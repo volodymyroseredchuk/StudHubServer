@@ -27,7 +27,7 @@ public class FeedBack {
 
     @EqualsAndHashCode.Exclude
     @Column(name = "mark")
-    private int mark;
+    private Integer mark;
 
     @Column(name = "teacher_id")
     @ManyToOne
