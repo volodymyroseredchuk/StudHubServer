@@ -32,9 +32,9 @@ public class FeedBack {
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
 
-    @Column(name = "univer_id")
+    @Column(name = "university_id")
     @ManyToOne
-    @JoinColumn(name = "univer_id", referencedColumnName = "id")
-    private Univer univer;
+    @JoinColumn(name = "university_id", referencedColumnName = "id")
+    private University university;
 }
 
