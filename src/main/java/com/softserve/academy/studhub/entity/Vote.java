@@ -19,11 +19,11 @@ public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "value")
     @NotNull
-    private int value;
+    private Integer value;
 
     @Column(name = "user_id")
     @ManyToOne
