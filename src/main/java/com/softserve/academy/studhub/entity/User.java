@@ -1,8 +1,7 @@
 package com.softserve.academy.studhub.entity;
 
-import com.softserve.academy.studhub.entity.Enums.Roles;
+import com.softserve.academy.studhub.entity.enums.Roles;
 import lombok.*;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -14,42 +13,34 @@ import java.time.LocalDate;
 @Table(name = "users")
 public class User {
 
-    @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @NonNull
     @EqualsAndHashCode.Exclude
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "role", nullable = false)
     private Roles role;
 
-    @NonNull
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NonNull
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NonNull
     @EqualsAndHashCode.Exclude
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @NonNull
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @NonNull
     @EqualsAndHashCode.Exclude
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @NonNull
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private LocalDate creationDate;
 
     @EqualsAndHashCode.Exclude
