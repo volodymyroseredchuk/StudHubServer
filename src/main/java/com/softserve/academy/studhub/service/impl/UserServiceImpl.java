@@ -3,11 +3,15 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+//@AllArgsConstructor
+@Value
 @Service
 public class UserServiceImpl implements UserService {
 
