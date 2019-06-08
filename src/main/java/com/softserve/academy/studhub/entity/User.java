@@ -3,6 +3,7 @@ package com.softserve.academy.studhub.entity;
 import com.softserve.academy.studhub.entity.enums.Roles;
 import lombok.*;
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.time.LocalDate;
 
 @Getter
@@ -30,10 +31,11 @@ public class User {
     private String lastName;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "email", nullable = false)
+    @Email
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
     @EqualsAndHashCode.Exclude
