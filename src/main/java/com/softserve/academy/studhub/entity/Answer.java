@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 @Entity
 public class Answer {
 
@@ -18,9 +20,11 @@ public class Answer {
     @Column(name = "id")
     private Integer id;
 
+    @EqualsAndHashCode.Exclude
     @Column(name="body", columnDefinition = "text")
     private String body;
 
+    @EqualsAndHashCode.Exclude
     @Column(name = "approved")
     private boolean approved;
 
@@ -37,6 +41,7 @@ public class Answer {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @EqualsAndHashCode.Exclude
     @Transient
     private Integer rate;
 
