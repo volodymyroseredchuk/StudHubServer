@@ -22,7 +22,7 @@ public class FeedBack {
     private Integer id;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "body")
+    @Column(columnDefinition = "TEXT", name = "body")
     private String body;
 
     @EqualsAndHashCode.Exclude
