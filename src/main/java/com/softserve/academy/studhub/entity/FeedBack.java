@@ -21,9 +21,11 @@ public class FeedBack {
     @Column(name = "id")
     private Integer id;
 
+    @EqualsAndHashCode.Exclude
     @Column(name = "body")
     private String body;
 
+    @EqualsAndHashCode.Exclude
     @Column(name = "mark")
     private int mark;
 
