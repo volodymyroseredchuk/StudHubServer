@@ -8,12 +8,13 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "questions")
+
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"title", "body", "rate", "user", "answerList", "tagList"})
+@Entity
+@Table(name = "questions")
 public class Question {
 
     @Id
