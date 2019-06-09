@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
+@Table(name="answers")
 public class Answer {
 
     @Id
@@ -26,7 +27,7 @@ public class Answer {
 
     @EqualsAndHashCode.Exclude
     @Column(name = "approved")
-    private boolean approved;
+    private Boolean approved;
 
     @Column(name = "question_id")
     @ManyToOne
