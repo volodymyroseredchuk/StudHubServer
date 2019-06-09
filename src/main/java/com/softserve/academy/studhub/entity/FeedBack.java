@@ -13,8 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
-@Table(name = "feedback")
-public class FeedBack {
+@Table(name = "feedbacks")
+public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class FeedBack {
     private Integer id;
 
     @EqualsAndHashCode.Exclude
-    @Column(columnDefinition = "TEXT", name = "body")
+    @Column(name = "body", columnDefinition = "TEXT")
     private String body;
 
     @EqualsAndHashCode.Exclude
