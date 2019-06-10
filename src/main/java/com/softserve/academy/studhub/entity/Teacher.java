@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "universities")
-public class University {
+@Table(name = "teachers")
+public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,16 +30,19 @@ public class University {
     private LocalDateTime modifiedDate;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "name")
-    private String name;
+    @Column(name = "first_name")
+    private String firstName;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "city")
-    private String city;
+    @Column(name = "last_name")
+    private String lastName;
 
     @EqualsAndHashCode.Exclude
     @Column(name = "image_url")
     private String imageUrl;
 
-
+    @Column(name = "university_id")
+    @ManyToOne
+    @JoinColumn(name = "university_id", referencedColumnName = "id")
+    private University university;
 }
