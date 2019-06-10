@@ -9,12 +9,34 @@ that contains next info along with credentials for your local MySql instance
 
 
 ```
-spring.datasource.url = jdbc:mysql://localhost:3306/studhub?createDatabaseIfNotExist=true
+spring.datasource.url = jdbc:mysql://localhost:3306/studhub?serverTimezone=UTC
 spring.datasource.username = 
 spring.datasource.password = 
+spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
+localhost.url = jdbc:mysql://localhost:3306/
+script.create = create database studhub
+script.drop = drop database studhub
+skip.db.init = true
 ```
 
+## Running Application
 
+To automatically create database with test data run the next command prompt
+(run only once)
+```
+mvn clean install -D skip.db.init=false
+```
+
+To run the application
+```
+mvn spring-boot:run
+```
+
+To recompile the application
+(run always if db is already created)
+```
+mvn clean install
+```
 
 ## Authors
 
