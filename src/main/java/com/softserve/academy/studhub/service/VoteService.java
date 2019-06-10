@@ -1,12 +1,8 @@
 package com.softserve.academy.studhub.service;
 
-import com.softserve.academy.studhub.entity.Answer;
-import com.softserve.academy.studhub.entity.Feedback;
-import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.Vote;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface VoteService {
 

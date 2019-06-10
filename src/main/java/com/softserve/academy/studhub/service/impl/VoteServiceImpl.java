@@ -1,8 +1,5 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.entity.Answer;
-import com.softserve.academy.studhub.entity.Feedback;
-import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.Vote;
 import com.softserve.academy.studhub.repository.VoteRepository;
 import com.softserve.academy.studhub.service.VoteService;
