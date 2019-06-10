@@ -20,23 +20,29 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "modified_date")
-    private LocalDateTime modefiedDate;
+    private LocalDateTime modifiedDate;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "first_name")
     private String firstName;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "last_name")
     private String lastName;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "image_url")
     private String imageUrl;
+
     @Column(name = "university_id")
     @ManyToOne
     @JoinColumn(name = "university_id", referencedColumnName = "id")
-    private University University;
+    private University university;
 }

@@ -20,22 +20,26 @@ public class University {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "modified_date")
-    private LocalDateTime modefiedDate;
+    private LocalDateTime modifiedDate;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "name")
     private String name;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "city")
     private String city;
+
     @EqualsAndHashCode.Exclude
     @Column(name = "image_url")
     private String imageUrl;
-
 
 
 }
