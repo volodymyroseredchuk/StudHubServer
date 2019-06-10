@@ -21,8 +21,7 @@ public class Vote {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "value")
-    @NotNull
+    @Column(name = "value", nullable = false)
     private Integer value;
 
     @Column(name = "user_id")
