@@ -41,7 +41,6 @@ public class Teacher {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "university_id")
     @ManyToOne
     @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;

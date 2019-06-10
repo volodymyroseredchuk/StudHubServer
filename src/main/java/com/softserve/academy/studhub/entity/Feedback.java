@@ -29,12 +29,10 @@ public class Feedback {
     @Column(name = "mark")
     private Integer mark;
 
-    @Column(name = "teacher_id")
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
 
-    @Column(name = "university_id")
     @ManyToOne
     @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;

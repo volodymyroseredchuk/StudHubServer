@@ -24,17 +24,14 @@ public class Vote {
     @Column(name = "value", nullable = false)
     private Integer value;
 
-    @Column(name = "user_id")
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "answer_id")
     @ManyToOne
     @JoinColumn(name = "answer_id", referencedColumnName = "id")
     private Answer answer;
 
-    @Column(name = "feedback_id")
     @ManyToOne
     @JoinColumn(name = "feedback_id", referencedColumnName = "id")
     private Feedback feedback;

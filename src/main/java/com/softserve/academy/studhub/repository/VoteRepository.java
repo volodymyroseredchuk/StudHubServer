@@ -1,5 +1,8 @@
 package com.softserve.academy.studhub.repository;
 
+import com.softserve.academy.studhub.entity.Answer;
+import com.softserve.academy.studhub.entity.Feedback;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.Vote;
 import org.springframework.data.jpa.repository.JpaRepository;
 

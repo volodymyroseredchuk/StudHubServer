@@ -32,12 +32,15 @@ public class Question {
     private LocalDateTime modefiedDate;
     @Transient
     private Integer rate;
-    @Column(name = "user_id")
+
+
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "questions")
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
     private List<Answer> answerList;
+
     @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)
     @JoinTable(name = "questions_tags", joinColumns = {@JoinColumn(name = "question_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})

@@ -29,12 +29,10 @@ public class Answer {
     @Column(name = "approved")
     private Boolean approved;
 
-    @Column(name = "question_id")
     @ManyToOne
     @JoinColumn(name="question_id", referencedColumnName = "id")
     private Question question;
 
-    @Column(name = "user_id")
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
