@@ -1,6 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.dao.QuestionRepository;
+import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;

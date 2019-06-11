@@ -1,6 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.dao.CommentRepository;
+import com.softserve.academy.studhub.repository.CommentRepository;
 import com.softserve.academy.studhub.entity.Comment;
 import com.softserve.academy.studhub.service.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
