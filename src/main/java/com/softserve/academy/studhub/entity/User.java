@@ -1,10 +1,11 @@
 package com.softserve.academy.studhub.entity;
 
-import com.softserve.academy.studhub.entity.enums.Roles;
 import lombok.*;
+
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,11 +20,6 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @EqualsAndHashCode.Exclude
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Roles role;
-
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -31,18 +27,17 @@ public class User {
     private String lastName;
 
     @EqualsAndHashCode.Exclude
-    @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "user_name", nullable = false, unique = true)
-    private String userName;
+    private String username;
 
     @EqualsAndHashCode.Exclude
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date")
     private LocalDate creationDate;
 
     @EqualsAndHashCode.Exclude
@@ -53,5 +48,11 @@ public class User {
     @EqualsAndHashCode.Exclude
     @Column(name = "image_url")
     private String imageUrl;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 }
