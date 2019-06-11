@@ -30,6 +30,7 @@ public class Question {
     private LocalDateTime creationDate;
     @Column(name = "modified_date")
     private LocalDateTime modefiedDate;
+    
 
 
     @ManyToOne
