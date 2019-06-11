@@ -1,9 +1,9 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.entity.Question;
+import com.softserve.academy.studhub.entity.Tag;
+import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class QuestionServiceImpl implements IQuestionService {
 
     private QuestionRepository repository;
 
-    @Autowired
+
     public QuestionServiceImpl(QuestionRepository repository) {
         this.repository = repository;
     }
@@ -46,5 +46,15 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public void deleteById(int id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<Question> sortByAge() {
+        return repository.findAllByOrderByCreationDateAsc();
+    }
+
+    @Override
+    public List<Question> sortByTag(List<Tag> tags) {
+        return repository.findByTagListInOrderByCreationDateAsc(tags);
     }
 }
