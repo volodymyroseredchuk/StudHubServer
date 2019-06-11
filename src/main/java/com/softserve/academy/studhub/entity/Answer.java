@@ -41,7 +41,7 @@ public class Answer {
     private LocalDateTime creationDate;
 
     @EqualsAndHashCode.Exclude
-    @Transient
+    @Column(name = "rate")
     private Integer rate;
 
 }
