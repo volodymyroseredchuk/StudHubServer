@@ -41,5 +41,7 @@ public class University {
     @Column(name = "image_url")
     private String imageUrl;
 
-
+    @EqualsAndHashCode.Exclude
+    @Column(name = "mark")
+    private Double mark;
 }
