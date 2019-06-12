@@ -11,7 +11,9 @@ import java.util.Optional;
 
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
+    //TODO: remove
     Optional<Vote> findById(Integer id);
+
     List<Vote> findByUser(User user);
     List<Vote> findByFeedback(Feedback feedback);
     List<Vote> findByAnswer(Answer answer);
