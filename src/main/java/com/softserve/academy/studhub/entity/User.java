@@ -3,6 +3,9 @@ package com.softserve.academy.studhub.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,19 +23,29 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @NonNull
+    @Size(min=3, max = 16)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @NonNull
+    @Size(min=3, max = 16)
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @NonNull
+    @Email
+    @Size(min=3, max = 16)
     @EqualsAndHashCode.Exclude
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NonNull
+    @Size(min=3, max = 16)
     @Column(name = "user_name", nullable = false, unique = true)
     private String username;
 
+    @NonNull
     @EqualsAndHashCode.Exclude
     @Column(name = "password", nullable = false)
     private String password;
