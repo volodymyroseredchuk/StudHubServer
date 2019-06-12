@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.entity.Vote;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -27,8 +28,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> get(Integer id) {
-        return userRepository.findById(id);
+    public User get(Integer id) {
+        Optional<User> resultVote = userRepository.findById(id);
+        if (resultVote.isPresent()) {
+            return resultVote.get();
+        } else {
+            throw new IllegalArgumentException("User not found.");
+        }
     }
 
     @Override
@@ -46,4 +52,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public User findByUsername(String username) {
+        Optional<User> resultVote = userRepository.findByUsername(username);
+        if (resultVote.isPresent()) {
+            return resultVote.get();
+        } else {
+            throw new IllegalArgumentException("User not found.");
+        }
+    }
 }

@@ -9,12 +9,14 @@ public interface UserService {
 
     User add(User user);
 
-    Optional<User> get(Integer id);
+    User get(Integer id);
 
     User update(User user);
 
     void delete(Integer id);
 
     List<User> getAll();
+
+    User findByUsername(String username);
 
 }
