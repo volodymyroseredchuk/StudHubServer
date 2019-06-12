@@ -46,4 +46,8 @@ public class Teacher {
     @ManyToOne
     @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;
+
+    @EqualsAndHashCode.Exclude
+    @Column(name = "mark")
+    private Double mark;
 }

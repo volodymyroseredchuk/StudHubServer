@@ -36,5 +36,13 @@ public class Feedback {
     @ManyToOne
     @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @EqualsAndHashCode.Exclude
+    @Column(name = "rate")
+    private Integer rate;
 }
 
