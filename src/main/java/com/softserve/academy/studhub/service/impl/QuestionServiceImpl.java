@@ -14,7 +14,6 @@ public class QuestionServiceImpl implements IQuestionService {
 
     private QuestionRepository repository;
 
-
     public QuestionServiceImpl(QuestionRepository repository) {
         this.repository = repository;
     }
@@ -25,8 +24,11 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public Question update(Question question) {
-        return repository.saveAndFlush(question);
+    public Question update(int id, Question question) {
+
+        Question updatable = findById(id);
+        updatable = question;
+        return repository.saveAndFlush(updatable);
     }
 
     @Override
@@ -55,6 +57,6 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     public List<Question> sortByTag(List<Tag> tags) {
-        return repository.findByTagListInOrderByCreationDateAsc(tags);
+        return repository.findAllByTagListInOrderByCreationDateAsc(tags);
     }
 }

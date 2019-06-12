@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"title", "body","rate", "answerList", "tagList"})
+@EqualsAndHashCode(exclude = {"title", "body", "modifiedDate", "answerList", "tagList"})
 @Entity
 @Table(name = "questions")
 public class Question {
@@ -29,10 +29,7 @@ public class Question {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
     @Column(name = "modified_date")
-    private LocalDateTime modefiedDate;
-    @Column(name="rate")
-    private Integer rate;
-
+    private LocalDateTime modifiedDate;
 
 
     @ManyToOne

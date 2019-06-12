@@ -9,7 +9,7 @@ public interface IQuestionService {
 
     Question save(Question question);
 
-    Question update(Question question);
+    Question update(int id, Question question);
 
     List<Question> findAll();
 
