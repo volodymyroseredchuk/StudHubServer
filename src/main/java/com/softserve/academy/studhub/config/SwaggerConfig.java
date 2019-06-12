@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub;
+package com.softserve.academy.studhub.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
