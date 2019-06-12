@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +21,13 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     public Question save(Question question) {
+        question.setCreationDate(LocalDateTime.now());
         return repository.saveAndFlush(question);
     }
 
     @Override
     public Question update(int id, Question question) {
-
+        question.setCreationDate(LocalDateTime.now());
         Question updatable = findById(id);
         updatable = question;
         return repository.saveAndFlush(updatable);
