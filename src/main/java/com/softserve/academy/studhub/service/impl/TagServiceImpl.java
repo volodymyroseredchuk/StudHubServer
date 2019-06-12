@@ -3,7 +3,9 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.repository.TagRepository;
 import com.softserve.academy.studhub.service.TagService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,5 +54,10 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findAll() {
         return tagRepository.findAll();
+    }
+
+    @Override
+    public List<Tag> findAll(Pageable pageable) {
+        return tagRepository.findAll(pageable).getContent();
     }
 }
