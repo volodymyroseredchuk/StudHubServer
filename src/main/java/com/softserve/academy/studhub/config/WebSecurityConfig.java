@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.security;
+package com.softserve.academy.studhub.config;
 
 import com.softserve.academy.studhub.security.jwt.JwtAuthEntryPoint;
 import com.softserve.academy.studhub.security.jwt.JwtAuthTokenFilter;
@@ -39,7 +39,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/webjars/**",
             "/api/auth/**",
-            "/sock/**"
+            "/sock/**",
+            "/home",
+            "/sendEmail"
+            // other public endpoints of your API may be appended to this array
     };
 
     @Bean
