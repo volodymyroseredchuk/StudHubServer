@@ -57,12 +57,35 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote update(Vote vote) {
-        return voteRepository.saveAndFlush(vote);
+
+        if (vote.getAnswer() != null) {
+            Optional<Vote> voteResponse = voteRepository.findByUserAndAndAnswer(vote.getUser(), vote.getAnswer());
+            if (voteResponse.isPresent()) {
+                Vote dbVote = voteResponse.get();
+                dbVote.setValue(vote.getValue());
+                return voteRepository.saveAndFlush(dbVote);
+            } else {
+                return voteRepository.saveAndFlush(vote);
+            }
+
+        } else if (vote.getFeedback() != null) {
+            Optional<Vote> voteResponse = voteRepository.findByUserAndFeedback(vote.getUser(), vote.getFeedback());
+            if (voteResponse.isPresent()) {
+                Vote dbVote = voteResponse.get();
+                dbVote.setValue(vote.getValue());
+                return voteRepository.saveAndFlush(dbVote);
+            } else {
+                return voteRepository.saveAndFlush(vote);
+            }
+        } else {
+            throw new IllegalArgumentException("Got invalid vote.");
+        }
     }
 
     @Override
     public void delete(Vote vote) {
         voteRepository.delete(vote);
     }
+
 
 }
