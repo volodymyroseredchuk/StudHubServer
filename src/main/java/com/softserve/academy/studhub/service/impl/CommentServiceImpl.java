@@ -1,11 +1,11 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.repository.CommentRepository;
 import com.softserve.academy.studhub.entity.Comment;
+import com.softserve.academy.studhub.repository.CommentRepository;
 import com.softserve.academy.studhub.service.ICommentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,19 +14,22 @@ public class CommentServiceImpl implements ICommentService {
 
     private CommentRepository repository;
 
-    @Autowired
     public CommentServiceImpl(CommentRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public Comment save(Comment comment) {
+        comment.setCreationDate(LocalDateTime.now());
         return repository.saveAndFlush(comment);
     }
 
     @Override
-    public Comment update(Comment comment) {
-        return repository.saveAndFlush(comment);
+    public Comment update(int id, Comment comment) {
+        Comment updatable = findById(id);
+        updatable.setBody(comment.getBody());
+        updatable.setModifiedDate(LocalDateTime.now());
+        return repository.saveAndFlush(updatable);
     }
 
     @Override
@@ -46,5 +49,10 @@ public class CommentServiceImpl implements ICommentService {
     @Override
     public void deleteById(int id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<Comment> findByAnswer(Integer id) {
+        return repository.findAllByAnswer_Id(id);
     }
 }

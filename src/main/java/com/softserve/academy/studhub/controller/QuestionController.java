@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -14,7 +15,7 @@ public class QuestionController {
 
     private IQuestionService questionService;
 
-    @Autowired
+
     public QuestionController(IQuestionService questionService) {
         this.questionService = questionService;
     }
@@ -42,7 +43,7 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public Question createQuestion(@RequestBody Question question) {
+    public Question createQuestion(@Valid @RequestBody Question question) {
 
         return questionService.save(question);
     }

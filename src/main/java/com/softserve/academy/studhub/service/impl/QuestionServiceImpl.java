@@ -27,9 +27,10 @@ public class QuestionServiceImpl implements IQuestionService {
 
     @Override
     public Question update(int id, Question question) {
-        question.setCreationDate(LocalDateTime.now());
         Question updatable = findById(id);
-        updatable = question;
+        updatable.setTitle(question.getTitle());
+        updatable.setBody(question.getBody());
+        updatable.setModifiedDate(LocalDateTime.now());
         return repository.saveAndFlush(updatable);
     }
 
