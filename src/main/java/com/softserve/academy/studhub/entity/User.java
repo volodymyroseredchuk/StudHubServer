@@ -35,7 +35,7 @@ public class User {
 
     @NonNull
     @Email
-    @Size(min=3, max = 16)
+    @Size(min=3, max = 60)
     @EqualsAndHashCode.Exclude
     @Column(name = "email", nullable = false, unique = true)
     private String email;
