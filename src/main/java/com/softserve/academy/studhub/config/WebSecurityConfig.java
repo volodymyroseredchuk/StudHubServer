@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/auth/**",
             "/sock/**",
             "/home",
-            "/sendEmail"
+            "/addVote"
             // other public endpoints of your API may be appended to this array
     };
 
