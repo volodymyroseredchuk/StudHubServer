@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +41,7 @@ public class Question {
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    @JsonManagedReference
     private List<Answer> answerList;
 
     @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)

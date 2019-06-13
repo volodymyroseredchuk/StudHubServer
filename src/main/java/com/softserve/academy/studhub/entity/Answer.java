@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -31,6 +33,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name="question_id", referencedColumnName = "id")
+    @JsonBackReference
     private Question question;
 
     @ManyToOne
