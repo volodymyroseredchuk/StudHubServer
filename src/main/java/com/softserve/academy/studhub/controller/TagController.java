@@ -20,7 +20,7 @@ public class TagController {
     }
 
     @GetMapping
-    public List<Tag> getAllTagsWithPagination(Pageable pageable) {
-        return tagService.findAll(pageable);
+    public List<Tag> getAllTagsSortedWithPagination(Pageable pageable) {
+        return tagService.findAllSorted(pageable);
     }
 }

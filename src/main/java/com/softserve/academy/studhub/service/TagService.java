@@ -19,5 +19,7 @@ public interface TagService {
 
     List<Tag> findAll();
 
-    public List<Tag> findAll(Pageable pageable);
+    List<Tag> findAll(Pageable pageable);
+
+    List<Tag> findAllSorted(Pageable pageable);
 }

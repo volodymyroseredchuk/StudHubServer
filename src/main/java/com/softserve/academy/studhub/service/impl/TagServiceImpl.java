@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +61,10 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findAll(Pageable pageable) {
         return tagRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public List<Tag> findAllSorted(Pageable pageable) {
+        return tagRepository.findAllSorted(pageable);
     }
 }
