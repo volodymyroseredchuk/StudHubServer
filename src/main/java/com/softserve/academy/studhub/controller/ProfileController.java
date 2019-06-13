@@ -1,10 +1,13 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,15 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private UserService userService;
+    private UserRepository userRepository;
 
     @GetMapping
     public User gerCurrentUser() {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return userService.findByUsername(user.getUsername());
+        String username;
+
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        User currentUser = userRepository.findByUsername(username)
+            .orElseThrow(() ->
+                new UsernameNotFoundException("User Not Found with -> username or email : " + username)
+            );
+
+        return currentUser;
     }
 
 }
