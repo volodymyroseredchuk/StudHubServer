@@ -14,7 +14,7 @@ spring.datasource.username =
 spring.datasource.password = 
 spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
 spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-localhost.url = jdbc:mysql://localhost:3306/
+localhost.url = jdbc:mysql://localhost:3306/?serverTimezone=UTC
 script.create = create database studhub
 script.drop = drop database studhub
 skip.db.init = true
