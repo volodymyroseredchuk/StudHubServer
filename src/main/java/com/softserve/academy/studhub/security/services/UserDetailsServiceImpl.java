@@ -1,7 +1,7 @@
 package com.softserve.academy.studhub.security.services;
 
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.repository.UserRepository;
+import com.softserve.academy.studhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,14 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
     	
-        User user = userRepository.findByUsername(username)
+        User user = userService.findByUsername(username)
                 	.orElseThrow(() -> 
                         new UsernameNotFoundException("User Not Found with -> username or email : " + username)
         );

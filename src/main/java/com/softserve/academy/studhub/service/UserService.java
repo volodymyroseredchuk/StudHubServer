@@ -17,4 +17,14 @@ public interface UserService {
 
     List<User> getAll();
 
+    Optional<User> findByUsername(String username);
+
+    Boolean existsByUsername(String username);
+
+    Boolean existsByEmail(String email);
+
+    User findByEmail(String email);
+
+    void updatePassword(String password, Integer userId);
+
 }

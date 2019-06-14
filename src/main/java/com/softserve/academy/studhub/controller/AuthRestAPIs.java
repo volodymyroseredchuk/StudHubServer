@@ -7,8 +7,8 @@ import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.repository.RoleRepository;
-import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
+import com.softserve.academy.studhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class AuthRestAPIs {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -63,12 +63,12 @@ public class AuthRestAPIs {
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (userService.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity<String>("Fail -> Username is already taken!",
                     HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userService.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity<String>("Fail -> Email is already in use!",
                     HttpStatus.BAD_REQUEST);
         }
@@ -102,7 +102,7 @@ public class AuthRestAPIs {
         });
 
         user.setRoles(roles);
-        userRepository.save(user);
+        userService.add(user);
 
         return ResponseEntity.ok().body("User registered successfully!");
     }
