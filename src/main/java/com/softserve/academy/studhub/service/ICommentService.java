@@ -7,10 +7,10 @@ import java.util.List;
 public interface ICommentService {
 
     Comment save(Comment comment);
-    Comment update(int id, Comment comment);
+    Comment update(Integer commentId, Comment comment);
     List<Comment> findAll();
-    Comment findById(int id);
-    List<Comment> findByAnswer(Integer id);
-    void deleteById(int id);
-
+    Comment findById(Integer commentId);
+    List<Comment> findByAnswer(Integer answerId);
+    void deleteById(Integer commentId);
+    void setQuestionAndAnswer(Integer questionId, Integer answerId, Comment comment);
 }

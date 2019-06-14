@@ -40,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/webjars/**",
             "/api/auth/**",
-            "/question/**"
+            "/questions/**"
             // other public endpoints of your API may be appended to this array
     };
 

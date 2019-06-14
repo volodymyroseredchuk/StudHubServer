@@ -4,8 +4,10 @@ import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.naming.OperationNotSupportedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +28,8 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public Question update(int id, Question question) {
-        Question updatable = findById(id);
+    public Question update(Integer questionId, Question question) {
+        Question updatable = findById(questionId);
         updatable.setTitle(question.getTitle());
         updatable.setBody(question.getBody());
         updatable.setModifiedDate(LocalDateTime.now());
@@ -40,17 +42,28 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public Question findById(int id) {
-        Optional<Question> result = repository.findById(id);
-        if (result.isPresent()) {
-            return result.get();
+    public Question findById(Integer questionId) {
+        Optional<Question> result = repository.findById(questionId);
+        if (!result.isPresent()) {
+            throw new IllegalArgumentException("Requested question does not exist");
         }
-        throw new IllegalArgumentException("Requested question does not exist");
+        return result.get();
+
     }
 
+    //need to change "if" block after answer dao& service ready.
     @Override
-    public void deleteById(int id) {
-        repository.deleteById(id);
+    public void deleteById(Integer questionId) {
+        Question questionToDelete = findById(questionId);
+        try {
+            if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
+                repository.deleteById(questionId);
+            } else {
+                throw new OperationNotSupportedException("This question already has answers and can not be deleted");
+            }
+        } catch (OperationNotSupportedException e) {
+            e.getMessage();
+        }
     }
 
     @Override

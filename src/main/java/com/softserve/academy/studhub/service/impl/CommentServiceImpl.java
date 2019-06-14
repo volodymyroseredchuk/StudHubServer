@@ -1,7 +1,11 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Comment;
+import com.softserve.academy.studhub.entity.Question;
+import com.softserve.academy.studhub.repository.AnswerRepository;
 import com.softserve.academy.studhub.repository.CommentRepository;
+import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.ICommentService;
 import org.springframework.stereotype.Service;
 
@@ -12,47 +16,73 @@ import java.util.Optional;
 @Service
 public class CommentServiceImpl implements ICommentService {
 
-    private CommentRepository repository;
+    private CommentRepository commentRepository;
+    private QuestionRepository questionRepository;
+    private AnswerRepository answerRepository;
 
-    public CommentServiceImpl(CommentRepository repository) {
-        this.repository = repository;
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              QuestionRepository questionRepository,
+                              AnswerRepository answerRepository) {
+        this.commentRepository = commentRepository;
+        this.questionRepository = questionRepository;
+        this.answerRepository = answerRepository;
     }
 
     @Override
     public Comment save(Comment comment) {
         comment.setCreationDate(LocalDateTime.now());
-        return repository.saveAndFlush(comment);
+        return commentRepository.saveAndFlush(comment);
     }
 
     @Override
-    public Comment update(int id, Comment comment) {
-        Comment updatable = findById(id);
+    public Comment update(Integer commentId, Comment comment) {
+        Comment updatable = findById(commentId);
         updatable.setBody(comment.getBody());
         updatable.setModifiedDate(LocalDateTime.now());
-        return repository.saveAndFlush(updatable);
+        return commentRepository.saveAndFlush(updatable);
     }
 
     @Override
     public List<Comment> findAll() {
-        return repository.findAll();
+        return commentRepository.findAll();
     }
 
     @Override
-    public Comment findById(int id) {
-        Optional<Comment> result = repository.findById(id);
-        if (result.isPresent()) {
-            return result.get();
+    public Comment findById(Integer commentId) {
+        Optional<Comment> result = commentRepository.findById(commentId);
+        if (!result.isPresent()) {
+            throw new IllegalArgumentException("Requested comment does not exist");
         }
-        throw new IllegalArgumentException("Requested comment does not exist");
+        return result.get();
+
     }
 
     @Override
-    public void deleteById(int id) {
-        repository.deleteById(id);
+    public void deleteById(Integer commentId) {
+        findById(commentId);
+        commentRepository.deleteById(commentId);
     }
 
     @Override
-    public List<Comment> findByAnswer(Integer id) {
-        return repository.findAllByAnswer_Id(id);
+    public List<Comment> findByAnswer(Integer answerId) {
+        return commentRepository.findAllByAnswer_Id(answerId);
+    }
+
+    @Override
+    public void setQuestionAndAnswer(Integer questionId, Integer answerId,
+                                     Comment comment) {
+        Question question = null;
+        Answer answer = null;
+        Optional<Question> q = questionRepository.findById(questionId);
+        Optional<Answer> a = answerRepository.findById(answerId);
+
+        if (q.isPresent()) {
+            question = q.get();
+        }
+        if (a.isPresent()) {
+            answer = a.get();
+            answer.setQuestion(question);
+        }
+        comment.setAnswer(answer);
     }
 }

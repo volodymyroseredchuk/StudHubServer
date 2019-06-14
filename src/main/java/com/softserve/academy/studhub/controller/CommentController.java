@@ -1,15 +1,15 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Comment;
 import com.softserve.academy.studhub.service.ICommentService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/questions/{questionId}/answers/{answerId}")
 public class CommentController {
 
     private ICommentService commentService;
@@ -17,26 +17,36 @@ public class CommentController {
     public CommentController(ICommentService commentService) {
         this.commentService = commentService;
     }
-    //not sure about urls...
-    @GetMapping
-    public List<Comment> getAllCommentsForAnswer(Answer answer) {
-        return commentService.findByAnswer(answer.getId());
-    }
 
-    @PostMapping("/create")
-    public Comment createComment(@Valid @RequestBody Comment comment) {
+    //not sure about urls... And - do we need this method?
+    /*@GetMapping
+    public List<Comment> getAllCommentsForAnswer(@PathVariable Integer questionId, @PathVariable Integer answerId) {
+        return commentService.findByAnswer(answerId);
+    }*/
 
+
+
+    @PostMapping("/comments/create")
+    @PreAuthorize("hasRole('USER')")
+    public Comment createComment(@PathVariable Integer questionId, @PathVariable Integer answerId,
+                                 @Valid @RequestBody Comment comment) {
+        commentService.setQuestionAndAnswer(questionId, answerId, comment);
         return commentService.save(comment);
     }
 
-    @PostMapping("/{id}/edit")
-    public Comment createComment(@PathVariable Integer id, @RequestBody Comment comment) {
-
-        return commentService.update(id, comment);
+    @PutMapping("comments/{commentId}/edit")
+    @PreAuthorize("@commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    public Comment editComment(@PathVariable Integer questionId, @PathVariable Integer answerId,
+                               @PathVariable Integer commentId, @Valid @RequestBody Comment comment) {
+        commentService.setQuestionAndAnswer(questionId, answerId, comment);
+        return commentService.update(commentId, comment);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public void deleteComment (@PathVariable Integer id){
-        commentService.deleteById(id);
+    @DeleteMapping("comments/{commentId}/delete")
+    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    public ResponseEntity<String> deleteComment(@PathVariable Integer commentId) {
+
+        commentService.deleteById(commentId);
+        return ResponseEntity.ok("Comment deleted");
     }
 }
