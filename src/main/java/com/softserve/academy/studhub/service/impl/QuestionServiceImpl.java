@@ -28,17 +28,7 @@ public class QuestionServiceImpl implements IQuestionService {
     public Question save(Question question) {
         question.setCreationDate(LocalDateTime.now());
 
-        List<Tag> dbTagsList = new ArrayList<>();
-        Tag tempTag;
-        for (Tag tag : question.getTagList()) {
-            try {
-                tempTag = tagService.findByName(tag.getName());
-            } catch (IllegalArgumentException e) {
-                tempTag = tagService.save(tag);
-            }
-            dbTagsList.add(tempTag);
-        }
-        question.setTagList(dbTagsList);
+        question.setTagList(tagService.reviewTagList(question.getTagList()));
 
         return repository.saveAndFlush(question);
     }
@@ -48,6 +38,9 @@ public class QuestionServiceImpl implements IQuestionService {
         question.setCreationDate(LocalDateTime.now());
         Question updatable = findById(id);
         updatable = question;
+
+        updatable.setTagList(tagService.reviewTagList(updatable.getTagList()));
+
         return repository.saveAndFlush(updatable);
     }
 

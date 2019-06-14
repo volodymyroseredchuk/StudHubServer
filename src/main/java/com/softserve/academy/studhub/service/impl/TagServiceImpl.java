@@ -7,6 +7,7 @@ import com.softserve.academy.studhub.service.TagService;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,5 +65,23 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagsDTO findAllSorted(Pageable pageable) {
         return new TagsDTO(tagRepository.findAllSorted(pageable));
+    }
+
+    @Override
+    public List<Tag> reviewTagList(List<Tag> tagList) {
+        if (tagList == null) {
+            return null;
+        }
+        List<Tag> dbTagsList = new ArrayList<>();
+        Tag tempTag;
+        for (Tag tag : tagList) {
+            try {
+                tempTag = findByName(tag.getName());
+            } catch (IllegalArgumentException e) {
+                tempTag = save(tag);
+            }
+            dbTagsList.add(tempTag);
+        }
+        return dbTagsList;
     }
 }
