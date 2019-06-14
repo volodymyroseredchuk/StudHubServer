@@ -1,11 +1,15 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +25,9 @@ public class Tag {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ManyToMany(targetEntity = Question.class, mappedBy = "tagList")
+    @JsonIgnore
+    private List<Question> questionList;
 }
