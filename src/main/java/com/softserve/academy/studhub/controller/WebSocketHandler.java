@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.coders.SocketMessageEncoder;
 import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.impl.SocketServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,12 +14,15 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 public class WebSocketHandler extends AbstractWebSocketHandler {
 
-    SocketService socketService = new SocketServiceImpl();
+    private SocketService socketService = new SocketServiceImpl();
+    private SocketMessageDecoder decoder = new SocketMessageDecoder();
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         socketService.sendNotification(session, message);
-        System.out.println("Got a message: \n" + message.getPayload());
+        SocketMessage msg = decoder.decode(message.getPayload());
+
+        System.out.println("Got a message: \n" + msg.toString());
     }
 
     @Override
@@ -27,7 +31,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
         System.out.println("Client connected.");
 
         /*-----------------------*/
-        String connMsg = "{\"name\":\"admin\",\"text\":\"Connected successfully.\\n        \"}";
+        String connMsg = "{\"name\":\"Greetings\",\"text\":\"Connected successfully.\\n        \"}";
         /*-----------------------*/
 
         socketService.addSession(session);
