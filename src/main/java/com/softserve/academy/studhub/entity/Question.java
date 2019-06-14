@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"title", "body", "rate", "user", "answerList", "tagList"})
+@EqualsAndHashCode(exclude = {"title", "body", "modifiedDate", "answerList", "tagList"})
 @Entity
 @Table(name = "questions")
 public class Question {
@@ -31,9 +32,7 @@ public class Question {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
     @Column(name = "modified_date")
-    private LocalDateTime modefiedDate;
-    @Transient
-    private Integer rate;
+    private LocalDateTime modifiedDate;
 
 
     @ManyToOne

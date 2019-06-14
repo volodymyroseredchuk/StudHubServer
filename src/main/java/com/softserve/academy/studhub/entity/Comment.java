@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"body", "rate", "answer", "user"})
+@EqualsAndHashCode(exclude = {"body", "modifiedDate"})
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -25,14 +25,11 @@ public class Comment {
     @Column(columnDefinition = "TEXT", name = "body")
     private String body;
 
-    @Transient
-    private Integer rate;
-
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
     @Column(name = "modified_date")
-    private LocalDateTime modefiedDate;
+    private LocalDateTime modifiedDate;
 
     @ManyToOne
     @JoinColumn(name = "answer_id", referencedColumnName = "id")
