@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
 @Entity
 @Table(name = "votes")
 public class Vote {

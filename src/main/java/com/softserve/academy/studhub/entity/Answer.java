@@ -1,6 +1,10 @@
 package com.softserve.academy.studhub.entity;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,7 +13,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
 @Entity
 @Table(name="answers")
 public class Answer {
@@ -29,6 +32,7 @@ public class Answer {
 
     @ManyToOne
     @JoinColumn(name="question_id", referencedColumnName = "id")
+    @JsonBackReference
     private Question question;
 
     @ManyToOne
