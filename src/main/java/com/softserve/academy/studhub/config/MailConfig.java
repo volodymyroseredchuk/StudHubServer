@@ -10,7 +10,6 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
-
     @Value("${spring.mail.host}")
     private String host;
 
@@ -37,7 +36,6 @@ public class MailConfig {
 
     @Bean
     public JavaMailSender getMailSender() {
-
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(host);
@@ -47,8 +45,6 @@ public class MailConfig {
 
         Properties properties = mailSender.getJavaMailProperties();
 
-        properties.setProperty("mail.transport.protocol", "smtp");
-        properties.setProperty("mail.smtp.starttls.enable", "true");
         properties.setProperty("mail.transport.protocol", protocol);
         properties.setProperty("mail.debug", debug);
         properties.setProperty("mail.smtp.auth", auth);

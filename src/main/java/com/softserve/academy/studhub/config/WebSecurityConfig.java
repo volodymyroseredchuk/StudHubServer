@@ -40,12 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/webjars/**",
             "/api/auth/**",
-<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/config/WebSecurityConfig.java
-            "/home",
-            "/sendEmail"
-=======
-            "/tags/**"
->>>>>>> a4d4b69826962c03dec83d85dd38a30334c229ef:src/main/java/com/softserve/academy/studhub/security/WebSecurityConfig.java
+            "/forgot-password",
+            "/reset-password"
             // other public endpoints of your API may be appended to this array
     };
 
