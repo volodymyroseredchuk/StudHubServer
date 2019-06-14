@@ -20,14 +20,13 @@ public class VoteController {
     private VoteService voteService;
 
     @PostMapping("/addVote")
-    public  ResponseEntity<Object> authenticateUser(@Valid @RequestBody VotePostDTO vote) {
+    public  ResponseEntity<Object> addVote(@Valid @RequestBody VotePostDTO vote) {
 
         try{
-            voteService.update(vote);
+            return ResponseEntity.status(HttpStatus.OK).body(voteService.update(vote));
         } catch (IllegalArgumentException | NullPointerException e){
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
 
     }
 

@@ -18,10 +18,13 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         socketService.sendNotification(session, message);
+        System.out.println("Got a message: \n" + message.getPayload());
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+
+        System.out.println("Client connected.");
 
         /*-----------------------*/
         String connMsg = "{\"name\":\"admin\",\"text\":\"Connected successfully.\\n        \"}";
@@ -33,6 +36,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        System.out.println("Client disconnected.");
         socketService.removeSession(session);
     }
 }

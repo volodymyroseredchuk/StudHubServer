@@ -10,25 +10,22 @@ import com.softserve.academy.studhub.repository.FeedbackRepository;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.repository.VoteRepository;
 import com.softserve.academy.studhub.service.VoteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class VoteServiceImpl implements VoteService {
 
-    @Autowired
     private VoteRepository voteRepository;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private AnswerRepository answerRepository;
 
-    @Autowired
     private FeedbackRepository feedbackRepository;
 
     @Override
