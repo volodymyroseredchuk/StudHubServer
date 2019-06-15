@@ -16,7 +16,6 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -35,7 +34,6 @@ public class User {
     @Column(name = "user_name", nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
     @EqualsAndHashCode.Exclude
     @Column(name = "password", nullable = false)
     private String password;
