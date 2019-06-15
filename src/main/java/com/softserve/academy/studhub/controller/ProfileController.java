@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,9 @@ public class ProfileController {
 
     private UserRepository userRepository;
 
-    @GetMapping
+    private UserService userService;
+
+    @GetMapping("/my")
     public User gerCurrentUser() {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -38,6 +41,11 @@ public class ProfileController {
             );
 
         return currentUser;
+    }
+
+    @GetMapping("/foreign/{id}")
+    public User getForeignUser(@PathVariable Integer id){
+       return userService.get(id);
     }
 
 }
