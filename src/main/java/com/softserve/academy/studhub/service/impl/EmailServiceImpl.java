@@ -1,6 +1,7 @@
-package com.softserve.academy.studhub.service;
+package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.security.model.Mail;
+import com.softserve.academy.studhub.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 
 
 @Service
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
@@ -26,7 +27,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String username;
 
-
+    @Override
     public void sendEmail(Mail mail) {
 
         try {

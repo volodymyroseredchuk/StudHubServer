@@ -1,7 +1,5 @@
 package com.softserve.academy.studhub.constraint;
 
-
-
 import org.apache.commons.beanutils.BeanUtils;
 
 import javax.validation.ConstraintValidator;

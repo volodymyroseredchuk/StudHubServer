@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.security.services;
+package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.UserService;
