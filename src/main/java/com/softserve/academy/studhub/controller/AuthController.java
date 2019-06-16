@@ -6,10 +6,10 @@ import com.softserve.academy.studhub.dto.message.response.JwtResponse;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
-import com.softserve.academy.studhub.repository.RoleRepository;
-import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.softserve.academy.studhub.service.RoleService;
+import com.softserve.academy.studhub.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,23 +26,24 @@ import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
-public class AuthRestAPIs {
+@Slf4j
+public class AuthController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final PasswordEncoder encoder;
+    private final JwtProvider jwtProvider;
 
-    @Autowired
-    UserRepository userRepository;
+    public AuthController(AuthenticationManager authenticationManager, UserService userService,
+                          RoleService roleService, PasswordEncoder encoder, JwtProvider jwtProvider) {
 
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtProvider jwtProvider;
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.roleService = roleService;
+        this.encoder = encoder;
+        this.jwtProvider = jwtProvider;
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
@@ -63,46 +64,38 @@ public class AuthRestAPIs {
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (userService.existsByUsername(signUpRequest.getUsername())) {
             return new ResponseEntity<String>("Fail -> Username is already taken!",
                     HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userService.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity<String>("Fail -> Email is already in use!",
                     HttpStatus.BAD_REQUEST);
         }
 
-        // Creating user's account
-        User user = new User();
-        user.setFirstName(signUpRequest.getFirstName());
-        user.setLastName(signUpRequest.getLastName());
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(encoder.encode(signUpRequest.getPassword()));
-        user.setCreationDate(LocalDate.now());
-        user.setImageUrl(signUpRequest.getImageUrl());
+        try {
+            // Creating user's account
+            User user = new User();
+            user.setFirstName(signUpRequest.getFirstName());
+            user.setLastName(signUpRequest.getLastName());
+            user.setUsername(signUpRequest.getUsername());
+            user.setEmail(signUpRequest.getEmail());
+            user.setPassword(encoder.encode(signUpRequest.getPassword()));
+            user.setCreationDate(LocalDate.now());
+            user.setImageUrl(signUpRequest.getImageUrl());
 
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+            Set<Role> roles = new HashSet<>();
+            Role userRole = roleService.findByName(RoleName.ROLE_USER);
+            roles.add(userRole);
 
-        strRoles.forEach(role -> {
-
-            switch (role) {
-                case "admin":
-                    Role adminRole = roleRepository.findByName(RoleName.ROLE_ADMIN)
-                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-                    roles.add(adminRole);
-                    break;
-                default:
-                    Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                            .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not find."));
-                    roles.add(userRole);
-            }
-        });
-
-        user.setRoles(roles);
-        userRepository.save(user);
+            user.setRoles(roles);
+            userService.add(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<String>(e.getMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
 
         return ResponseEntity.ok().body("User registered successfully!");
     }
