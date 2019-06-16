@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/my")
     public ResponseEntity<UserDto> gerCurrentUser() {
@@ -32,13 +32,13 @@ public class ProfileController {
             username = principal.toString();
         }
 
-        return new ResponseEntity<UserDto>(userService.findByUsername(username), HttpStatus.OK);
+        return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
     }
 
     @GetMapping("/foreign/{id}")
     public ResponseEntity<UserDto> getForeignUser(@PathVariable Integer id) {
 
-        return new ResponseEntity<UserDto>(userService.get(id), HttpStatus.OK);
+        return new ResponseEntity<>(userService.get(id), HttpStatus.OK);
     }
 
 }
