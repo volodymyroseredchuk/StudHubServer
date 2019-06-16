@@ -18,7 +18,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Optional<Role> findByName(RoleName roleName) {
-        return roleRepository.findByName(roleName);
+    public Role findByName(RoleName roleName) {
+
+        Optional<Role> role = roleRepository.findByName(roleName);
+
+        if (role.isPresent()) {
+            return role.get();
+        }
+        throw new IllegalArgumentException("Role is not found by this name!");
     }
 }

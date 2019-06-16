@@ -1,20 +1,27 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.entity.enums.RoleName;
+import com.softserve.academy.studhub.repository.RoleRepository;
 import com.softserve.academy.studhub.repository.UserRepository;
+import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -43,8 +50,36 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User findById(Integer id) {
+
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new IllegalArgumentException("User is not found by this id!");
+    }
+
+    @Override
+    public User findByUsername(String username) {
+
+        Optional<User> user = userRepository.findByUsername(username);
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new IllegalArgumentException("User is not found by this username!");
+    }
+
+    @Override
+    public User findByEmail(String email) {
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new IllegalArgumentException("User is not found by this email!");
     }
 
     @Override
@@ -58,13 +93,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public void updatePassword(String password, Integer userId) {
+        userRepository.updatePassword(password, userId);
     }
 
     @Override
-    public void updatePassword(String password, Integer userId) {
-        userRepository.updatePassword(password, userId);
+    public boolean isUserPrivileged(Integer userId) {
+
+        User user = findById(userId);
+        Set<Role> roles = user.getRoles();
+
+        for (Role role : roles) {
+
+            if (role.getName().equals(RoleName.ROLE_MODERATOR)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

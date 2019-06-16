@@ -14,11 +14,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
-
-    User findByEmail(String email);
 
     @Modifying
     @Query("update User u set u.password = :password where u.id = :id")

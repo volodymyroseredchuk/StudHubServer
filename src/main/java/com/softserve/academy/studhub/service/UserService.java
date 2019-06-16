@@ -17,7 +17,9 @@ public interface UserService {
 
     List<User> getAll();
 
-    Optional<User> findByUsername(String username);
+    User findById(Integer id);
+
+    User findByUsername(String username);
 
     Boolean existsByUsername(String username);
 
@@ -26,5 +28,7 @@ public interface UserService {
     User findByEmail(String email);
 
     void updatePassword(String password, Integer userId);
+
+    boolean isUserPrivileged(Integer userId);
 
 }

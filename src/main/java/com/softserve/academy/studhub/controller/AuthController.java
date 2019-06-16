@@ -9,6 +9,7 @@ import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -72,23 +74,28 @@ public class AuthController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        // Creating user's account
-        User user = new User();
-        user.setFirstName(signUpRequest.getFirstName());
-        user.setLastName(signUpRequest.getLastName());
-        user.setUsername(signUpRequest.getUsername());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(encoder.encode(signUpRequest.getPassword()));
-        user.setCreationDate(LocalDate.now());
-        user.setImageUrl(signUpRequest.getImageUrl());
+        try {
+            // Creating user's account
+            User user = new User();
+            user.setFirstName(signUpRequest.getFirstName());
+            user.setLastName(signUpRequest.getLastName());
+            user.setUsername(signUpRequest.getUsername());
+            user.setEmail(signUpRequest.getEmail());
+            user.setPassword(encoder.encode(signUpRequest.getPassword()));
+            user.setCreationDate(LocalDate.now());
+            user.setImageUrl(signUpRequest.getImageUrl());
 
-        Set<Role> roles = new HashSet<>();
-        Role userRole = roleService.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Fail! -> Cause: User Role not found."));
-        roles.add(userRole);
+            Set<Role> roles = new HashSet<>();
+            Role userRole = roleService.findByName(RoleName.ROLE_USER);
+            roles.add(userRole);
 
-        user.setRoles(roles);
-        userService.add(user);
+            user.setRoles(roles);
+            userService.add(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<String>(e.getMessage(),
+                    HttpStatus.BAD_REQUEST);
+        }
 
         return ResponseEntity.ok().body("User registered successfully!");
     }
