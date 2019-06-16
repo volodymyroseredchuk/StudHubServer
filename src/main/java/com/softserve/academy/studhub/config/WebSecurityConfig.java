@@ -1,8 +1,8 @@
-package com.softserve.academy.studhub.security;
+package com.softserve.academy.studhub.config;
 
 import com.softserve.academy.studhub.security.jwt.JwtAuthEntryPoint;
 import com.softserve.academy.studhub.security.jwt.JwtAuthTokenFilter;
-import com.softserve.academy.studhub.security.services.UserDetailsServiceImpl;
+import com.softserve.academy.studhub.security.services.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,10 +39,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/api/auth/**",
-            "/tags/**",
             "/api/test/getAllAnswers/*",
-            "/question/*/answer"
+            "/signin",
+            "/signup",
+            "/forgot-password",
+            "/reset-password",
+            "/tags/**",
+            "/question/**"
+
             // other public endpoints of your API may be appended to this array
     };
 

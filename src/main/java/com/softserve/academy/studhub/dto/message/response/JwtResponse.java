@@ -1,12 +1,8 @@
 package com.softserve.academy.studhub.dto.message.response;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class JwtResponse {
 
     private String token;

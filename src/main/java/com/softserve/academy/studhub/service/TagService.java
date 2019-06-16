@@ -24,4 +24,6 @@ public interface TagService {
     List<Tag> findAll(Pageable pageable);
 
     TagsDTO findAllSorted(Pageable pageable);
+
+    List<Tag> reviewTagList(List<Tag> tagList);
 }
