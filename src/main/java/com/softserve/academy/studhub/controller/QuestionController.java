@@ -59,8 +59,7 @@ public class QuestionController {
     @PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
-        questionService.deleteById(questionId);
-        return ResponseEntity.ok("Question deleted");
+        return ResponseEntity.ok(questionService.deleteById(questionId));
     }
 
 

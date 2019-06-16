@@ -15,7 +15,7 @@ public interface IQuestionService {
 
     Question findById(Integer questionId);
 
-    void deleteById(Integer questionId);
+    String deleteById(Integer questionId);
 
     List<Question> sortByAge();
 

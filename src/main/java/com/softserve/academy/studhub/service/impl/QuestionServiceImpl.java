@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TagService;
@@ -55,7 +56,7 @@ public class QuestionServiceImpl implements IQuestionService {
     public Question findById(Integer questionId) {
         Optional<Question> result = repository.findById(questionId);
         if (!result.isPresent()) {
-            throw new IllegalArgumentException("Requested question does not exist");
+            throw new NotFoundException("Requested question does not exist");
         }
         return result.get();
 
@@ -63,17 +64,14 @@ public class QuestionServiceImpl implements IQuestionService {
 
     //need to change "if" block after answer dao& service ready.
     @Override
-    public void deleteById(Integer questionId) {
+    public String deleteById(Integer questionId) {
         Question questionToDelete = findById(questionId);
-        try {
-            if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
-                repository.deleteById(questionId);
-            } else {
-                throw new OperationNotSupportedException("This question already has answers and can not be deleted");
-            }
-        } catch (OperationNotSupportedException e) {
-            e.getMessage();
+
+        if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
+            repository.deleteById(questionId);
+            return "This question already has answers and can not be deleted";
         }
+        return "Question deleted";
     }
 
     @Override
