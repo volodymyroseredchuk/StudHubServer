@@ -1,6 +1,5 @@
 package com.softserve.academy.studhub.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;

@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class UserDto {
+public class UserDTO {
 
     private String firstName;
 

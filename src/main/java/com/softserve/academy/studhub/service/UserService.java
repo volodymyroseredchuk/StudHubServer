@@ -1,23 +1,22 @@
 package com.softserve.academy.studhub.service;
 
-import com.softserve.academy.studhub.dto.UserDto;
+import com.softserve.academy.studhub.dto.UserDTO;
 import com.softserve.academy.studhub.entity.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
-    User add(User user);
+    UserDTO add(User user);
 
-    UserDto get(Integer id);
+    UserDTO get(Integer id);
 
-    User update(User user);
+    UserDTO update(User user);
 
     void delete(Integer id);
 
-    List<User> getAll();
+    List<UserDTO> getAll();
 
-    UserDto findByUsername(String username);
+    UserDTO findByUsername(String username);
 
 }

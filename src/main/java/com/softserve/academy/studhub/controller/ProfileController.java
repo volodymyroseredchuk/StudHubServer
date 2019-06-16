@@ -1,6 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.dto.UserDto;
+import com.softserve.academy.studhub.dto.UserDTO;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class ProfileController {
     private final UserService userService;
 
     @GetMapping("/my")
-    public ResponseEntity<UserDto> gerCurrentUser() {
+    public ResponseEntity<UserDTO> gerCurrentUser() {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -36,7 +36,7 @@ public class ProfileController {
     }
 
     @GetMapping("/foreign/{id}")
-    public ResponseEntity<UserDto> getForeignUser(@PathVariable Integer id) {
+    public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(userService.get(id), HttpStatus.OK);
     }
