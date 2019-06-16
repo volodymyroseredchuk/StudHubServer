@@ -9,13 +9,13 @@ public interface IQuestionService {
 
     Question save(Question question);
 
-    Question update(int id, Question question);
+    Question update(Integer questionId, Question question);
 
     List<Question> findAll();
 
-    Question findById(int id);
+    Question findById(Integer questionId);
 
-    void deleteById(int id);
+    void deleteById(Integer questionId);
 
     List<Question> sortByAge();
 
