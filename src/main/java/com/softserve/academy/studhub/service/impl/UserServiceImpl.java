@@ -18,33 +18,30 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final ModelMapper modelMapper;
+
 
     @Override
-    public UserDTO add(User user) {
+    public User add(User user) {
 
-        return modelMapper.map(userRepository.saveAndFlush(user), UserDTO.class);
+        return userRepository.saveAndFlush(user);
     }
 
     @Override
-    public UserDTO get(Integer id) {
+    public User get(Integer id) {
 
         Optional<User> resultVote = userRepository.findById(id);
 
         if (resultVote.isPresent()) {
-
-            User user = resultVote.get();
-
-            return modelMapper.map(user, UserDTO.class);
+            return resultVote.get();
         } else {
             throw new IllegalArgumentException("User not found.");
         }
     }
 
     @Override
-    public UserDTO update(User user) {
+    public User update(User user) {
 
-        return modelMapper.map(userRepository.saveAndFlush(user), UserDTO.class);
+        return userRepository.saveAndFlush(user);
     }
 
     @Override
@@ -54,23 +51,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAll() {
+    public List<User> getAll() {
 
-        return userRepository.findAll().stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+        return userRepository.findAll();
     }
 
     @Override
-    public UserDTO findByUsername(String username) {
+    public User findByUsername(String username) {
 
         Optional<User> resultVote = userRepository.findByUsername(username);
 
         if (resultVote.isPresent()) {
-
-            User user = resultVote.get();
-
-            return modelMapper.map(user, UserDTO.class);
+            return resultVote.get();
         } else {
             throw new IllegalArgumentException("User not found.");
         }
