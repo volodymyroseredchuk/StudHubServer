@@ -111,19 +111,7 @@ CREATE TABLE `feedbacks` (
 
 LOCK TABLES `feedbacks` WRITE;
 /*!40000 ALTER TABLE `feedbacks` DISABLE KEYS */;
-INSERT INTO `feedbacks` VALUES
-(1,'The worst corrupted university in the whole universe',4,NULL,1,0,1),
-(2,'Not as bad as they say',3,NULL,1,0,2),
-(3,'Totally liked that!',5,NULL,1,0,3),
-(4,'So far so good.',4,NULL,2,0,4),
-(5,'To pass exam you need only 0.5 bottle of vodka. The funniest learning experience ever)',5,NULL,3,0,1),
-(6,'Don`t know what to say',2,NULL,4,0,2),
-(7,'As a lecturer he is the worst, but as a person he\'s good',3,1,NULL,0,3),
-(8,'bad_bad_bad_bad_bad_bad_bad bad_bad_bad_bad_bad_bad_bad_bad_bad',1,2,NULL,0,4),
-(9,'good',5,2,NULL,0,1),
-(10,'Sample text',4,4,NULL,0,2),
-(11,'Petuch',3,6,NULL,0,3),
-(12,'ggg',4,1,NULL,0,4);
+INSERT INTO `feedbacks` VALUES (1,'The worst corrupted university in the whole universe',4,NULL,1,0,1),(2,'Not as bad as they say',3,NULL,1,0,2),(3,'Totally liked that!',5,NULL,1,0,3),(4,'So far so good.',4,NULL,2,0,4),(5,'To pass exam you need only 0.5 bottle of vodka. The funniest learning experience ever)',5,NULL,3,0,1),(6,'Don`t know what to say',2,NULL,4,0,2),(7,'As a lecturer he is the worst, but as a person he\'s good',3,1,NULL,0,3),(8,'bad_bad_bad_bad_bad_bad_bad bad_bad_bad_bad_bad_bad_bad_bad_bad',1,2,NULL,0,4),(9,'good',5,2,NULL,0,1),(10,'Sample text',4,4,NULL,0,2),(11,'Petuch',3,6,NULL,0,3),(12,'ggg',4,1,NULL,0,4);
 /*!40000 ALTER TABLE `feedbacks` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -134,21 +122,8 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sa`@`%`*/ /*!50003 TRIGGER `recalcFeedbackMarkInsert` BEFORE INSERT ON `feedbacks` FOR EACH ROW BEGIN
-IF NEW.`teacher_id` IS NOT NULL THEN
-UPDATE `teachers`
-SET `mark` = (SELECT (SUM(`mark`) + NEW.`mark`) / (COUNT(*) + 1)FROM `feedbacks`
-  WHERE `feedbacks`.`teacher_id` = NEW.`teacher_id`
-  AND `feedbacks`.`rate` > -5 )
-WHERE `teachers`.`id`  = NEW.`teacher_id`;
-ELSEIF NEW.`university_id` IS NOT NULL THEN
-UPDATE `universities`
-SET `mark` = (SELECT (SUM(`mark`) + NEW.`mark`) / (COUNT(*) + 1)FROM `feedbacks`
-  WHERE `feedbacks`.`university_id` = NEW.`university_id`
-  AND `feedbacks`.`rate` > -5 )
-WHERE `universities`.`id`  = NEW.`university_id`;
-END IF;
-END */;
+/*!50003 CREATE*/  /*!50003 TRIGGER `recalcFeedbackMarkInsert` BEFORE INSERT ON `feedbacks` FOR EACH ROW BEGIN IF NEW.`teacher_id` IS NOT NULL THEN UPDATE `teachers` SET `mark` = (SELECT (SUM(`mark`) + NEW.`mark`) / (COUNT(*) + 1)FROM `feedbacks` WHERE `feedbacks`.`teacher_id` = NEW.`teacher_id` AND `feedbacks`.`rate` > -5 ) WHERE `teachers`.`id`  = NEW.`teacher_id`; ELSEIF NEW.`university_id` IS NOT NULL THEN UPDATE `universities` SET `mark` = (SELECT (SUM(`mark`) + NEW.`mark`) / (COUNT(*) + 1)FROM `feedbacks` WHERE `feedbacks`.`university_id` = NEW.`university_id` AND `feedbacks`.`rate` > -5 ) WHERE `universities`.`id`  = NEW.`university_id`; END IF; END */;
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -161,25 +136,39 @@ END */;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sa`@`%`*/ /*!50003 TRIGGER `recalcFeedbackMarkUpdate` BEFORE UPDATE ON `feedbacks` FOR EACH ROW BEGIN
-IF NEW.`teacher_id` IS NOT NULL THEN
-UPDATE `teachers`
-SET `mark` = (SELECT (SUM(`mark`) - OLD.`mark` + NEW.`mark`) / (COUNT(*))FROM `feedbacks`
-  WHERE `feedbacks`.`teacher_id` = NEW.`teacher_id`
-  AND `feedbacks`.`rate` > -5 )
-WHERE `teachers`.`id`  = NEW.`teacher_id`;
-ELSEIF NEW.`university_id` IS NOT NULL THEN
-UPDATE `universities`
-SET `mark` = (SELECT (SUM(`mark`) - OLD.`mark` + NEW.`mark`) / (COUNT(*))FROM `feedbacks`
-  WHERE `feedbacks`.`university_id` = NEW.`university_id`
-  AND `feedbacks`.`rate` > -5 )
-WHERE `universities`.`id`  = NEW.`university_id`;
-END IF;
-END */;
+/*!50003 CREATE*/  /*!50003 TRIGGER `recalcFeedbackMarkUpdate` BEFORE UPDATE ON `feedbacks` FOR EACH ROW BEGIN IF NEW.`teacher_id` IS NOT NULL THEN UPDATE `teachers` SET `mark` = (SELECT (SUM(`mark`) - OLD.`mark` + NEW.`mark`) / (COUNT(*))FROM `feedbacks` WHERE `feedbacks`.`teacher_id` = NEW.`teacher_id` AND `feedbacks`.`rate` > -5 ) WHERE `teachers`.`id`  = NEW.`teacher_id`; ELSEIF NEW.`university_id` IS NOT NULL THEN UPDATE `universities` SET `mark` = (SELECT (SUM(`mark`) - OLD.`mark` + NEW.`mark`) / (COUNT(*))FROM `feedbacks` WHERE `feedbacks`.`university_id` = NEW.`university_id` AND `feedbacks`.`rate` > -5 ) WHERE `universities`.`id`  = NEW.`university_id`; END IF; END */;
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `password_reset_token`
+--
+
+DROP TABLE IF EXISTS `password_reset_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `password_reset_token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(200) DEFAULT NULL,
+  `expiry_date` date DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `password_reset_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `password_reset_token`
+--
+
+LOCK TABLES `password_reset_token` WRITE;
+/*!40000 ALTER TABLE `password_reset_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `password_reset_token` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `questions`
@@ -407,7 +396,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','123','tarasgl',NULL),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','123','olozh',NULL),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','admin','admin',NULL),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','123','avash',NULL);
+INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -451,17 +440,7 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sa`@`%`*/ /*!50003 TRIGGER `recalcVoteRate` BEFORE INSERT ON `votes` FOR EACH ROW BEGIN
-IF NEW.`answer_id` IS NOT NULL THEN
-UPDATE `answers`
-	SET `rate` = `rate` + NEW.`value`
-    WHERE `id` = NEW.`answer_id`;
-ELSEIF NEW.`feedback_id` IS NOT NULL THEN
-UPDATE `feedbacks`
-	SET `rate` = `rate` + NEW.`value`
-    WHERE `id` = NEW.`feedback_id`;
-END IF;
-END */;
+/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRate` BEFORE INSERT ON `votes` FOR EACH ROW BEGIN IF NEW.`answer_id` IS NOT NULL THEN UPDATE `answers` SET `rate` = `rate` + NEW.`value` WHERE `id` = NEW.`answer_id`; ELSEIF NEW.`feedback_id` IS NOT NULL THEN UPDATE `feedbacks` SET `rate` = `rate` + NEW.`value` WHERE `id` = NEW.`feedback_id`; END IF; END */;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -474,17 +453,7 @@ END */;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 CREATE*/ /*!50017 DEFINER=`sa`@`%`*/ /*!50003 TRIGGER `recalcVoteRateUpdate` BEFORE UPDATE ON `votes` FOR EACH ROW BEGIN
-IF NEW.`answer_id` IS NOT NULL THEN
-UPDATE `answers`
-	SET `rate` = `rate` - OLD.`value` + NEW.`value`
-    WHERE `id` = NEW.`answer_id`;
-ELSEIF NEW.`feedback_id` IS NOT NULL THEN
-UPDATE `feedbacks`
-	SET `rate` = `rate` - OLD.`value` + NEW.`value`
-    WHERE `id` = NEW.`feedback_id`;
-END IF;
-END */;
+/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRateUpdate` BEFORE UPDATE ON `votes` FOR EACH ROW BEGIN IF NEW.`answer_id` IS NOT NULL THEN UPDATE `answers` SET `rate` = `rate` - OLD.`value` + NEW.`value` WHERE `id` = NEW.`answer_id`; ELSEIF NEW.`feedback_id` IS NOT NULL THEN UPDATE `feedbacks` SET `rate` = `rate` - OLD.`value` + NEW.`value` WHERE `id` = NEW.`feedback_id`; END IF; END */;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -499,4 +468,4 @@ END */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-11 17:04:06
+-- Dump completed on 2019-06-14 21:19:27
