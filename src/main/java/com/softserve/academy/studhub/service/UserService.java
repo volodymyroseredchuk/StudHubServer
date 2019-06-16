@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service;
 
+import com.softserve.academy.studhub.dto.UserDto;
 import com.softserve.academy.studhub.entity.User;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface UserService {
 
     User add(User user);
 
-    User get(Integer id);
+    UserDto get(Integer id);
 
     User update(User user);
 
@@ -17,6 +18,6 @@ public interface UserService {
 
     List<User> getAll();
 
-    User findByUsername(String username);
+    UserDto findByUsername(String username);
 
 }

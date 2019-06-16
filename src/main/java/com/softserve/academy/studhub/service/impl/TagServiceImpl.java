@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class TagServiceImpl implements TagService {
+
     private final TagRepository tagRepository;
 
     public TagServiceImpl(TagRepository tagRepository) {
