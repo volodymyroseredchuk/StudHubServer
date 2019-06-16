@@ -1,9 +1,9 @@
 package com.softserve.academy.studhub.service;
 
-import com.softserve.academy.studhub.dto.AnswerDTO;
+import com.softserve.academy.studhub.entity.Answer;
 
 import java.util.List;
 
 public interface AnswerService {
-    List<AnswerDTO> findAllAnswersByQuestionId(Integer questionId);
+    List<Answer> findAllAnswersByQuestionId(Integer questionId);
 }

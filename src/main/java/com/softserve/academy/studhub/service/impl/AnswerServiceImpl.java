@@ -20,12 +20,10 @@ public class AnswerServiceImpl implements AnswerService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<AnswerDTO> findAllAnswersByQuestionId(Integer questionId) {
+    public List<Answer> findAllAnswersByQuestionId(Integer questionId) {
         List<Answer> answers = answerRepository.findByQuestionIdOrderByCreationDateAsc(questionId);
-        List<AnswerDTO> answerDTOS = answers.stream()
-                .map(answer -> modelMapper.map(answer, AnswerDTO.class))
-                .collect(Collectors.toList());
 
-        return answerDTOS;
+
+        return answers;
     }
 }
