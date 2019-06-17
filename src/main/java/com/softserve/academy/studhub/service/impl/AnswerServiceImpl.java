@@ -55,6 +55,7 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setCreationDate(LocalDateTime.now());
         answer.setComment(new ArrayList<Comment>());
         answer.setApproved(false);
+        answer.setRate(0);
         answer.setQuestion(questionRepository.findById(questionId).get());
         answer.setUser(userRepository.findByUsername(username).get());
         return answerRepository.saveAndFlush(answer);

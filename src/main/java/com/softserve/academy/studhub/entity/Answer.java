@@ -51,7 +51,7 @@ public class Answer {
     private LocalDateTime creationDate;
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "rate")
+    @Column(name = "rate", columnDefinition = "int default 0")
     private Integer rate;
 
 }
