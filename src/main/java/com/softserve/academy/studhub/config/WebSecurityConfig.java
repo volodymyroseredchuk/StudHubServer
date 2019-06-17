@@ -42,7 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/sock/**",
             "/home",
             "/addVote",
-            "/tags/**"
+            "/tags/**",
+            "/getSocketToken"
             // other public endpoints of your API may be appended to this array
     };
 

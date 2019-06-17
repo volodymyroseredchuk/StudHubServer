@@ -1,19 +1,19 @@
 package com.softserve.academy.studhub.coders;
 
 import com.google.gson.Gson;
-import com.softserve.academy.studhub.entity.SocketMessage;
+import com.softserve.academy.studhub.entity.SocketToken;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-public class SocketMessageDecoder implements Decoder.Text<SocketMessage> {
+public class SocketTokenDecoder implements Decoder.Text<SocketToken> {
 
     private static Gson GSON = new Gson();
 
     @Override
-    public SocketMessage decode(String s) throws DecodeException {
-        return GSON.fromJson(s, SocketMessage.class);
+    public SocketToken decode(String s) throws DecodeException {
+        return GSON.fromJson(s, SocketToken.class);
     }
 
     @Override
@@ -30,5 +30,4 @@ public class SocketMessageDecoder implements Decoder.Text<SocketMessage> {
     public void destroy() {
 
     }
-
 }
