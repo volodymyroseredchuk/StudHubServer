@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +39,12 @@ public class AnswerController {
     }
 
     @PostMapping("/question/{questionId}/answer")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> createAnswer(@Valid @RequestBody AnswerCreateDTO answerCreateDTO,
-                                  @PathVariable Integer questionId,
-                                  @RequestHeader("Bearer") String token){
+                                          @PathVariable Integer questionId,
+                                          Principal principal){
 
-        String username = jwtProvider.getUserNameFromJwtToken(token);
+        String username = principal.getName();
 
         return ResponseEntity.ok(modelMapper.map(
                 answerService.save(answerCreateDTO, questionId, username), AnswerDTO.class)
@@ -51,7 +53,7 @@ public class AnswerController {
 
 
     @DeleteMapping("/question/{questionId}/answer/{answerId}/delete")
-    //@PreAuthorize("hasRole('ADMIN') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == authentication.getName()")
+    @PreAuthorize("hasRole('ADMIN') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
     public ResponseEntity<String> deleteAnswer(@PathVariable Integer answerId){
 
         answerService.deleteById(answerId);
