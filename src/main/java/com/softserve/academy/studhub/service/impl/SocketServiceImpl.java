@@ -1,49 +1,57 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.coders.SocketMessageEncoder;
+import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.service.SocketService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.websocket.EncodeException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SocketServiceImpl implements SocketService {
 
-    private static List<WebSocketSession> SESSION_LIST = new ArrayList<>();
+    private static Map<Integer, WebSocketSession> sessionIdMap = new HashMap<>();
+
+    private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
 
     @Override
-    public void addSession(WebSocketSession session) {
-        SESSION_LIST.add(session);
+    public void addSession(Integer id, WebSocketSession session) {
+        sessionIdMap.put(id, session);
     }
 
     @Override
-    public void sendNotification(WebSocketSession session, TextMessage message) {
-        for (WebSocketSession s : SESSION_LIST) {
-            if (s != session) {
-                try {
-                    s.sendMessage(new TextMessage(message.getPayload()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    public void sendNotification(Integer userId, TextMessage message) throws IOException {
+        sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
     }
 
     @Override
-    public void sendGreetings(WebSocketSession session, TextMessage message) {
-        try {
-            session.sendMessage(new TextMessage(message.getPayload()));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void sendGreetings(WebSocketSession session, Integer textId) throws EncodeException, IOException {
+
+        /*-----------------------*/
+        SocketMessage connMsg = new SocketMessage("Connected successfully.");
+        SocketMessage noConnMsg = new SocketMessage("Connected unsuccessfully. Access denied.");
+        /*-----------------------*/
+
+        if (textId.equals(1)) {
+            session.sendMessage(new TextMessage(messageEncoder.encode(connMsg)));
+        } else {
+            session.sendMessage(new TextMessage(messageEncoder.encode(noConnMsg)));
         }
+
     }
 
     @Override
     public void removeSession(WebSocketSession session) {
-        SESSION_LIST.remove(session);
+        sessionIdMap.values().remove(session);
     }
 
+    @Override
+    public void sendCustomMessage(WebSocketSession session, String msg) throws EncodeException, IOException {
+        SocketMessage message = new SocketMessage(msg);
+        session.sendMessage(new TextMessage(messageEncoder.encode(message)));
+    }
 }

@@ -1,15 +1,18 @@
 package com.softserve.academy.studhub.entity;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
-@Data
-@Builder
+@Getter
+@Setter
+@EqualsAndHashCode
 @ToString
 public class SocketMessage {
 
-    private String name;
+    private String name = "Ok";
     private String text;
+
+    public SocketMessage(String text) {
+        this.text = text;
+    }
 
 }
