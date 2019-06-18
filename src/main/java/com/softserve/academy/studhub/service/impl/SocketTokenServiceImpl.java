@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import javax.websocket.EncodeException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SocketTokenServiceImpl implements SocketTokenService {
 
-    private static Map<String, Integer> tokenIdMap = new HashMap<>();
+    private static Map<String, Integer> tokenIdMap = new ConcurrentHashMap<>();
     private static LocalDate LAST_CLEAR_DATE = LocalDate.now();
     private static Period CLEANING_PERIOD = Period.ofDays(15);
 
@@ -39,6 +39,7 @@ public class SocketTokenServiceImpl implements SocketTokenService {
 
         if(comparePeriods(Period.between(LAST_CLEAR_DATE, LocalDate.now()), CLEANING_PERIOD)) {
             tokenIdMap.clear();
+            LAST_CLEAR_DATE = LocalDate.now();
         }
 
         String generatedString = RandomStringUtils.random(20, true, true);

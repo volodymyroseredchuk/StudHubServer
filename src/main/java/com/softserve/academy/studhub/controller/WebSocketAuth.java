@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.websocket.EncodeException;
+import java.text.ParseException;
 
 
 @RestController
@@ -28,9 +29,9 @@ public class WebSocketAuth {
             String token = tokenService.generateToken(Integer.parseInt(id));
             return ResponseEntity.status(HttpStatus.OK).body(token);
 
-        } catch (IllegalArgumentException | NullPointerException e){
+        } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (EncodeException e) {
+        } catch (EncodeException | NullPointerException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Generating token error.");
         }
 
