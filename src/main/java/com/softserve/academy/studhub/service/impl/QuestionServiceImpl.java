@@ -8,12 +8,14 @@ import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TagService;
 import com.softserve.academy.studhub.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class QuestionServiceImpl implements IQuestionService {
@@ -94,5 +96,10 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public List<Question> sortByTag(List<Tag> tags) {
         return repository.findAllByTagListInOrderByCreationDateAsc(tags);
+    }
+
+    @Override
+    public Page<Question> search(String[] keywords, Pageable pageable) {
+        return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
 }

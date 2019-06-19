@@ -49,6 +49,32 @@ INSERT INTO `answers` VALUES (1,_binary '','test','2019-06-03 00:00:00',1,2,-1)
 UNLOCK TABLES;
 
 --
+-- Table structure for table `channels`
+--
+
+DROP TABLE IF EXISTS `channels`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `channels` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subject_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `subject_id_idx` (`subject_id`),
+  CONSTRAINT `subject_id` FOREIGN KEY (`subject_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `channels`
+--
+
+LOCK TABLES `channels` WRITE;
+/*!40000 ALTER TABLE `channels` DISABLE KEYS */;
+INSERT INTO `channels` VALUES (1,1);
+/*!40000 ALTER TABLE `channels` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `comments`
 --
 
@@ -186,6 +212,7 @@ CREATE TABLE `questions` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKjoo8hp6d3gfwctr68dl2iaemj` (`user_id`),
+  FULLTEXT KEY `questions_search` (`title`,`body`),
   CONSTRAINT `FKjoo8hp6d3gfwctr68dl2iaemj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -239,7 +266,7 @@ CREATE TABLE `roles` (
   `name` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_nb4h0p6txrmfc0xbrd1kglp9t` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,9 +275,39 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (2,'ROLE_ADMIN'),(1,'ROLE_USER'),(3, 'ROLE_MODERATOR');
+INSERT INTO `roles` VALUES (2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(1,'ROLE_USER');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `subscriptions`
+--
+
+DROP TABLE IF EXISTS `subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `subscriptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `channel_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id_idx` (`user_id`),
+  KEY `channel_id_idx` (`channel_id`),
+  CONSTRAINT `channel_id` FOREIGN KEY (`channel_id`) REFERENCES `channels` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `subscriptions`
+--
+
+LOCK TABLES `subscriptions` WRITE;
+/*!40000 ALTER TABLE `subscriptions` DISABLE KEYS */;
+INSERT INTO `subscriptions` VALUES (1,1,1);
+/*!40000 ALTER TABLE `subscriptions` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 --
 -- Table structure for table `tags`
@@ -440,7 +497,21 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRate` BEFORE INSERT ON `votes` FOR EACH ROW BEGIN IF NEW.`answer_id` IS NOT NULL THEN UPDATE `answers` SET `rate` = `rate` + NEW.`value` WHERE `id` = NEW.`answer_id`; ELSEIF NEW.`feedback_id` IS NOT NULL THEN UPDATE `feedbacks` SET `rate` = `rate` + NEW.`value` WHERE `id` = NEW.`feedback_id`; END IF; END */;
+
+/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRate` BEFORE INSERT ON `votes` FOR EACH ROW BEGIN
+IF NEW.answer_id IS NOT NULL THEN
+UPDATE answers SET rate = 0 WHERE id = NEW.answer_id AND rate IS NULL;
+UPDATE answers
+  SET rate = rate + NEW.value
+    WHERE id = NEW.answer_id;
+ELSEIF NEW.feedback_id IS NOT NULL THEN
+UPDATE feedbacks SET rate = 0 WHERE id = NEW.feedback_id AND rate IS NULL;
+UPDATE feedbacks
+  SET rate = rate + NEW.value
+    WHERE id = NEW.feedback_id;
+END IF;
+END */;
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -453,7 +524,21 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRateUpdate` BEFORE UPDATE ON `votes` FOR EACH ROW BEGIN IF NEW.`answer_id` IS NOT NULL THEN UPDATE `answers` SET `rate` = `rate` - OLD.`value` + NEW.`value` WHERE `id` = NEW.`answer_id`; ELSEIF NEW.`feedback_id` IS NOT NULL THEN UPDATE `feedbacks` SET `rate` = `rate` - OLD.`value` + NEW.`value` WHERE `id` = NEW.`feedback_id`; END IF; END */;
+
+/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRateUpdate` BEFORE UPDATE ON `votes` FOR EACH ROW BEGIN
+IF NEW.answer_id IS NOT NULL THEN
+UPDATE answers SET rate = 0 WHERE id = NEW.answer_id AND rate IS NULL;
+UPDATE answers
+  SET rate = rate - OLD.value + NEW.value
+    WHERE id = NEW.answer_id;
+ELSEIF NEW.feedback_id IS NOT NULL THEN
+UPDATE feedbacks SET rate = 0 WHERE id = NEW.feedback_id AND rate IS NULL;
+UPDATE feedbacks
+  SET rate = rate - OLD.value + NEW.value
+    WHERE id = NEW.feedback_id;
+END IF;
+END */;
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
