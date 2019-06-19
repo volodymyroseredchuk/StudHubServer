@@ -19,30 +19,24 @@ public class ProfileController {
 
     private final ModelMapper modelMapper;
 
-    @CrossOrigin(exposedHeaders="Access-Control-Allow-Origin")
+    @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping("/my")
     public ResponseEntity<UserDTO> gerCurrentUser() {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        String username;
-
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+        String username = ((UserDetails) principal).getUsername();
 
         return new ResponseEntity<>(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
+            map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
     }
 
-    @CrossOrigin(exposedHeaders="Access-Control-Allow-Origin")
+    @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping("/foreign/{id}")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(modelMapper.
-                map(userService.get(id), UserDTO.class), HttpStatus.OK);
+            map(userService.get(id), UserDTO.class), HttpStatus.OK);
     }
 
 }
