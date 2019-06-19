@@ -13,6 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>studhub</name>
     <description>RESTfull StudHub Application</description>
+    <packaging>war</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -183,6 +184,14 @@
             </plugin>
 
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
                 <version>1.0.0</version>
@@ -195,7 +204,7 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>src/main/resources/application.properties</file>
+                                <file>application.properties</file>
                             </files>
                         </configuration>
                     </execution>
@@ -207,7 +216,7 @@
                         </goals>
                         <configuration>
                             <files>
-                                <file>src/main/resources/application.properties</file>
+                                <file>application.properties</file>
                             </files>
                         </configuration>
                     </execution>
