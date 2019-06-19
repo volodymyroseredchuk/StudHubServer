@@ -5,7 +5,6 @@ import com.softserve.academy.studhub.entity.SocketToken;
 import com.softserve.academy.studhub.service.SocketTokenService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Service;
-
 import javax.websocket.EncodeException;
 import java.time.LocalDate;
 import java.time.Period;

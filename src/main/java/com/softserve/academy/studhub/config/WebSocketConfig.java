@@ -23,20 +23,9 @@ public class WebSocketConfig  implements WebSocketConfigurer {
 
     private SubscriptionService subscriptionService;
 
-    @Bean
-    public ServletServerContainerFactoryBean createWebSocketConatainer() {
-
-        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxBinaryMessageBufferSize(1024000);
-        return container;
-
-    }
-
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new WebSocketHandler(socketService, tokenService, subscriptionService), "/sock").setAllowedOrigins("*");
     }
-
-
 
 }
