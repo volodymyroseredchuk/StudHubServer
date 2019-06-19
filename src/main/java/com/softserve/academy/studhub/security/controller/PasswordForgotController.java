@@ -9,6 +9,7 @@ import com.softserve.academy.studhub.security.services.PasswordResetTokenService
 import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,9 @@ public class PasswordForgotController {
     private final UserService userService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final EmailService emailService;
+
+    @Value("${client.host}")
+    private String clientHost;
 
     public PasswordForgotController(UserService userService, PasswordResetTokenService passwordResetTokenService,
                                     EmailService emailService) {
@@ -61,8 +65,7 @@ public class PasswordForgotController {
             model.put("token", token);
             model.put("user", user);
             model.put("signature", "https://studhub.com");
-            String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-            model.put("resetUrl", url + "/reset-password?token=" + token.getToken());
+            model.put("resetUrl", clientHost + "/password_reset?token=" + token.getToken());
             mail.setModel(model);
             emailService.sendEmail(mail);
 

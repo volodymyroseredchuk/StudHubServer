@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,12 +64,12 @@ public class AuthController {
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 
         if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity<String>("Fail -> Username is already taken!",
+            return new ResponseEntity<>("Fail -> Username is already taken!",
                     HttpStatus.BAD_REQUEST);
         }
 
         if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity<String>("Fail -> Email is already in use!",
+            return new ResponseEntity<>("Fail -> Email is already in use!",
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -82,7 +81,8 @@ public class AuthController {
             user.setUsername(signUpRequest.getUsername());
             user.setEmail(signUpRequest.getEmail());
             user.setPassword(encoder.encode(signUpRequest.getPassword()));
-            user.setCreationDate(LocalDate.now());
+            user.setCreationDate(signUpRequest.getCreationDate());
+            user.setUniversity(signUpRequest.getUniversity());
             user.setImageUrl(signUpRequest.getImageUrl());
 
             Set<Role> roles = new HashSet<>();
@@ -93,10 +93,10 @@ public class AuthController {
             userService.add(user);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new ResponseEntity<String>(e.getMessage(),
+            return new ResponseEntity<>(e.getMessage(),
                     HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok().body("User registered successfully!");
+        return new ResponseEntity<>("User has been successfully registered", HttpStatus.OK);
     }
 }

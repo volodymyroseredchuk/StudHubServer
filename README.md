@@ -30,6 +30,9 @@ spring.mail.protocol=smtp
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 mail.debug=true
+
+#Client Properties
+client.host=http://localhost:4200
 ```
 
 ## Running Application
