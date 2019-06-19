@@ -3,7 +3,6 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
-import com.softserve.academy.studhub.repository.RoleRepository;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 import java.util.Set;
 
 @Service
@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
 
+
     public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
@@ -26,30 +27,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(User user) {
+
         return userRepository.saveAndFlush(user);
     }
 
     @Override
-    public Optional<User> get(Integer id) {
-        return userRepository.findById(id);
+    public User get(Integer id) {
+
+        Optional<User> resultVote = userRepository.findById(id);
+
+        if (resultVote.isPresent()) {
+            return resultVote.get();
+        } else {
+            throw new IllegalArgumentException("User not found.");
+        }
     }
 
     @Override
     public User update(User user) {
+
         return userRepository.saveAndFlush(user);
     }
 
     @Override
     public void delete(Integer id) {
+
         userRepository.deleteById(id);
     }
 
     @Override
     public List<User> getAll() {
+
         return userRepository.findAll();
     }
 
     @Override
+
     public User findById(Integer id) {
 
         Optional<User> user = userRepository.findById(id);
