@@ -4,8 +4,8 @@ import javax.websocket.EncodeException;
 
 public interface SocketTokenService {
 
-    boolean checkAccess(String token);
-    String generateToken() throws EncodeException;
+    Integer checkAccess(String token);
+    String generateToken(Integer id) throws EncodeException;
     void removeToken(String token);
 
 }

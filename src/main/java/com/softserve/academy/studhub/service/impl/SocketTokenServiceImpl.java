@@ -4,43 +4,45 @@ import com.softserve.academy.studhub.coders.SocketTokenEncoder;
 import com.softserve.academy.studhub.entity.SocketToken;
 import com.softserve.academy.studhub.service.SocketTokenService;
 import org.apache.commons.lang.RandomStringUtils;
-
+import org.springframework.stereotype.Service;
 import javax.websocket.EncodeException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Service
 public class SocketTokenServiceImpl implements SocketTokenService {
 
-    private static List<String> tokenList = new ArrayList<>();
+    private static Map<String, Integer> tokenIdMap = new ConcurrentHashMap<>();
     private static LocalDate LAST_CLEAR_DATE = LocalDate.now();
     private static Period CLEANING_PERIOD = Period.ofDays(15);
 
     private SocketTokenEncoder encoder = new SocketTokenEncoder();
 
     @Override
-    public boolean checkAccess(String token) {
+    public Integer checkAccess(String token) {
 
-        for(String t : tokenList) {
-            if (t.equals(token)) {
-                removeToken(t);
-                return true;
-            }
+        try {
+            Integer id = tokenIdMap.get(token);
+            removeToken(token);
+            return id;
+        } catch (NullPointerException e) {
+            return 0;
         }
-        return false;
 
     }
 
     @Override
-    public String generateToken() throws EncodeException {
+    public String generateToken(Integer id) throws EncodeException {
 
         if(comparePeriods(Period.between(LAST_CLEAR_DATE, LocalDate.now()), CLEANING_PERIOD)) {
-            tokenList.clear();
+            tokenIdMap.clear();
+            LAST_CLEAR_DATE = LocalDate.now();
         }
 
         String generatedString = RandomStringUtils.random(20, true, true);
-        tokenList.add(generatedString);
+        tokenIdMap.put(generatedString, id);
 
         SocketToken socketToken = new SocketToken(generatedString);
 
@@ -49,7 +51,7 @@ public class SocketTokenServiceImpl implements SocketTokenService {
 
     @Override
     public void removeToken(String token) {
-        tokenList.remove(token);
+        tokenIdMap.remove(token);
     }
 
     private boolean comparePeriods(Period p1, Period p2) {
