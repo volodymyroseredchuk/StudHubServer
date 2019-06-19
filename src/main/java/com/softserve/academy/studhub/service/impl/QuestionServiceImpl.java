@@ -6,6 +6,8 @@ import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TagService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.naming.OperationNotSupportedException;
@@ -84,5 +86,10 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public List<Question> sortByTag(List<Tag> tags) {
         return repository.findAllByTagListInOrderByCreationDateAsc(tags);
+    }
+
+    @Override
+    public Page<Question> search(String[] keywords, Pageable pageable) {
+        return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
 }

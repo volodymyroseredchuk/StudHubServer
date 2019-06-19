@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +30,11 @@ public class QuestionController {
     public List<Question> getAllQuestions() {
 
         return questionService.sortByAge();
+    }
+
+    @GetMapping("/search/{keywords}")
+    public List<Question> getSearched(@PathVariable String[] keywords, Pageable pageable) {
+        return questionService.search(keywords, pageable).getContent();
     }
 
     @GetMapping("/{questionId}")
