@@ -29,7 +29,7 @@ public class AnswerController {
 
 
     @GetMapping("/questions/{questionId}/answers")
-    public ResponseEntity<List<AnswerDTO>> getAnswersByQuestionId(@PathVariable Integer questionId){
+    public ResponseEntity<List<AnswerDTO>> getAnswersByQuestionId(@PathVariable Integer questionId) {
         List<Answer> answers = answerService.findAllByQuestionId(questionId);
         List<AnswerDTO> answerDTOS = answers.stream()
                 .map(answer -> modelMapper.map(answer, AnswerDTO.class))
@@ -43,7 +43,7 @@ public class AnswerController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> createAnswer(@Valid @RequestBody AnswerCreateDTO answerCreateDTO,
                                           @PathVariable Integer questionId,
-                                          Principal principal){
+                                          Principal principal) {
 
         String username = principal.getName();
 
@@ -55,7 +55,7 @@ public class AnswerController {
 
     @DeleteMapping("/questions/{questionId}/answers/{answerId}/delete")
     @PreAuthorize("hasRole('ADMIN') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
-    public ResponseEntity<String> deleteAnswer(@PathVariable Integer answerId){
+    public ResponseEntity<String> deleteAnswer(@PathVariable Integer answerId) {
 
         answerService.deleteById(answerId);
 
@@ -65,14 +65,14 @@ public class AnswerController {
 
     @PutMapping("/questions/{questionId}/answers/{answerId}/approve")
     @PreAuthorize("@answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
-    public ResponseEntity<?> setApprovedAnswer (@PathVariable Integer answerId,
-                                                @RequestBody Boolean approved) {
+    public ResponseEntity<?> setApprovedAnswer(@PathVariable Integer answerId,
+                                               @RequestBody Boolean approved) {
         AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();
         answerApproveDTO.setAnswerId(answerId);
         answerApproveDTO.setApproved(approved);
         try {
             return ResponseEntity.ok(answerService.approve(answerApproveDTO));
-        } catch(IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
