@@ -25,7 +25,9 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void sendNotification(Integer userId, TextMessage message) throws IOException {
-        sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
+        if (sessionIdMap.containsKey(userId)) {
+            sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
+        }
     }
 
     @Override

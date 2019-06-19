@@ -8,11 +8,11 @@ import lombok.*;
 @ToString
 public class SocketMessage {
 
-    private String name = "Ok";
-    private String text;
+    private String subject_type = "Ok";
+    private String id;
 
-    public SocketMessage(String text) {
-        this.text = text;
+    public SocketMessage(String id) {
+        this.id = id;
     }
 
 }

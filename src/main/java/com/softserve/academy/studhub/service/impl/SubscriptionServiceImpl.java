@@ -12,6 +12,7 @@ import org.springframework.web.socket.TextMessage;
 
 import javax.websocket.EncodeException;
 import java.io.IOException;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -41,12 +42,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void handleMessage(SocketMessage msg) {
         try {
-            Integer subjectId = Integer.parseInt(msg.getText());
-            Integer id = Integer.parseInt(msg.getName());
+            Integer subjectId = Integer.parseInt(msg.getId());
+            List<Integer> userId = subscriptionRepository.findUserIdByChannelQuestionId(subjectId);
 
-            if (subscriptionRepository.findSubscriptionByChannelIdAndUserId(subjectId, id).isPresent()) {
-                SocketMessageEncoder encoder = new SocketMessageEncoder();
-                SocketMessage message = new SocketMessage("You've got a new answer for your question.");
+            SocketMessageEncoder encoder = new SocketMessageEncoder();
+            SocketMessage message = new SocketMessage("You've got a new answer for your question.");
+            for (Integer id : userId) {
                 socketService.sendNotification(id, new TextMessage(encoder.encode(message)));
             }
 
