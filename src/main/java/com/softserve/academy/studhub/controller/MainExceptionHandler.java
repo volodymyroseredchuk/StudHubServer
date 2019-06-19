@@ -17,15 +17,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class MainExceptionHandler extends ResponseEntityExceptionHandler {
 
+    // This is for unauthorised access errors
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(
             AccessDeniedException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.UNAUTHORIZED,
-                "You don't have rights to access this resource");
+                ErrorMessage.NOT_AUTHORISED);
         ex.printStackTrace();
         return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
 
+    // Custom response if entity not found
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -33,6 +35,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
+    //This is optional. If no use - delete
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -40,6 +43,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
+    // This is for all other errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.SERVER_ERROR);
@@ -47,6 +51,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // This one for wrong url params (letter instead of number etc)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleIllegalArgument(MethodArgumentTypeMismatchException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -54,6 +59,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
+    // This is supposed to catch errors thrown by @Valid, @NotNull etc.
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
