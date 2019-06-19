@@ -16,15 +16,15 @@ public class ErrorDetails {
     private int errorCode;
     private String errorDetail;
     private String message;
-    private Throwable cause;
 
 
-    public ErrorDetails(HttpStatus status, String message, Throwable ex) {
+
+    public ErrorDetails(HttpStatus status, String message) {
         this.timestamp = LocalDateTime.now();
         this.errorCode = status.value();
         this.errorDetail = status.getReasonPhrase();
         this.message = message;
-        this.cause = ex;
+
 
     }
 

@@ -2,15 +2,14 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
+import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TagService;
-
 import com.softserve.academy.studhub.service.UserService;
 import org.springframework.stereotype.Service;
 
-import javax.naming.OperationNotSupportedException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,6 +39,7 @@ public class QuestionServiceImpl implements IQuestionService {
 
         return repository.saveAndFlush(question);
     }
+// TODO: Delete after ui is ready.
 
     @Override
     public Question saveNoUser(Question question) {
@@ -49,8 +49,6 @@ public class QuestionServiceImpl implements IQuestionService {
 
         return repository.saveAndFlush(question);
     }
-
-
 
     @Override
 
@@ -70,25 +68,22 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public Question findById(Integer questionId) {
-        Optional<Question> result = repository.findById(questionId);
-        if (!result.isPresent()) {
-            throw new NotFoundException("Requested question does not exist");
-        }
-        return result.get();
+    public Question findById(Integer questionId) throws NotFoundException {
+
+        return repository.findById(questionId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.QUESTION_NOTFOUND + questionId));
 
     }
 
-    //need to change "if" block after answer dao& service ready.
     @Override
     public String deleteById(Integer questionId) {
         Question questionToDelete = findById(questionId);
 
         if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
             repository.deleteById(questionId);
-            return "This question already has answers and can not be deleted";
+            return "Question deleted";
         }
-        return "Question deleted";
+        return "This question already has answers and can not be deleted";
     }
 
     @Override
