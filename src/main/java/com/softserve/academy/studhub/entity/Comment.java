@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "answer_id", referencedColumnName = "id")
+    @JsonBackReference
     private Answer answer;
 
     @ManyToOne
