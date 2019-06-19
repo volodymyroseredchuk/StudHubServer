@@ -4,18 +4,23 @@ import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/questions")
 public class QuestionController {
 
     private IQuestionService questionService;
 
-    @Autowired
+
     public QuestionController(IQuestionService questionService) {
         this.questionService = questionService;
     }
@@ -26,9 +31,9 @@ public class QuestionController {
         return questionService.sortByAge();
     }
 
-    @GetMapping("/{id}")
-    public Question showQuestionPage(@PathVariable Integer id) {
-        return questionService.findById(id);
+    @GetMapping("/{questionId}")
+    public Question showQuestionPage(@PathVariable Integer questionId) {
+        return questionService.findById(questionId);
     }
 
     @GetMapping("/tagged")
@@ -36,22 +41,26 @@ public class QuestionController {
         return questionService.sortByTag(tags);
     }
 
-    @PutMapping("/{id}/edit")
-    public Question editQuestion(@PathVariable Integer id, @RequestBody Question question) {
+    @PutMapping("/{questionId}/edit")
+    @PreAuthorize("@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
+    public Question editQuestion(@PathVariable Integer questionId, @RequestBody Question question) {
 
-        return questionService.update(id, question);
+        return questionService.update(questionId, question);
     }
 
     @PostMapping("/create")
-    public Question createQuestion(@RequestBody Question question) {
+    @PreAuthorize("hasRole('USER')")
+    public Question createQuestion(@Valid @RequestBody Question question) {
 
         return questionService.save(question);
     }
 
-    @DeleteMapping("/{id}/delete")
-    public void deleteQuestion(@PathVariable Integer id) {
+    @DeleteMapping("/{questionId}/delete")
+    @PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
-        questionService.deleteById(id);
+        questionService.deleteById(questionId);
+        return ResponseEntity.ok("Question deleted");
     }
 
 
