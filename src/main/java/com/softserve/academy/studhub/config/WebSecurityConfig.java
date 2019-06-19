@@ -31,7 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthEntryPoint unauthorizedHandler;
 
     private static final String[] AUTH_WHITELIST = {
-            // -- swagger ui
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
@@ -39,13 +38,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
+            "/profile/**",
+            "/api/auth/**",
+            "/sock/**",
+            "/home",
+            "/addVote",
+            "/tags/**",
+            "/getSocketToken",
             "/signin",
             "/signup",
             "/forgot-password",
             "/reset-password",
             "/tags/**",
             "/questions/**"
-
             // other public endpoints of your API may be appended to this array
     };
 
