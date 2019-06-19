@@ -1,8 +1,8 @@
-package com.softserve.academy.studhub.security;
+package com.softserve.academy.studhub.config;
 
 import com.softserve.academy.studhub.security.jwt.JwtAuthEntryPoint;
 import com.softserve.academy.studhub.security.jwt.JwtAuthTokenFilter;
-import com.softserve.academy.studhub.security.services.UserDetailsServiceImpl;
+import com.softserve.academy.studhub.security.services.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthEntryPoint unauthorizedHandler;
 
     private static final String[] AUTH_WHITELIST = {
-            // -- swagger ui
             "/v2/api-docs",
             "/swagger-resources",
             "/swagger-resources/**",
@@ -39,11 +38,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
+            "/profile/**",
             "/api/auth/**",
+            "/sock/**",
+            "/home",
+            "/addVote",
+            "/tags/**",
+            "/getSocketToken",
+            "/signin",
+            "/signup",
+            "/forgot-password",
+            "/reset-password",
             "/tags/**",
             "/questions/**"
 
-            // other public endpoints of your API may be appended to this array
     };
 
     @Bean

@@ -4,23 +4,11 @@ RESTfull application created by students of SoftServe IT Academy
 
 ## Getting Started
 
-To start working on this project please add `application.properties` file in the resources folder
-that contains next info along with credentials for your local MySql instance and jwt token security
+To start working on this project please add `application.properties` file in the root
+directory of the project (next to `README.md` and `.gitignore`) containing the same
+info as `application.properties` file in `src/main/resources/` directory, but 
+change `${...}` values to your local credentials.
 
-
-```
-spring.datasource.url = jdbc:mysql://localhost:3306/studhub?serverTimezone=UTC
-spring.datasource.username = 
-spring.datasource.password = 
-spring.datasource.driver-class-name = com.mysql.cj.jdbc.Driver
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-localhost.url = jdbc:mysql://localhost:3306/?serverTimezone=UTC
-script.create = create database studhub
-script.drop = drop database studhub
-skip.db.init = true
-studhub.app.jwtSecret =
-studhub.app.jwtExpiration =
-```
 
 ## Running Application
 
