@@ -31,9 +31,9 @@ public class QuestionController {
         return questionService.sortByAge();
     }
 
-    @GetMapping("/{questionId}")
-    public Question showQuestionPage(@PathVariable Integer questionId) {
-        return questionService.findById(questionId);
+    @GetMapping("/{id}")
+    public Question showQuestionPage(@PathVariable Integer id) {
+        return questionService.findById(id);
     }
 
     @GetMapping("/tagged")
@@ -42,21 +42,22 @@ public class QuestionController {
     }
 
     @PutMapping("/{questionId}/edit")
-    @PreAuthorize("@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
+    //@PreAuthorize("@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public Question editQuestion(@PathVariable Integer questionId, @RequestBody Question question) {
 
         return questionService.update(questionId, question);
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('USER')")
+    //@PreAuthorize("hasRole('USER')")
     public Question createQuestion(@Valid @RequestBody Question question) {
 
-        return questionService.save(question);
+        //return questionService.save(question, principal);
+        return questionService.saveNoUser(question);
     }
 
     @DeleteMapping("/{questionId}/delete")
-    @PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    //@PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));

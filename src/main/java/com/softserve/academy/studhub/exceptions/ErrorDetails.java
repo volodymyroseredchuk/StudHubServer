@@ -13,15 +13,19 @@ public class ErrorDetails {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
-    private HttpStatus status;
+    private int errorCode;
+    private String errorDetail;
     private String message;
-    private String details;
+    private Throwable cause;
+
 
     public ErrorDetails(HttpStatus status, String message, Throwable ex) {
         this.timestamp = LocalDateTime.now();
-        this.status = status;
+        this.errorCode = status.value();
+        this.errorDetail = status.getReasonPhrase();
         this.message = message;
-        this.details = ex.getLocalizedMessage();
+        this.cause = ex;
+
     }
 
 

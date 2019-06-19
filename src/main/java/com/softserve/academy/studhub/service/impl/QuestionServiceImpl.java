@@ -7,9 +7,11 @@ import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TagService;
 
+import com.softserve.academy.studhub.service.UserService;
 import org.springframework.stereotype.Service;
 
 import javax.naming.OperationNotSupportedException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,19 +23,34 @@ public class QuestionServiceImpl implements IQuestionService {
 
     private TagService tagService;
 
-    public QuestionServiceImpl(QuestionRepository repository, TagService tagService) {
+    private UserService userService;
+
+    public QuestionServiceImpl(QuestionRepository repository, TagService tagService, UserService userService) {
         this.repository = repository;
         this.tagService = tagService;
+        this.userService = userService;
     }
 
     @Override
-    public Question save(Question question) {
+    public Question save(Question question, Principal principal) {
+        question.setCreationDate(LocalDateTime.now());
+        question.setUser(userService.findByUserName(principal.getName()));
+
+        question.setTagList(tagService.reviewTagList(question.getTagList()));
+
+        return repository.saveAndFlush(question);
+    }
+
+    @Override
+    public Question saveNoUser(Question question) {
         question.setCreationDate(LocalDateTime.now());
 
         question.setTagList(tagService.reviewTagList(question.getTagList()));
 
         return repository.saveAndFlush(question);
     }
+
+
 
     @Override
 

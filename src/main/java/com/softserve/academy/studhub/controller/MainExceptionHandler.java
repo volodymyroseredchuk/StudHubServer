@@ -19,15 +19,17 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAccessDeniedException(
             AccessDeniedException ex, WebRequest request) {
         ErrorDetails details = new ErrorDetails(HttpStatus.UNAUTHORIZED,
-                "You don't have rights to access this resource", ex);
-        return new ResponseEntity<>(details, details.getStatus());
+                "You don't have rights to access this resource", ex.getCause());
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleNotFoundException(NotFoundException ex, WebRequest request) {
-        ErrorDetails details = new ErrorDetails(HttpStatus.NOT_FOUND,
-                ex.getMessage(), ex);
-        return new ResponseEntity<>(details, details.getStatus());
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.NOT_FOUND, ex.getMessage(), ex.getCause());
+
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
 
@@ -36,7 +38,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         ErrorDetails details = new ErrorDetails(status,
-                "One or more of posted parameters is not valid", ex);
-        return new ResponseEntity<>(details, details.getStatus());
+                "One or more of posted parameters is not valid", ex.getCause());
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 }

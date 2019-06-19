@@ -10,6 +10,7 @@ public interface UserService {
     User add(User user);
 
     Optional<User> get(Integer id);
+    User findByUserName (String userName);
 
     User update(User user);
 

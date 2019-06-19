@@ -1,6 +1,8 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -29,6 +31,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> get(Integer id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        Optional<User> result = userRepository.findByUsername(userName);
+        if (!result.isPresent()) {
+            throw new NotFoundException("Requested question does not exist");
+        }
+        return result.get();
+
     }
 
     @Override

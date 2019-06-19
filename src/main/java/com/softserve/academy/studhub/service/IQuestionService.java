@@ -3,11 +3,14 @@ package com.softserve.academy.studhub.service;
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface IQuestionService {
 
-    Question save(Question question);
+    Question save(Question question, Principal principal);
+
+    Question saveNoUser(Question question);
 
     Question update(Integer questionId, Question question);
 
