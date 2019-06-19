@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service;
 
+import com.softserve.academy.studhub.dto.AnswerApproveDTO;
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.entity.Answer;
 
@@ -13,5 +14,7 @@ public interface AnswerService {
     Answer findById(Integer answerId);
 
     void deleteById(Integer answerId);
+
+    AnswerApproveDTO approve (AnswerApproveDTO answerApproveDTO);
 
 }

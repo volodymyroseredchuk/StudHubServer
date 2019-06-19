@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.dto.AnswerApproveDTO;
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.dto.AnswerDTO;
 import com.softserve.academy.studhub.entity.Answer;
@@ -66,5 +67,19 @@ public class AnswerServiceImpl implements AnswerService {
     public void deleteById(Integer answerId) {
         answerRepository.deleteById(answerId);
     }
+
+    @Override
+    public AnswerApproveDTO approve(AnswerApproveDTO answerApproveDTO) {
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerApproveDTO.getAnswerId());
+        if(optionalAnswer.isPresent()){
+            Answer answer = optionalAnswer.get();
+            answer.setApproved(answerApproveDTO.getApproved());
+            answerRepository.saveAndFlush(answer);
+            return answerApproveDTO;
+        } else {
+            throw new IllegalArgumentException("Requested answer does not exist");
+        }
+    }
+
 
 }

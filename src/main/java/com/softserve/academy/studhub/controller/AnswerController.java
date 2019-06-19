@@ -2,11 +2,13 @@ package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.dto.AnswerDTO;
+import com.softserve.academy.studhub.dto.AnswerApproveDTO;
 import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
 import com.softserve.academy.studhub.service.AnswerService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,6 @@ public class AnswerController {
 
     private ModelMapper modelMapper;
 
-    private JwtProvider jwtProvider;
 
     @GetMapping("/question/{questionId}/answer")
     public ResponseEntity<List<AnswerDTO>> getAnswersByQuestionId(@PathVariable Integer questionId){
@@ -60,4 +61,21 @@ public class AnswerController {
 
         return ResponseEntity.ok("Answer deleted");
     }
+
+
+    @PutMapping("/question/{questionId}/answer/{answerId}/approve")
+    @PreAuthorize("@answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
+    public ResponseEntity<?> setApprovedAnswer (@PathVariable Integer answerId,
+                                                @RequestBody Boolean approved) {
+        AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();
+        answerApproveDTO.setAnswerId(answerId);
+        answerApproveDTO.setApproved(approved);
+        try {
+            return ResponseEntity.ok(answerService.approve(answerApproveDTO));
+        } catch(IllegalArgumentException ex){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 }
