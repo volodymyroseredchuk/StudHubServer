@@ -28,7 +28,7 @@ public class AnswerController {
     private ModelMapper modelMapper;
 
 
-    @GetMapping("/question/{questionId}/answer")
+    @GetMapping("/questions/{questionId}/answers")
     public ResponseEntity<List<AnswerDTO>> getAnswersByQuestionId(@PathVariable Integer questionId){
         List<Answer> answers = answerService.findAllByQuestionId(questionId);
         List<AnswerDTO> answerDTOS = answers.stream()
@@ -39,7 +39,7 @@ public class AnswerController {
 
     }
 
-    @PostMapping("/question/{questionId}/answer")
+    @PostMapping("/questions/{questionId}/answers")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> createAnswer(@Valid @RequestBody AnswerCreateDTO answerCreateDTO,
                                           @PathVariable Integer questionId,
@@ -53,7 +53,7 @@ public class AnswerController {
     }
 
 
-    @DeleteMapping("/question/{questionId}/answer/{answerId}/delete")
+    @DeleteMapping("/questions/{questionId}/answers/{answerId}/delete")
     @PreAuthorize("hasRole('ADMIN') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
     public ResponseEntity<String> deleteAnswer(@PathVariable Integer answerId){
 
@@ -63,7 +63,7 @@ public class AnswerController {
     }
 
 
-    @PutMapping("/question/{questionId}/answer/{answerId}/approve")
+    @PutMapping("/questions/{questionId}/answers/{answerId}/approve")
     @PreAuthorize("@answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
     public ResponseEntity<?> setApprovedAnswer (@PathVariable Integer answerId,
                                                 @RequestBody Boolean approved) {
