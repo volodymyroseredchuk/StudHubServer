@@ -32,9 +32,9 @@ public class QuestionController {
         return questionService.sortByAge();
     }
 
-    @GetMapping("/search")
-    public List<Question> getSearched(Pageable pageable) {
-        return questionService.search("help please theme", pageable).getContent();
+    @GetMapping("/search/{keywords}")
+    public List<Question> getSearched(@PathVariable String[] keywords, Pageable pageable) {
+        return questionService.search(keywords, pageable).getContent();
     }
 
     @GetMapping("/{questionId}")

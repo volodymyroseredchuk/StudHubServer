@@ -89,7 +89,7 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public Page<Question> search(String searchPattern, Pageable pageable) {
-        return repository.findByFullTextSearch(searchPattern, pageable);
+    public Page<Question> search(String[] keywords, Pageable pageable) {
+        return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
 }

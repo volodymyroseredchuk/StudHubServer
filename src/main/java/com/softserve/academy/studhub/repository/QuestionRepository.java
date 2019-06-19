@@ -18,11 +18,11 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     List<Question> findAllByTagListInOrderByCreationDateAsc(List<Tag> chosenTags);
 
     @Query(
-        value = "select * from Questions q where match(q.title, q.body) against(?1) order by ?#{#pageable}",
-        countQuery = "select count(*) from Questions q where match(q.title, q.body) against(?1)",
+        value = "select * from Questions q where match(q.title, q.body) against(:pattern) order by :#{#pageable}",
+        countQuery = "select count(*) from Questions q where match(q.title, q.body) against(:pattern)",
         nativeQuery = true
     )
     Page<Question> findByFullTextSearch(
-        String searchPattern,
-        Pageable pageable);
+        @Param("pattern") String searchPattern,
+        @Param("pageable") Pageable pageable);
 }

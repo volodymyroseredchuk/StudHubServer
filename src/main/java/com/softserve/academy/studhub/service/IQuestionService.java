@@ -23,5 +23,5 @@ public interface IQuestionService {
 
     List<Question> sortByTag(List<Tag> tags);
 
-    Page<Question> search(String searchPattern, Pageable pageable);
+    Page<Question> search(String[] keywords, Pageable pageable);
 }
