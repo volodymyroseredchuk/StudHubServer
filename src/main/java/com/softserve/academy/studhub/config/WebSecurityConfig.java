@@ -49,8 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/signup",
             "/forgot-password",
             "/reset-password",
-            "/tags/**",
-            "/questions/**"
+            "/tags/**"
             // other public endpoints of your API may be appended to this array
     };
 
