@@ -1,8 +1,10 @@
 package com.softserve.academy.studhub.service.impl;
 
+
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 import java.util.Set;
 
 @Service
@@ -41,6 +42,16 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new IllegalArgumentException("User not found.");
         }
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        Optional<User> result = userRepository.findByUsername(userName);
+        if (!result.isPresent()) {
+            throw new NotFoundException("Requested question does not exist");
+        }
+        return result.get();
+
     }
 
     @Override
