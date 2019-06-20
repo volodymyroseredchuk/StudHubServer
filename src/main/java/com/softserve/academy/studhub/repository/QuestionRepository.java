@@ -15,7 +15,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     List<Question> findAllByOrderByCreationDateAsc();
 
-    List<Question> findAllByTagListInOrderByCreationDateAsc(List<Tag> chosenTags);
+    Page<Question> findAllByTagListInOrderByCreationDateAsc(List<Tag> chosenTags, Pageable pageable);
 
     @Query(
         value = "select * from Questions q where match(q.title, q.body) against(:pattern) order by :#{#pageable}",

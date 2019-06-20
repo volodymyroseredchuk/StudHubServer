@@ -24,7 +24,7 @@ public interface IQuestionService {
 
     List<Question> sortByAge();
 
-    List<Question> sortByTag(List<Tag> tags);
+    List<Question> sortByTags(String[] tags, Pageable pageable);
 
     Page<Question> search(String[] keywords, Pageable pageable);
 }

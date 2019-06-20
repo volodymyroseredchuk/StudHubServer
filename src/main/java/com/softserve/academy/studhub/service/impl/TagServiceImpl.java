@@ -85,4 +85,18 @@ public class TagServiceImpl implements TagService {
         }
         return dbTagsList;
     }
+
+    @Override
+    public List<Tag> reviewTagList(String[] tags) throws IllegalArgumentException {
+        if (tags == null) {
+            throw new IllegalArgumentException("Empty list of tags");
+        }
+        List<Tag> dbTagsList = new ArrayList<>();
+        Tag tempTag;
+        for (String tag : tags) {
+            tempTag = findByName(tag);
+            dbTagsList.add(tempTag);
+        }
+        return dbTagsList;
+    }
 }
