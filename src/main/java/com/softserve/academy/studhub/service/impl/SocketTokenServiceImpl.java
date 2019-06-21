@@ -1,5 +1,9 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.graph.Graph;
 import com.softserve.academy.studhub.coders.SocketTokenEncoder;
 import com.softserve.academy.studhub.entity.SocketToken;
 import com.softserve.academy.studhub.service.SocketTokenService;
@@ -10,13 +14,20 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class SocketTokenServiceImpl implements SocketTokenService {
 
-    private static Map<String, Integer> tokenIdMap = new ConcurrentHashMap<>();
-    private static LocalDate LAST_CLEAR_DATE = LocalDate.now();
-    private static Period CLEANING_PERIOD = Period.ofDays(15);
+    private static LoadingCache<String, Integer> tokenIdMap = CacheBuilder.newBuilder()
+            .maximumSize(100000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(new CacheLoader<String, Integer>() {
+                @Override
+                public Integer load(String s) throws Exception {
+                    return tokenIdMap.get(s);
+                }
+            });
 
     private SocketTokenEncoder encoder = new SocketTokenEncoder();
 
@@ -24,7 +35,7 @@ public class SocketTokenServiceImpl implements SocketTokenService {
     public Integer checkAccess(String token) {
 
         try {
-            Integer id = tokenIdMap.get(token);
+            Integer id = tokenIdMap.asMap().get(token);
             removeToken(token);
             return id;
         } catch (NullPointerException e) {
@@ -36,11 +47,6 @@ public class SocketTokenServiceImpl implements SocketTokenService {
     @Override
     public String generateToken(Integer id) throws EncodeException {
 
-        if(comparePeriods(Period.between(LAST_CLEAR_DATE, LocalDate.now()), CLEANING_PERIOD)) {
-            tokenIdMap.clear();
-            LAST_CLEAR_DATE = LocalDate.now();
-        }
-
         String generatedString = RandomStringUtils.random(20, true, true);
         tokenIdMap.put(generatedString, id);
 
@@ -51,18 +57,7 @@ public class SocketTokenServiceImpl implements SocketTokenService {
 
     @Override
     public void removeToken(String token) {
-        tokenIdMap.remove(token);
-    }
-
-    private boolean comparePeriods(Period p1, Period p2) {
-        return period2Days(p1) >= period2Days(p2);
-    }
-
-    private int period2Days(Period p) {
-        if (p == null) {
-            return 0;
-        }
-        return (p.getYears() * 12 + p.getMonths()) * 30 + p.getDays();
+        tokenIdMap.asMap().remove(token);
     }
 
 }

@@ -6,10 +6,12 @@ import com.softserve.academy.studhub.dto.AnswerDTO;
 import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Comment;
 import com.softserve.academy.studhub.entity.Question;
+import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.repository.AnswerRepository;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.AnswerService;
+import com.softserve.academy.studhub.service.SubscriptionService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,8 @@ public class AnswerServiceImpl implements AnswerService {
     private QuestionRepository questionRepository;
 
     private UserRepository userRepository;
+
+    private SubscriptionService subscriptionService;
 
     @Override
     public Answer findById(Integer answerId){
@@ -59,7 +63,9 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setRate(0);
         answer.setQuestion(questionRepository.findById(questionId).get());
         answer.setUser(userRepository.findByUsername(username).get());
-        return answerRepository.saveAndFlush(answer);
+        Answer returnAnswer = answerRepository.saveAndFlush(answer);
+        subscriptionService.handleMessage(new SocketMessage(returnAnswer.getId().toString()));
+        return returnAnswer;
 
     }
 
