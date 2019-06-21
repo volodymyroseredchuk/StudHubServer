@@ -50,21 +50,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Integer id) {
+    public User findById(Integer id) throws NotFoundException {
 
         return userRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws NotFoundException {
 
         return userRepository.findByUsername(username).orElseThrow(() ->
                 new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User findByEmail(String email) throws NotFoundException {
 
         return userRepository.findByEmail(email).orElseThrow(() ->
                 new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));

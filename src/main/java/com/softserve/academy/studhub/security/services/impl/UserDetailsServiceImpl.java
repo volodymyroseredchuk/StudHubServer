@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,14 +17,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) {
-    	
+    public UserDetails loadUserByUsername(String username) throws NotFoundException {
+
         User user = userService.findByUsername(username);
         return UserPrinciple.build(user);
     }
 
     @Transactional
-    public UserDetails loadUserById (Integer id) {
+    public UserDetails loadUserById(Integer id) throws NotFoundException {
 
         User user = userService.findById(id);
         return UserPrinciple.build(user);

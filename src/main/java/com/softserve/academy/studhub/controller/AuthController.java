@@ -1,8 +1,8 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.dto.message.request.LoginForm;
-import com.softserve.academy.studhub.dto.message.request.SignUpForm;
-import com.softserve.academy.studhub.dto.message.response.JwtResponse;
+import com.softserve.academy.studhub.security.dto.LoginForm;
+import com.softserve.academy.studhub.security.dto.SignUpForm;
+import com.softserve.academy.studhub.security.dto.JwtResponse;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
