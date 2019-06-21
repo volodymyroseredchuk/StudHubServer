@@ -13,16 +13,12 @@ import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin
+@AllArgsConstructor
 @RestController
 @RequestMapping("/teachers")
 public class TeacherController {
 
     private TeacherService teacherService;
-
-
-    public TeacherController(TeacherService teacherService) {
-        this.teacherService = teacherService;
-    }
 
     @GetMapping
     List<Teacher> findAllTeacher() {

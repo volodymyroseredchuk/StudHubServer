@@ -18,16 +18,8 @@ import java.util.List;
 public class UniversityController {
 
 
+    private UniversityService universityService;
 
-
-
-@Autowired
-    private final UniversityService universityService;
-
-
-   // UniversityController(UniversityService universityService) {
-     //   this.universityService = universityService;
-    //}
 
     @GetMapping
     List<University> findAllTeacher() {
@@ -39,6 +31,7 @@ public class UniversityController {
 
         return universityService.findById(id).orElseThrow(() -> new IllegalArgumentException());
     }
+
     @PostMapping
     University newTeacher(@RequestBody University newUniversity) {
         return universityService.save(newUniversity);
