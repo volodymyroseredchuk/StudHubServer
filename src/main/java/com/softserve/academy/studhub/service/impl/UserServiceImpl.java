@@ -9,6 +9,7 @@ import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) throws NotFoundException {
 
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
+                new UsernameNotFoundException("User doesn't exist with username: " + username));
     }
 
     @Override
