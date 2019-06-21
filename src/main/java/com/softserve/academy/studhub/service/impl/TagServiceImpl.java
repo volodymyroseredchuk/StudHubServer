@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -27,20 +26,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag findById(Integer id) {
-        Optional<Tag> resultTag = tagRepository.findById(id);
-        if (resultTag.isPresent()) {
-            return resultTag.get();
-        }
-        throw new IllegalArgumentException("Tag is not found");
+        return tagRepository.findById(id).orElseThrow(
+            () -> new IllegalArgumentException("Tag is not found"));
     }
 
     @Override
     public Tag findByName(String name) {
-        Optional<Tag> resultTag = tagRepository.findByNameIgnoreCase(name);
-        if (resultTag.isPresent()) {
-            return resultTag.get();
-        }
-        throw new IllegalArgumentException("Tag is not found");
+        return tagRepository.findByNameIgnoreCase(name).orElseThrow(
+            () -> new IllegalArgumentException("Tag is not found"));
     }
 
     @Override
@@ -81,6 +74,20 @@ public class TagServiceImpl implements TagService {
             } catch (IllegalArgumentException e) {
                 tempTag = save(tag);
             }
+            dbTagsList.add(tempTag);
+        }
+        return dbTagsList;
+    }
+
+    @Override
+    public List<Tag> reviewTagList(String[] tags) throws IllegalArgumentException {
+        if (tags == null) {
+            throw new IllegalArgumentException("Empty list of tags");
+        }
+        List<Tag> dbTagsList = new ArrayList<>();
+        Tag tempTag;
+        for (String tag : tags) {
+            tempTag = findByName(tag);
             dbTagsList.add(tempTag);
         }
         return dbTagsList;

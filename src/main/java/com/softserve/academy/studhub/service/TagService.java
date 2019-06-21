@@ -26,4 +26,6 @@ public interface TagService {
     TagsDTO findAllSorted(Pageable pageable);
 
     List<Tag> reviewTagList(List<Tag> tagList);
+
+    List<Tag> reviewTagList(String[] tags) throws IllegalArgumentException;
 }
