@@ -21,4 +21,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userService.findByUsername(username);
         return UserPrinciple.build(user);
     }
+
+    @Transactional
+    public UserDetails loadUserById (Integer id) {
+
+        User user = userService.findById(id);
+        return UserPrinciple.build(user);
+    }
 }
