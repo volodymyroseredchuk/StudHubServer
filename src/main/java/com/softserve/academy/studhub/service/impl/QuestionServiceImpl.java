@@ -36,7 +36,7 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public Question save(Question question, Principal principal) {
         question.setCreationDate(LocalDateTime.now());
-        question.setUser(userService.findByUserName(principal.getName()));
+        question.setUser(userService.findByUsername(principal.getName()));
 
         question.setTagList(tagService.reviewTagList(question.getTagList()));
 

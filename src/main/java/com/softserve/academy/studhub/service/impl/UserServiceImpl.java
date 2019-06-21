@@ -4,6 +4,7 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
+import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.RoleService;
@@ -11,7 +12,6 @@ import com.softserve.academy.studhub.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -19,7 +19,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
-
 
     public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
@@ -30,28 +29,6 @@ public class UserServiceImpl implements UserService {
     public User add(User user) {
 
         return userRepository.saveAndFlush(user);
-    }
-
-    @Override
-    public User get(Integer id) {
-
-        Optional<User> resultVote = userRepository.findById(id);
-
-        if (resultVote.isPresent()) {
-            return resultVote.get();
-        } else {
-            throw new IllegalArgumentException("User not found.");
-        }
-    }
-
-    @Override
-    public User findByUserName(String userName) {
-        Optional<User> result = userRepository.findByUsername(userName);
-        if (!result.isPresent()) {
-            throw new NotFoundException("Requested question does not exist");
-        }
-        return result.get();
-
     }
 
     @Override
@@ -73,37 +50,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-
     public User findById(Integer id) {
 
-        Optional<User> user = userRepository.findById(id);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new IllegalArgumentException("User is not found by this id!");
+        return userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
     }
 
     @Override
     public User findByUsername(String username) {
 
-        Optional<User> user = userRepository.findByUsername(username);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new IllegalArgumentException("User is not found by this username!");
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
     }
 
     @Override
     public User findByEmail(String email) {
 
-        Optional<User> user = userRepository.findByEmail(email);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new IllegalArgumentException("User is not found by this email!");
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
     }
 
     @Override
@@ -136,6 +100,4 @@ public class UserServiceImpl implements UserService {
 
         return false;
     }
-
-
 }
