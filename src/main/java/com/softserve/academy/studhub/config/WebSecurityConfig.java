@@ -50,7 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/forgot-password",
             "/reset-password",
             "/tags/**",
-            "/questions/**"
+            "/questions/**",
+            "/teachers/**",
+            "/universities/**"
 
     };
 
