@@ -3,6 +3,8 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Comment;
 import com.softserve.academy.studhub.entity.Question;
+import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.AnswerRepository;
 import com.softserve.academy.studhub.repository.CommentRepository;
 import com.softserve.academy.studhub.repository.QuestionRepository;
@@ -49,11 +51,9 @@ public class CommentServiceImpl implements ICommentService {
 
     @Override
     public Comment findById(Integer commentId) {
-        Optional<Comment> result = commentRepository.findById(commentId);
-        if (!result.isPresent()) {
-            throw new IllegalArgumentException("Requested comment does not exist");
-        }
-        return result.get();
+
+        return commentRepository.findById(commentId).orElseThrow(() ->
+                new NotFoundException(ErrorMessage.COMMENT_NOTFOUND + commentId));
 
     }
 
@@ -64,8 +64,14 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public List<Comment> findByAnswer(Integer answerId) {
-        return commentRepository.findAllByAnswer_Id(answerId);
+    public List<Comment> findByAnswer(Integer answerId) throws IllegalArgumentException {
+        List<Comment> commentList = null;
+        try {
+            commentList = commentRepository.findAllByAnswer_Id(answerId);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return commentList;
     }
 
     @Override

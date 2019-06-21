@@ -10,11 +10,12 @@ import org.springframework.web.socket.WebSocketSession;
 import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SocketServiceImpl implements SocketService {
 
-    private static Map<Integer, WebSocketSession> sessionIdMap = new HashMap<>();
+    private static Map<Integer, WebSocketSession> sessionIdMap = new ConcurrentHashMap<>();
 
     private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
 
@@ -32,7 +33,6 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void sendGreetings(WebSocketSession session, Integer textId) throws EncodeException, IOException {
-
         /*-----------------------*/
         SocketMessage connMsg = new SocketMessage("Connected successfully.");
         SocketMessage noConnMsg = new SocketMessage("Connected unsuccessfully. Access denied.");

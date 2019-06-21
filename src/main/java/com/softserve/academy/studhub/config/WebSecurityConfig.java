@@ -51,7 +51,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/reset-password",
             "/tags/**",
             "/questions/**"
-        // other public endpoints of your API may be appended to this array
     };
 
     @Bean

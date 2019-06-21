@@ -2,16 +2,21 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
+import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TagService;
-
+import com.softserve.academy.studhub.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.naming.OperationNotSupportedException;
+import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class QuestionServiceImpl implements IQuestionService {
@@ -20,13 +25,27 @@ public class QuestionServiceImpl implements IQuestionService {
 
     private TagService tagService;
 
-    public QuestionServiceImpl(QuestionRepository repository, TagService tagService) {
+    private UserService userService;
+
+    public QuestionServiceImpl(QuestionRepository repository, TagService tagService, UserService userService) {
         this.repository = repository;
         this.tagService = tagService;
+        this.userService = userService;
     }
 
     @Override
-    public Question save(Question question) {
+    public Question save(Question question, Principal principal) {
+        question.setCreationDate(LocalDateTime.now());
+        question.setUser(userService.findByUserName(principal.getName()));
+
+        question.setTagList(tagService.reviewTagList(question.getTagList()));
+
+        return repository.saveAndFlush(question);
+    }
+// TODO: Delete after ui is ready.
+
+    @Override
+    public Question saveNoUser(Question question) {
         question.setCreationDate(LocalDateTime.now());
 
         question.setTagList(tagService.reviewTagList(question.getTagList()));
@@ -52,28 +71,22 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public Question findById(Integer questionId) {
-        Optional<Question> result = repository.findById(questionId);
-        if (!result.isPresent()) {
-            throw new IllegalArgumentException("Requested question does not exist");
-        }
-        return result.get();
+    public Question findById(Integer questionId) throws NotFoundException {
+
+        return repository.findById(questionId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.QUESTION_NOTFOUND + questionId));
 
     }
 
-    //need to change "if" block after answer dao& service ready.
     @Override
-    public void deleteById(Integer questionId) {
+    public String deleteById(Integer questionId) {
         Question questionToDelete = findById(questionId);
-        try {
-            if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
-                repository.deleteById(questionId);
-            } else {
-                throw new OperationNotSupportedException("This question already has answers and can not be deleted");
-            }
-        } catch (OperationNotSupportedException e) {
-            e.getMessage();
+
+        if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
+            repository.deleteById(questionId);
+            return "Question deleted";
         }
+        return "This question already has answers and can not be deleted";
     }
 
     @Override
@@ -82,7 +95,18 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public List<Question> sortByTag(List<Tag> tags) {
-        return repository.findAllByTagListInOrderByCreationDateAsc(tags);
+    public List<Question> sortByTags(String[] tags, Pageable pageable) {
+        List<Tag> tagList;
+        try {
+            tagList = tagService.reviewTagList(tags);
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<>();
+        }
+        return repository.findAllByTagListInOrderByCreationDateAsc(tagList, pageable).getContent();
+    }
+
+    @Override
+    public Page<Question> search(String[] keywords, Pageable pageable) {
+        return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
 }
