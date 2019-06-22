@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.dto.TagsDTO;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.repository.TagRepository;
 import com.softserve.academy.studhub.service.TagService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
@@ -57,8 +58,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagsDTO findAllSorted(Pageable pageable) {
-        return new TagsDTO(tagRepository.findAllSorted(pageable));
+    public Page<Tag> findAllSorted(Pageable pageable) {
+        return tagRepository.findAllSorted(pageable);
     }
 
     @Override
@@ -80,14 +81,19 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> reviewTagList(String[] tags) throws IllegalArgumentException {
+    public List<Tag> reviewTagList(String[] tags) {
         if (tags == null) {
-            throw new IllegalArgumentException("Empty list of tags");
+            return new ArrayList<>();
         }
         List<Tag> dbTagsList = new ArrayList<>();
         Tag tempTag;
         for (String tag : tags) {
-            tempTag = findByName(tag);
+            try {
+                tempTag = findByName(tag);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+
             dbTagsList.add(tempTag);
         }
         return dbTagsList;
