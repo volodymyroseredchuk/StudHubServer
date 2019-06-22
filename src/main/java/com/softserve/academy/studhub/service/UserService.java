@@ -11,20 +11,15 @@ public interface UserService {
 
 
 
-    User findByUserName (String userName);
+    User findByUserName(String userName);
 
-    User get(Integer id);
-
+    User findById(Integer id);
 
     User update(User user);
 
     void delete(Integer id);
 
     List<User> getAll();
-
-    User findById(Integer id);
-
-    User findByUsername(String username);
 
     Boolean existsByUsername(String username);
 

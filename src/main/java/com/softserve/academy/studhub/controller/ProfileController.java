@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @AllArgsConstructor
 @RestController
@@ -21,14 +22,12 @@ public class ProfileController {
 
     @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping("/my")
-    public ResponseEntity<UserDTO> gerCurrentUser() {
+    public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username = ((UserDetails) principal).getUsername();
+        String username = principal.getName();
 
         return new ResponseEntity<>(modelMapper.
-            map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
+                map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
     }
 
     @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
@@ -36,7 +35,7 @@ public class ProfileController {
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(modelMapper.
-            map(userService.get(id), UserDTO.class), HttpStatus.OK);
+                map(userService.findById(id), UserDTO.class), HttpStatus.OK);
     }
 
 }

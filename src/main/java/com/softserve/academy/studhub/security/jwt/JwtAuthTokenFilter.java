@@ -1,6 +1,8 @@
 package com.softserve.academy.studhub.security.jwt;
 
 import com.softserve.academy.studhub.security.services.impl.UserDetailsServiceImpl;
+import com.softserve.academy.studhub.service.UserService;
+import com.softserve.academy.studhub.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -36,7 +41,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
             if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
 
-                String username = tokenProvider.getIdFromJwtToken(jwt);
+                String username = userService.findById(Integer.
+                        parseInt(tokenProvider.getIdFromJwtToken(jwt))).getUsername();
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication
