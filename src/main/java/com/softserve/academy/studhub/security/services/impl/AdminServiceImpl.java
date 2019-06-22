@@ -22,34 +22,36 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void raiseToModerator(Integer userId) {
+    public void addRole(Integer userId, RoleName roleName) {
 
-        if(userService.isUserPrivileged(userId) == false){
+        User user = userService.findById(userId);
 
-            User user = userService.findById(userId);
+        if(userService.isUserPrivilegedByRole(userId, roleName) == false){
+
             Set<Role> roles = user.getRoles();
-            Role moderatorRole = roleService.findByName(RoleName.ROLE_MODERATOR);
-            roles.add(moderatorRole);
+            Role role = roleService.findByName(roleName);
+            roles.add(role);
             user.setRoles(roles);
             userService.update(user);
         } else {
-            throw new IllegalArgumentException("This user is already moderator");
+            throw new IllegalArgumentException("This user is already " + roleName);
         }
     }
 
     @Override
-    public void downToUser(Integer moderatorId) {
+    public void removeRole(Integer userId, RoleName roleName) {
 
-        if(userService.isUserPrivileged(moderatorId)){
+        User user = userService.findById(userId);
 
-            User user = userService.findById(moderatorId);
+        if(userService.isUserPrivilegedByRole(userId, roleName)){
+
             Set<Role> roles = user.getRoles();
-            Role moderatorRole = roleService.findByName(RoleName.ROLE_MODERATOR);
-            roles.remove(moderatorRole);
+            Role role = roleService.findByName(roleName);
+            roles.remove(role);
             user.setRoles(roles);
             userService.update(user);
         } else {
-            throw new IllegalArgumentException("This user isn't moderator");
+            throw new IllegalArgumentException("This user isn't " + roleName);
         }
     }
 }

@@ -100,14 +100,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserPrivileged(Integer userId) {
+    public boolean isUserPrivilegedByRole(Integer userId, RoleName roleName) {
 
         User user = findById(userId);
         Set<Role> roles = user.getRoles();
 
         for (Role role : roles) {
 
-            if (role.getName().equals(RoleName.ROLE_MODERATOR)) {
+            if (role.getName().equals(roleName)) {
                 return true;
             }
         }
