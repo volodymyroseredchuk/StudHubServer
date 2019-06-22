@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.security.dto.LoginForm;
+import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.security.dto.SignUpForm;
 import com.softserve.academy.studhub.security.dto.JwtResponse;
 import com.softserve.academy.studhub.entity.Role;
@@ -10,6 +11,7 @@ import com.softserve.academy.studhub.security.jwt.JwtProvider;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,15 +35,18 @@ public class AuthController {
     private final RoleService roleService;
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
+    private final ModelMapper modelMapper;
 
     public AuthController(AuthenticationManager authenticationManager, UserService userService,
-                          RoleService roleService, PasswordEncoder encoder, JwtProvider jwtProvider) {
+                          RoleService roleService, PasswordEncoder encoder, JwtProvider jwtProvider,
+                          ModelMapper modelMapper) {
 
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.roleService = roleService;
         this.encoder = encoder;
         this.jwtProvider = jwtProvider;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping("/signin")
@@ -61,42 +66,19 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 
-        if (userService.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity<>("Fail -> Username is already taken!",
-                    HttpStatus.BAD_REQUEST);
-        }
+        // Creating user's account
+        User user = modelMapper.map(signUpRequest, User.class);
+        user.setPassword(encoder.encode(user.getPassword()));
 
-        if (userService.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity<>("Fail -> Email is already in use!",
-                    HttpStatus.BAD_REQUEST);
-        }
+        Set<Role> roles = new HashSet<>();
+        Role userRole = roleService.findByName(RoleName.ROLE_USER);
+        roles.add(userRole);
 
-        try {
-            // Creating user's account
-            User user = new User();
-            user.setFirstName(signUpRequest.getFirstName());
-            user.setLastName(signUpRequest.getLastName());
-            user.setUsername(signUpRequest.getUsername());
-            user.setEmail(signUpRequest.getEmail());
-            user.setPassword(encoder.encode(signUpRequest.getPassword()));
-            user.setCreationDate(signUpRequest.getCreationDate());
-            user.setUniversity(signUpRequest.getUniversity());
-            user.setImageUrl(signUpRequest.getImageUrl());
+        user.setRoles(roles);
+        userService.add(user);
 
-            Set<Role> roles = new HashSet<>();
-            Role userRole = roleService.findByName(RoleName.ROLE_USER);
-            roles.add(userRole);
-
-            user.setRoles(roles);
-            userService.add(user);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>("User has been successfully registered", HttpStatus.OK);
+        return ResponseEntity.ok(new MessageResponse("User has been successfully registered"));
     }
 }
