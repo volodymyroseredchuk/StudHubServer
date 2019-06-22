@@ -3,10 +3,12 @@ package com.softserve.academy.studhub.controller;
 import com.softserve.academy.studhub.exceptions.ErrorDetails;
 import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
+import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,6 +37,13 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
+    }
+
     //This is optional. If no use - delete
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
@@ -54,6 +63,13 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     // This one for wrong url params (letter instead of number etc)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleIllegalArgument(MethodArgumentTypeMismatchException ex) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserAlreadyExistsAuthenticationException.class)
+    public ResponseEntity<Object> handleUserAlreadyExistsAuthenticationException(UserAlreadyExistsAuthenticationException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
         ex.printStackTrace();
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
