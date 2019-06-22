@@ -4,10 +4,13 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
+import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
+import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +23,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleService roleService;
 
-
     public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
@@ -29,29 +31,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User add(User user) {
 
-        return userRepository.saveAndFlush(user);
-    }
+        if (!(userRepository.existsByEmail(user.getEmail()))) {
 
-    @Override
-    public User get(Integer id) {
+            if (!(userRepository.existsByUsername(user.getUsername()))) {
 
-        Optional<User> resultVote = userRepository.findById(id);
-
-        if (resultVote.isPresent()) {
-            return resultVote.get();
+                Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+                return optionalUser.orElseGet(() -> userRepository.save(user));
+            } else {
+                throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
+            }
         } else {
-            throw new IllegalArgumentException("User not found.");
+            throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_EMAIL);
         }
-    }
-
-    @Override
-    public User findByUserName(String userName) {
-        Optional<User> result = userRepository.findByUsername(userName);
-        if (!result.isPresent()) {
-            throw new NotFoundException("Requested question does not exist");
-        }
-        return result.get();
-
     }
 
     @Override
@@ -73,37 +64,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Integer id) throws NotFoundException {
 
-    public User findById(Integer id) {
-
-        Optional<User> user = userRepository.findById(id);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new IllegalArgumentException("User is not found by this id!");
+        return userRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<User> user = userRepository.findByUsername(username);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new IllegalArgumentException("User is not found by this username!");
+        return userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User findByEmail(String email) throws NotFoundException {
 
-        Optional<User> user = userRepository.findByEmail(email);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-        throw new IllegalArgumentException("User is not found by this email!");
+        return userRepository.findByEmail(email).orElseThrow(() ->
+                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
     }
 
     @Override
@@ -122,20 +100,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserPrivileged(Integer userId) {
+    public boolean isUserPrivilegedByRole(Integer userId, RoleName roleName) {
 
         User user = findById(userId);
         Set<Role> roles = user.getRoles();
 
         for (Role role : roles) {
 
-            if (role.getName().equals(RoleName.ROLE_MODERATOR)) {
+            if (role.getName().equals(roleName)) {
                 return true;
             }
         }
 
         return false;
     }
-
-
 }

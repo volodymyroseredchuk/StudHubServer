@@ -34,7 +34,7 @@ public class ProfileController {
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(modelMapper.
-            map(userService.get(id), UserDTO.class), HttpStatus.OK);
+            map(userService.findById(id), UserDTO.class), HttpStatus.OK);
     }
 
 }

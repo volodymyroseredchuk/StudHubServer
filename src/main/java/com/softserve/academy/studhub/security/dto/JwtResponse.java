@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.dto.message.response;
+package com.softserve.academy.studhub.security.dto;
 
 import lombok.Data;
 
