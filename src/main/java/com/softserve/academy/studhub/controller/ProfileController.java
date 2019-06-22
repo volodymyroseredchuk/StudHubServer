@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @AllArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
@@ -20,7 +21,6 @@ public class ProfileController {
 
     private final ModelMapper modelMapper;
 
-    @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping("/my")
     public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 
@@ -30,7 +30,6 @@ public class ProfileController {
                 map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
     }
 
-    @CrossOrigin(exposedHeaders = "Access-Control-Allow-Origin")
     @GetMapping("/foreign/{id}")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 

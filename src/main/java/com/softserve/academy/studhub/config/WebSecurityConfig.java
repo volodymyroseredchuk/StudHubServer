@@ -51,7 +51,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/reset-password",
             "/tags/**",
             "/questions/**"
-
     };
 
     @Bean

@@ -1,12 +1,11 @@
 package com.softserve.academy.studhub.service.impl;
 
-
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.repository.UserRepository;
-import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    private final RoleService roleService;
-
-
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-    }
 
     @Override
     public User add(User user) {
@@ -34,7 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String userName) {
+    public User findByUsername(String userName) {
         Optional<User> result = userRepository.findByUsername(userName);
 
         return result.orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + userName));
@@ -89,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(String password, Integer userId) {
-        
+
         userRepository.updatePassword(password, userId);
     }
 
