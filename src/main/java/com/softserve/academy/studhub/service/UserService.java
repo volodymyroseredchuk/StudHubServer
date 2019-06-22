@@ -9,12 +9,9 @@ public interface UserService {
 
     User add(User user);
 
-
-
-    User findByUserName (String userName);
+    User findByUserName(String userName);
 
     User get(Integer id);
-
 
     User update(User user);
 
