@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.exceptions.ErrorDetails;
 import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class MainExceptionHandler extends ResponseEntityExceptionHandler {
 
     // This is for unauthorised access errors
@@ -34,6 +36,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.NOT_FOUND, ex.getMessage());
         ex.printStackTrace();
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
 
@@ -41,6 +44,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.UNAUTHORIZED, ex.getMessage());
         ex.printStackTrace();
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
 
