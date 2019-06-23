@@ -1,31 +1,45 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.VotePostDTO;
+import com.softserve.academy.studhub.dto.VoteResponseDTO;
 import com.softserve.academy.studhub.service.VoteService;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.stream.Collectors;
+
 @CrossOrigin
 @RestController
+@AllArgsConstructor
 public class VoteController {
 
-    @Autowired
     private VoteService voteService;
 
-    @PostMapping("/addVote")
-    public  ResponseEntity<Object> addVote(@Valid @RequestBody VotePostDTO vote) {
+    private ModelMapper modelMapper;
 
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(voteService.update(vote));
-        } catch (IllegalArgumentException | NullPointerException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    @PostMapping("/votes")
+    public  ResponseEntity<Object> addVote(@Valid @RequestBody VotePostDTO vote,
+                                           Principal principal) {
+        return ResponseEntity.status(HttpStatus.OK).body( modelMapper.map(
+                voteService.update(vote, principal.getName()), VoteResponseDTO.class
+                ));
+    }
+
+    @GetMapping("/votes/question/{questionId}")
+    public ResponseEntity<Object> getVotesByUserAndQuestionId( @PathVariable Integer questionId,
+                                                               Principal principal){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                voteService.findByUsernameAndQuestionId(principal.getName(), questionId).stream()
+                        .map(answer -> modelMapper.map(answer, VoteResponseDTO.class))
+                        .collect(Collectors.toList())
+        );
 
     }
 

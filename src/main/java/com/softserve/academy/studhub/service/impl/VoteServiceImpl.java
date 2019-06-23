@@ -1,20 +1,14 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.dto.VotePostDTO;
-import com.softserve.academy.studhub.entity.Answer;
-import com.softserve.academy.studhub.entity.Feedback;
-import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.entity.Vote;
-import com.softserve.academy.studhub.repository.AnswerRepository;
-import com.softserve.academy.studhub.repository.FeedbackRepository;
-import com.softserve.academy.studhub.repository.UserRepository;
-import com.softserve.academy.studhub.repository.VoteRepository;
+import com.softserve.academy.studhub.entity.*;
+import com.softserve.academy.studhub.repository.*;
 import com.softserve.academy.studhub.service.VoteService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import javax.transaction.Transactional;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -27,6 +21,8 @@ public class VoteServiceImpl implements VoteService {
     private AnswerRepository answerRepository;
 
     private FeedbackRepository feedbackRepository;
+
+    private QuestionRepository questionRepository;
 
     @Override
     public Vote findById(Integer id) {
@@ -59,13 +55,25 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
+    public List<Vote> findByUsernameAndQuestionId(String username, Integer questionId) {
+        Optional<User> userResponse = userRepository.findByUsername(username);
+        Optional<Question> questionResponse = questionRepository.findById(questionId);
+        if(userResponse.isPresent() && questionResponse.isPresent()){
+            return voteRepository.findByUserAndAnswer_Question(userResponse.get(), questionResponse.get());
+        } else {
+            return new ArrayList<Vote>();
+        }
+    }
+
+    @Override
     public Vote save(Vote vote) {
         return voteRepository.saveAndFlush(vote);
     }
 
     @Override
-    public Vote update(VotePostDTO voteDTO) throws NullPointerException, IllegalArgumentException {
-        Optional<User> userResponse = userRepository.findById(voteDTO.getUserId());
+    @Transactional
+    public Vote update(VotePostDTO voteDTO, String username) throws NullPointerException, IllegalArgumentException {
+        Optional<User> userResponse = userRepository.findByUsername(username);
         if (userResponse.isPresent()) {
             User user = userResponse.get();
             if (voteDTO.getAnswerId() != null) {
@@ -76,9 +84,13 @@ public class VoteServiceImpl implements VoteService {
                     Optional<Vote> voteResponse = voteRepository
                             .findByUserAndAnswer(user, answer);
                     if (voteResponse.isPresent()) {
-                        Vote dbVote = voteResponse.get();
-                        dbVote.setValue(voteDTO.getValue());
-                        return voteRepository.saveAndFlush(dbVote);
+                        if(voteResponse.get().getValue() == voteDTO.getValue()) {
+                            return voteResponse.get();
+                        } else {
+                            Vote dbVote = voteResponse.get();
+                            dbVote.setValue(voteDTO.getValue());
+                            return voteRepository.saveAndFlush(dbVote);
+                        }
                     } else {
                         Vote vote = new Vote();
                         vote.setValue(voteDTO.getValue());
@@ -99,9 +111,13 @@ public class VoteServiceImpl implements VoteService {
 
                     Optional<Vote> voteResponse = voteRepository.findByUserAndFeedback(user, feedback);
                     if (voteResponse.isPresent()) {
-                        Vote dbVote = voteResponse.get();
-                        dbVote.setValue(voteDTO.getValue());
-                        return voteRepository.saveAndFlush(dbVote);
+                        if(voteResponse.get().getValue() == voteDTO.getValue()) {
+                            return voteResponse.get();
+                        } else {
+                            Vote dbVote = voteResponse.get();
+                            dbVote.setValue(voteDTO.getValue());
+                            return voteRepository.saveAndFlush(dbVote);
+                        }
                     } else {
                         Vote vote = new Vote();
                         vote.setUser(user);
