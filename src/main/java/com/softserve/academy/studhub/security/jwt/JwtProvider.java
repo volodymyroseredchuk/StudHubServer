@@ -16,18 +16,33 @@ public class JwtProvider {
     @Value("${studhub.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${studhub.app.jwtExpiration}")
-    private int jwtExpiration;
+    @Value("${studhub.app.accessTokenExpiration}")
+    private int accessTokenExpiration;
 
-    public String generateJwtToken(Authentication authentication) {
+    @Value("${studhub.app.refreshTokenExpiration}")
+    private int refreshTokenExpiration;
+
+    public String generateAccessToken(Authentication authentication) {
 
         UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getId().toString()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpiration * 1000))
+                .setExpiration(new Date((new Date()).getTime() + accessTokenExpiration))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+
+        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+
+        return Jwts.builder()
+                .setSubject((userPrincipal.getId().toString()))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + refreshTokenExpiration))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 
@@ -51,11 +66,11 @@ public class JwtProvider {
         return false;
     }
 
-    public String getIdFromJwtToken(String token) {
+    public Integer getIdFromJwtToken(String token) {
 
-        return Jwts.parser()
+        return Integer.valueOf(Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
-                .getBody().getSubject();
+                .getBody().getSubject());
     }
 }
