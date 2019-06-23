@@ -34,8 +34,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
+        String username = user.getUsername();
 
-        return userRepository.saveAndFlush(user);
+        User updatable = userRepository.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException("No user found with username: " + username));
+
+        updatable.setFirstName(user.getFirstName());
+        updatable.setLastName(user.getLastName());
+        updatable.setEmail(user.getEmail());
+        updatable.setImageUrl(user.getImageUrl());
+
+        return userRepository.saveAndFlush(updatable);
     }
 
     @Override
@@ -100,6 +109,5 @@ public class UserServiceImpl implements UserService {
 
         return false;
     }
-
 
 }
