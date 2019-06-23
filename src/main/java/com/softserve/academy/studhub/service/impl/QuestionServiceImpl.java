@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -94,8 +95,14 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public List<Question> sortByTag(List<Tag> tags) {
-        return repository.findAllByTagListInOrderByCreationDateAsc(tags);
+    public List<Question> sortByTags(String[] tags, Pageable pageable) {
+        List<Tag> tagList;
+        try {
+            tagList = tagService.reviewTagList(tags);
+        } catch (IllegalArgumentException e) {
+            return new ArrayList<>();
+        }
+        return repository.findAllByTagListInOrderByCreationDateAsc(tagList, pageable).getContent();
     }
 
     @Override

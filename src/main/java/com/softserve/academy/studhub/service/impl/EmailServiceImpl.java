@@ -1,6 +1,8 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.model.Mail;
+import com.softserve.academy.studhub.security.model.PasswordResetToken;
 import com.softserve.academy.studhub.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +13,11 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
@@ -27,28 +32,51 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String username;
 
+    @Value("${client.host}")
+    private String clientHost;
+
     @Override
-    public void sendEmail(Mail mail) {
+    public void sendResetPasswordEmail(User receiver, PasswordResetToken token) {
 
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message,
-                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                    StandardCharsets.UTF_8.name());
 
-            Context context = new Context();
-            context.setVariables(mail.getModel());
-            String html = templateEngine.process("email/email-template", context);
+            Map<String, Object> model = new HashMap<>();
+            model.put("token", token);
+            model.put("user", receiver);
+            model.put("signature", "https://studhub.com");
+            model.put("resetUrl", clientHost + "/password_reset?token=" + token.getToken());
 
-            helper.setFrom(username);
-            helper.setTo(mail.getTo());
-            helper.setText(html, true);
-            helper.setSubject(mail.getSubject());
+            Mail mail = new Mail(
+                    "no-reply@studhub-supp.com",
+                    receiver.getEmail(),
+                    "Password reset request",
+                    model
+            );
 
+            MimeMessage message = createEmailTemplate(mail);
             mailSender.send(message);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private MimeMessage createEmailTemplate(Mail mail) throws MessagingException {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,
+                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name());
+
+        Context context = new Context();
+        context.setVariables(mail.getModel());
+        String html = templateEngine.process("email/email-template", context);
+
+        helper.setFrom(username);
+        helper.setTo(mail.getTo());
+        helper.setText(html, true);
+        helper.setSubject(mail.getSubject());
+
+        return message;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.softserve.academy.studhub.security.services;
 
+import com.softserve.academy.studhub.entity.enums.RoleName;
+
 public interface AdminService {
 
-    void raiseToModerator(Integer userId);
+    void addRole(Integer userId, RoleName roleName);
 
-    void downToUser(Integer moderatorId);
+    void removeRole(Integer userId, RoleName roleName);
 }

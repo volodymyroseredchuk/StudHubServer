@@ -1,15 +1,13 @@
 package com.softserve.academy.studhub.service;
 
-import com.softserve.academy.studhub.dto.UserDTO;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.entity.enums.RoleName;
 
 import java.util.List;
 
 public interface UserService {
 
     User add(User user);
-
-    User get(Integer id);
 
     User update(User user);
 
@@ -29,6 +27,6 @@ public interface UserService {
 
     void updatePassword(String password, Integer userId);
 
-    boolean isUserPrivileged(Integer userId);
+    boolean isUserPrivilegedByRole(Integer userId, RoleName roleName);
 
 }

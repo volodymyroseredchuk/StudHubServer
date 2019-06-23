@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +45,9 @@ public class QuestionController {
     }
 
 
-    @GetMapping("/tagged")
-    public List<Question> getAllSortByTags(@RequestBody List<Tag> tags) {
-        return questionService.sortByTag(tags);
+    @GetMapping("/tagged/{tags}")
+    public List<Question> getAllSortByTags(@PathVariable String[] tags, Pageable pageable) {
+        return questionService.sortByTags(tags, pageable);
     }
 
     @PutMapping("/{questionId}/edit")
