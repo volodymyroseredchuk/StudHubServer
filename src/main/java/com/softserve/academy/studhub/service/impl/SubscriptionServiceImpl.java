@@ -55,7 +55,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             List<User> userList = subscriptionRepository.findUserByChannelQuestionId(subjectId);
             Question question = questionRepository.findById(subjectId).orElseThrow(
                     () -> new IllegalArgumentException("Question not found."));
-
             sendSocketNotifications(userList);
             sendEmailNotifications(userList, question);
 
