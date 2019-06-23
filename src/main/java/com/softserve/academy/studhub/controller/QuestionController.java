@@ -33,9 +33,9 @@ public class QuestionController {
     }
 
 
-    @GetMapping("/{id}")
-    public Question showQuestionPage(@PathVariable Integer id) {
-        return questionService.findById(id);
+    @GetMapping("/{questionId}")
+    public Question showQuestionPage(@PathVariable Integer questionId) {
+        return questionService.findById(questionId);
     }
 
     @GetMapping("/search/{keywords}")
@@ -64,7 +64,7 @@ public class QuestionController {
         return questionService.saveNoUser(question);
     }
 
-    @DeleteMapping("/{questionId}/delete")
+    @DeleteMapping("/{questionId}")
     //@PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 

@@ -6,13 +6,19 @@ import com.softserve.academy.studhub.exceptions.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.mail.MethodNotSupportedException;
+import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class MainExceptionHandler extends ResponseEntityExceptionHandler {
@@ -62,6 +68,31 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     // This is supposed to catch errors thrown by @Valid, @NotNull etc.
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ErrorMessage.BAD_ARGUMENT);
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodNotAllowedException.class)
+    public ResponseEntity<Object> handleMethodNotAllowed (MethodNotAllowedException ex, HttpServletRequest request) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.METHOD_NOT_ALLOWED,  request.getMethod() + ErrorMessage.WRONG_METHOD);
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+                                                                         HttpHeaders headers, HttpStatus status,
+                                                                         WebRequest request) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage());
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ErrorMessage.BAD_ARGUMENT);

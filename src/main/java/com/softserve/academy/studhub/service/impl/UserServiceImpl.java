@@ -45,16 +45,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUserName(String userName) {
-        Optional<User> result = userRepository.findByUsername(userName);
-        if (!result.isPresent()) {
-            throw new NotFoundException("Requested question does not exist");
-        }
-        return result.get();
-
-    }
-
-    @Override
     public User update(User user) {
 
         return userRepository.saveAndFlush(user);

@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    List<Question> findAllByOrderByCreationDateAsc();
+    List<Question> findAllByOrderByCreationDateDesc();
 
     List<Question> findAllByTagListInOrderByCreationDateAsc(List<Tag> chosenTags);
 
