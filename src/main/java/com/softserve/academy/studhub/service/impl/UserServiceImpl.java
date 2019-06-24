@@ -37,12 +37,17 @@ public class UserServiceImpl implements UserService {
         String username = user.getUsername();
 
         User updatable = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("No user found with username: " + username));
-
-        updatable.setFirstName(user.getFirstName());
-        updatable.setLastName(user.getLastName());
-        updatable.setEmail(user.getEmail());
-        updatable.setImageUrl(user.getImageUrl());
+            new UsernameNotFoundException("No user found with username: " + username));
+        System.out.println(user.getFirstName().equals(""));
+        if (!user.getFirstName().equals("")) {
+            updatable.setFirstName(user.getFirstName());
+        }
+        if (!user.getLastName().equals("")) {
+            updatable.setLastName(user.getLastName());
+        }
+        if (!user.getEmail().equals("")) {
+            updatable.setEmail(user.getEmail());
+        }
 
         return userRepository.saveAndFlush(updatable);
     }

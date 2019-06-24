@@ -45,9 +45,6 @@ public class ProfileController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
 
-
-        System.out.println(user.getFirstName());
-
         return new ResponseEntity<>(modelMapper.
                 map(userService.update(user), UserDTO.class), HttpStatus.OK);
     }
