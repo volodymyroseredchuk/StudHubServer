@@ -5,11 +5,14 @@ import lombok.Data;
 @Data
 public class JwtResponse {
 
-    private String token;
+    private String accessToken;
+
+    private String refreshToken;
 
     private String type = "Bearer";
 
-    public JwtResponse(String accessToken) {
-        this.token = accessToken;
+    public JwtResponse(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }
