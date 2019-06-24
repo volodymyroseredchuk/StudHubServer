@@ -1,17 +1,19 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.UserDTO;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-@CrossOrigin
+
+import java.security.Principal;
+
 @AllArgsConstructor
+@CrossOrigin
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
@@ -22,11 +24,9 @@ public class ProfileController {
 
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> gerCurrentUser() {
+    public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username = ((UserDetails) principal).getUsername();
+        String username = principal.getName();
 
         return new ResponseEntity<>(modelMapper.
             map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
@@ -40,4 +40,11 @@ public class ProfileController {
             map(userService.findById(id), UserDTO.class), HttpStatus.OK);
     }
 
+    @PostMapping("/update")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
+
+        return new ResponseEntity<>(modelMapper.
+            map(userService.update(user), UserDTO.class), HttpStatus.OK);
+    }
 }
