@@ -42,16 +42,6 @@ public class QuestionServiceImpl implements IQuestionService {
 
         return repository.saveAndFlush(question);
     }
-// TODO: Delete after ui is ready.
-
-    @Override
-    public Question saveNoUser(Question question) {
-        question.setCreationDate(LocalDateTime.now());
-
-        question.setTagList(tagService.reviewTagList(question.getTagList()));
-
-        return repository.saveAndFlush(question);
-    }
 
     @Override
 
