@@ -32,6 +32,7 @@ public class QuestionController {
 
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<QuestionPaginatedDTO> getAllQuestions(Pageable pageable) {
         Page<Question> questionPage = questionService.sortByAge(pageable);
 
@@ -44,11 +45,13 @@ public class QuestionController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public Question showQuestionPage(@PathVariable Integer id) {
         return questionService.findById(id);
     }
 
     @GetMapping("/search/{keywords}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<QuestionPaginatedDTO> getSearched(@PathVariable String[] keywords, Pageable pageable) {
         Page<Question> questionPage = questionService.search(keywords, pageable);
 
@@ -61,6 +64,7 @@ public class QuestionController {
 
 
     @GetMapping("/tagged/{tags}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<QuestionPaginatedDTO> getAllSortByTags(@PathVariable String[] tags, Pageable pageable) {
         Page<Question> questionPage = questionService.sortByTags(tags, pageable);
 
@@ -72,14 +76,14 @@ public class QuestionController {
     }
 
     @PutMapping("/{questionId}/edit")
-    //@PreAuthorize("@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
+    @PreAuthorize("isAuthenticated() and @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public Question editQuestion(@PathVariable Integer questionId, @RequestBody Question question) {
 
         return questionService.update(questionId, question);
     }
 
     @PostMapping("/create")
-    //@PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public Question createQuestion(@Valid @RequestBody Question question) {
 
         //return questionService.save(question, principal);
@@ -87,7 +91,7 @@ public class QuestionController {
     }
 
     @DeleteMapping("/{questionId}/delete")
-    //@PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    @PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));

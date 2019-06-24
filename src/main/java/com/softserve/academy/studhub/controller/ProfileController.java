@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,7 @@ public class ProfileController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/my")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 
         String username = principal.getName();
@@ -34,7 +33,7 @@ public class ProfileController {
     }
 
     @GetMapping("/foreign/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(modelMapper.
@@ -42,7 +41,7 @@ public class ProfileController {
     }
 
     @PostMapping("/update")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
 
         return new ResponseEntity<>(modelMapper.

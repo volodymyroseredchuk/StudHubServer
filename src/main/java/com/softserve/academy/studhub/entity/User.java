@@ -71,6 +71,6 @@ public class User {
 
     @EqualsAndHashCode.Exclude
     @Column(name = "email_subscription", columnDefinition = "boolean default true")
-    private Boolean emailSubscription;
+    private Boolean emailSubscription = true;
 
 }
