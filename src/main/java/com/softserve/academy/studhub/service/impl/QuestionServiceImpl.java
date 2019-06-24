@@ -90,19 +90,15 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public List<Question> sortByAge() {
-        return repository.findAllByOrderByCreationDateDesc();
+
+    public Page<Question> sortByAge(Pageable pageable) {
+        return repository.findAllByOrderByCreationDateDesc(pageable);
+
     }
 
     @Override
-    public List<Question> sortByTags(String[] tags, Pageable pageable) {
-        List<Tag> tagList;
-        try {
-            tagList = tagService.reviewTagList(tags);
-        } catch (IllegalArgumentException e) {
-            return new ArrayList<>();
-        }
-        return repository.findAllByTagListInOrderByCreationDateAsc(tagList, pageable).getContent();
+    public Page<Question> sortByTags(String[] tags, Pageable pageable) {
+        return repository.findAllDistinctByTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
     }
 
     @Override

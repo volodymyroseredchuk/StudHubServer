@@ -16,8 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SocketServiceImpl implements SocketService {
 
     private static Map<Integer, WebSocketSession> sessionIdMap = new ConcurrentHashMap<>();
-
     private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
+
+    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.");
+    private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.");
 
     @Override
     public void addSession(Integer id, WebSocketSession session) {
@@ -33,15 +35,11 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void sendGreetings(WebSocketSession session, Integer textId) throws EncodeException, IOException {
-        /*-----------------------*/
-        SocketMessage connMsg = new SocketMessage("Connected successfully.");
-        SocketMessage noConnMsg = new SocketMessage("Connected unsuccessfully. Access denied.");
-        /*-----------------------*/
 
         if (textId.equals(1)) {
-            session.sendMessage(new TextMessage(messageEncoder.encode(connMsg)));
+            session.sendMessage(new TextMessage(messageEncoder.encode(CONNECTED_MESSAGE)));
         } else {
-            session.sendMessage(new TextMessage(messageEncoder.encode(noConnMsg)));
+            session.sendMessage(new TextMessage(messageEncoder.encode(NOT_CONNECTED_MESSAGE)));
         }
 
     }

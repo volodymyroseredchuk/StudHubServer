@@ -64,7 +64,8 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setQuestion(questionRepository.findById(questionId).get());
         answer.setUser(userRepository.findByUsername(username).get());
         Answer returnAnswer = answerRepository.saveAndFlush(answer);
-        subscriptionService.handleMessage(new SocketMessage(returnAnswer.getId().toString()));
+        subscriptionService.handleMessage(
+                new SocketMessage(returnAnswer.getQuestion().getId().toString()));
         return returnAnswer;
 
     }

@@ -10,6 +10,7 @@ import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@AllArgsConstructor
 @Slf4j
 public class AuthController {
 
@@ -34,18 +36,6 @@ public class AuthController {
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
     private final ModelMapper modelMapper;
-
-    public AuthController(AuthenticationManager authenticationManager, UserService userService,
-                          RoleService roleService, PasswordEncoder encoder, JwtProvider jwtProvider,
-                          ModelMapper modelMapper) {
-
-        this.authenticationManager = authenticationManager;
-        this.userService = userService;
-        this.roleService = roleService;
-        this.encoder = encoder;
-        this.jwtProvider = jwtProvider;
-        this.modelMapper = modelMapper;
-    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
@@ -58,9 +48,10 @@ public class AuthController {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtProvider.generateJwtToken(authentication);
+        String accessTokenString = jwtProvider.generateAccessToken(authentication);
+        String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
     }
 
     @PostMapping("/signup")

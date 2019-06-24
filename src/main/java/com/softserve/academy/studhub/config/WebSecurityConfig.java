@@ -40,7 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**",
             "/profile/**",
             "/sock/**",
-            "/addVote",
             "/tags/**",
             "/getSocketToken",
             "/signin",
@@ -48,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/forgot-password",
             "/reset-password",
             "/tags/**",
+            "/universities",
             "/questions/**"
     };
 

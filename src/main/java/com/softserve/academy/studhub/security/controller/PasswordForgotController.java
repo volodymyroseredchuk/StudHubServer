@@ -8,6 +8,7 @@ import com.softserve.academy.studhub.security.model.PasswordResetToken;
 import com.softserve.academy.studhub.security.services.PasswordResetTokenService;
 import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,20 +18,13 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/forgot-password")
+@AllArgsConstructor
 @Slf4j
 public class PasswordForgotController {
 
     private final UserService userService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final EmailService emailService;
-
-    public PasswordForgotController(UserService userService, PasswordResetTokenService passwordResetTokenService,
-                                    EmailService emailService) {
-
-        this.userService = userService;
-        this.passwordResetTokenService = passwordResetTokenService;
-        this.emailService = emailService;
-    }
 
     @PostMapping
     public ResponseEntity<?> processForgotPasswordForm(@Valid @RequestBody PasswordForgotDto form) {
