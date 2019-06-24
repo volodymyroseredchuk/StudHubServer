@@ -51,22 +51,22 @@ public class QuestionController {
     }
 
     @PutMapping("/{questionId}/edit")
-    //@PreAuthorize("@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
+    @PreAuthorize("@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public Question editQuestion(@PathVariable Integer questionId, @RequestBody Question question) {
 
         return questionService.update(questionId, question);
     }
 
     @PostMapping("/create")
-    //@PreAuthorize("hasRole('USER')")
-    public Question createQuestion(@Valid @RequestBody Question question) {
+    @PreAuthorize("hasRole('USER')")
+    public Question createQuestion(@Valid @RequestBody Question question, Principal principal) {
 
-        //return questionService.save(question, principal);
-        return questionService.saveNoUser(question);
+        return questionService.save(question, principal);
+        //return questionService.saveNoUser(question);
     }
 
     @DeleteMapping("/{questionId}")
-    //@PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    @PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));
