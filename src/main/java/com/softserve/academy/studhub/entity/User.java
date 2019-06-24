@@ -69,4 +69,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @EqualsAndHashCode.Exclude
+    @Column(name = "email_subscription")
+    private Boolean emailSubscription;
+
 }

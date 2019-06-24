@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.entity.enums.RoleName;
 
 import java.util.List;
 
@@ -8,15 +9,15 @@ public interface UserService {
 
     User add(User user);
 
-    User findByUsername(String userName);
-
-    User findById(Integer id);
-
     User update(User user);
 
     void delete(Integer id);
 
     List<User> getAll();
+
+    User findById(Integer id);
+
+    User findByUsername(String username);
 
     Boolean existsByUsername(String username);
 
@@ -26,6 +27,6 @@ public interface UserService {
 
     void updatePassword(String password, Integer userId);
 
-    boolean isUserPrivileged(Integer userId);
+    boolean isUserPrivilegedByRole(Integer userId, RoleName roleName);
 
 }

@@ -16,8 +16,9 @@ public interface VoteService {
     List<Vote> findByFeedback(Feedback feedback);
     List<Vote> findAll();
 
+    List<Vote> findByUsernameAndQuestionId(String username, Integer questionId);
     Vote save(Vote vote);
-    Vote update(VotePostDTO votePostDTO);
+    Vote update(VotePostDTO votePostDTO, String username);
     void delete(Vote vote);
 
 }

@@ -16,18 +16,33 @@ public class JwtProvider {
     @Value("${studhub.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${studhub.app.jwtExpiration}")
-    private int jwtExpiration;
+    @Value("${studhub.app.accessTokenExpiration}")
+    private long accessTokenExpiration;
 
-    public String generateJwtToken(Authentication authentication) {
+    @Value("${studhub.app.refreshTokenExpiration}")
+    private long refreshTokenExpiration;
+
+    public String generateAccessToken(Authentication authentication) {
 
         UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getId().toString()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpiration * 1000))
+                .setExpiration(new Date((new Date()).getTime() + accessTokenExpiration))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+
+        UserPrinciple userPrincipal = (UserPrinciple) authentication.getPrincipal();
+
+        return Jwts.builder()
+                .setSubject((userPrincipal.getId().toString()))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + refreshTokenExpiration))
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
 
@@ -37,25 +52,25 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            log.error("Invalid JWT signature -> Message: {} ", e);
+            log.error("Invalid JWT signature -> Message: {} ", e.getMessage());
         } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token -> Message: {}", e);
+            log.error("Invalid JWT token -> Message: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token -> Message: {}", e);
+            log.error("Expired JWT token -> Message: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token -> Message: {}", e);
+            log.error("Unsupported JWT token -> Message: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty -> Message: {}", e);
+            log.error("JWT claims string is empty -> Message: {}", e.getMessage());
         }
 
         return false;
     }
 
-    public String getIdFromJwtToken(String token) {
+    public Integer getIdFromJwtToken(String token) {
 
-        return Jwts.parser()
+        return Integer.valueOf(Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
-                .getBody().getSubject();
+                .getBody().getSubject());
     }
 }

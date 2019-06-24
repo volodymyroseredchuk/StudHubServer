@@ -30,7 +30,7 @@ public class ProfileController {
         String username = principal.getName();
 
         return new ResponseEntity<>(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
+            map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
     }
 
     @GetMapping("/foreign/{id}")
@@ -38,7 +38,7 @@ public class ProfileController {
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(modelMapper.
-                map(userService.findById(id), UserDTO.class), HttpStatus.OK);
+            map(userService.findById(id), UserDTO.class), HttpStatus.OK);
     }
 
     @PostMapping("/update")
@@ -46,6 +46,6 @@ public class ProfileController {
     public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
 
         return new ResponseEntity<>(modelMapper.
-                map(userService.update(user), UserDTO.class), HttpStatus.OK);
+            map(userService.update(user), UserDTO.class), HttpStatus.OK);
     }
 }

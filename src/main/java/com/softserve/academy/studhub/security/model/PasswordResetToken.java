@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -25,7 +26,15 @@ public class PasswordResetToken {
     @Column(nullable = false)
     private Date expiryDate;
 
-    public void setExpiryDate(int minutes){
+    public PasswordResetToken(User user) {
+        this.user = user;
+        this.token = UUID.randomUUID().toString();
+        setExpiryDate(30);
+    }
+
+    public PasswordResetToken(){}
+
+    public void setExpiryDate(int minutes) {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, minutes);
         this.expiryDate = now.getTime();

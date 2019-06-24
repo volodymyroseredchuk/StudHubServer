@@ -13,9 +13,9 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    List<Question> findAllByOrderByCreationDateAsc();
+    Page<Question> findAllByOrderByCreationDateAsc(Pageable pageable);
 
-    Page<Question> findAllByTagListInOrderByCreationDateAsc(List<Tag> chosenTags, Pageable pageable);
+    Page<Question> findAllDistinctByTagListInOrderByCreationDateDesc(List<Tag> chosenTags, Pageable pageable);
 
     @Query(
         value = "select * from Questions q where match(q.title, q.body) against(:pattern) order by :#{#pageable}",
