@@ -439,7 +439,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `university_id` int(11) DEFAULT NULL,
-   `email_subscription` bit(1) NOT NULL DEFAULT '1',
+   `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UK_k8d0f2n7n88w1a16yhua64onx` (`user_name`),
