@@ -17,10 +17,10 @@ public class JwtProvider {
     private String jwtSecret;
 
     @Value("${studhub.app.accessTokenExpiration}")
-    private int accessTokenExpiration;
+    private long accessTokenExpiration;
 
     @Value("${studhub.app.refreshTokenExpiration}")
-    private int refreshTokenExpiration;
+    private long refreshTokenExpiration;
 
     public String generateAccessToken(Authentication authentication) {
 
@@ -52,15 +52,15 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            log.error("Invalid JWT signature -> Message: {} ", e);
+            log.error("Invalid JWT signature -> Message: {} ", e.getMessage());
         } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token -> Message: {}", e);
+            log.error("Invalid JWT token -> Message: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token -> Message: {}", e);
+            log.error("Expired JWT token -> Message: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token -> Message: {}", e);
+            log.error("Unsupported JWT token -> Message: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty -> Message: {}", e);
+            log.error("JWT claims string is empty -> Message: {}", e.getMessage());
         }
 
         return false;
