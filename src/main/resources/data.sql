@@ -439,6 +439,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `university_id` int(11) DEFAULT NULL,
+   `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UK_k8d0f2n7n88w1a16yhua64onx` (`user_name`),
@@ -453,7 +454,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL);
+INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
