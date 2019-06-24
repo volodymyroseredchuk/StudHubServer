@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.service.SocketTokenService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +13,9 @@ import javax.websocket.EncodeException;
 
 @CrossOrigin
 @RestController
+@AllArgsConstructor
 public class WebSocketAuth {
 
-    @Autowired
     private SocketTokenService tokenService;
 
     @GetMapping("/getSocketToken")
