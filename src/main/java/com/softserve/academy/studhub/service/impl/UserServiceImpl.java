@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
         User updatable = userRepository.findByUsername(username).orElseThrow(() ->
             new UsernameNotFoundException("No user found with username: " + username));
-        System.out.println(user.getFirstName().equals(""));
+
         if (!user.getFirstName().equals("")) {
             updatable.setFirstName(user.getFirstName());
         }
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             updatable.setEmail(user.getEmail());
         }
 
-        return userRepository.saveAndFlush(user);
+        return userRepository.saveAndFlush(updatable);
     }
 
     @Override
