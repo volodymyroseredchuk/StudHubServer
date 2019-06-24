@@ -41,7 +41,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject((userPrincipal.getId().toString()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + refreshTokenExpiration))
+                .setExpiration(new Date((new Date()).getTime() + refreshTokenExpiration*1000))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }
