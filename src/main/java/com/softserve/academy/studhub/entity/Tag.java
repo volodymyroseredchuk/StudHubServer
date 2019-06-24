@@ -29,5 +29,6 @@ public class Tag {
     @LazyCollection(LazyCollectionOption.EXTRA)
     @ManyToMany(targetEntity = Question.class, mappedBy = "tagList")
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private List<Question> questionList;
 }
