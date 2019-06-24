@@ -3,6 +3,7 @@ package com.softserve.academy.studhub.controller;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.security.services.AdminService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,11 @@ import javax.validation.Valid;
 @CrossOrigin
 @RestController
 @RequestMapping("/admin")
+@AllArgsConstructor
 @Slf4j
 public class AdminController {
 
     private final AdminService adminService;
-
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
-    }
 
     @PostMapping("/raiseToModerator/{userId}")
     @PreAuthorize("hasRole('ADMIN')")

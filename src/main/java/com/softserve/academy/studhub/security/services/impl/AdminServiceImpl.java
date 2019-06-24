@@ -6,20 +6,17 @@ import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.services.AdminService;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
     private final UserService userService;
     private final RoleService roleService;
-
-    public AdminServiceImpl(UserService userService, RoleService roleService) {
-        this.userService = userService;
-        this.roleService = roleService;
-    }
 
     @Override
     public void addRole(Integer userId, RoleName roleName) {
