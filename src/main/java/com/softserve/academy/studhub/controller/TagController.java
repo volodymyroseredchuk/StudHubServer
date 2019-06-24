@@ -22,6 +22,6 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<TagsDTO> getAllTagsSortedWithPagination(Pageable pageable) {
-        return ResponseEntity.ok().body(tagService.findAllSorted(pageable));
+        return ResponseEntity.ok().body(new TagsDTO(tagService.findAllSorted(pageable)));
     }
 }
