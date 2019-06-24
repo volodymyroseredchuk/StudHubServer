@@ -45,7 +45,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
 
-        return userRepository.saveAndFlush(user);
+        String username = user.getUsername();
+
+        User updatable = userRepository.findByUsername(username).orElseThrow(() ->
+            new UsernameNotFoundException("No user found with username: " + username));
+
+        if (!user.getFirstName().equals("")) {
+            updatable.setFirstName(user.getFirstName());
+        }
+        if (!user.getLastName().equals("")) {
+            updatable.setLastName(user.getLastName());
+        }
+        if (!user.getEmail().equals("")) {
+            updatable.setEmail(user.getEmail());
+        }
+
+        return userRepository.saveAndFlush(updatable);
     }
 
     @Override
@@ -64,21 +79,21 @@ public class UserServiceImpl implements UserService {
     public User findById(Integer id) throws NotFoundException {
 
         return userRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
+            new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
     }
 
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
 
         return userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
+            new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
     }
 
     @Override
     public User findByEmail(String email) throws NotFoundException {
 
         return userRepository.findByEmail(email).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
+            new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
     }
 
     @Override

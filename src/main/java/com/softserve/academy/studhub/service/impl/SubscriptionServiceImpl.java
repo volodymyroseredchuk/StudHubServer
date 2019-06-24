@@ -68,7 +68,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         new Thread(()->{
             for (User user : userList) {
                 try {
-                    emailService.sendNotificationEmail(user, question);
+                    if (user.getEmailSubscription()) {
+                        emailService.sendNotificationEmail(user, question);
+                    }
                 } catch (RuntimeException e) {
                     e.printStackTrace();
                 }
