@@ -10,6 +10,7 @@ import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationE
 import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +19,11 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
-
-    public UserServiceImpl(UserRepository userRepository, RoleService roleService) {
-        this.userRepository = userRepository;
-        this.roleService = roleService;
-    }
 
     @Override
     public User add(User user) {
