@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,7 @@ public class AuthController {
     private final ModelMapper modelMapper;
 
     @PostMapping("/signin")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -55,6 +57,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpForm signUpRequest) {
 
         User user = modelMapper.map(signUpRequest, User.class);

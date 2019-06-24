@@ -27,7 +27,7 @@ public class CommentController {
 
 
     @PostMapping("/comments/create")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public Comment createComment(@PathVariable Integer questionId, @PathVariable Integer answerId,
                                  @Valid @RequestBody Comment comment) {
         commentService.setQuestionAndAnswer(questionId, answerId, comment);
@@ -35,7 +35,7 @@ public class CommentController {
     }
 
     @PutMapping("comments/{commentId}/edit")
-    @PreAuthorize("@commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    @PreAuthorize("isAuthenticated() and @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
     public Comment editComment(@PathVariable Integer questionId, @PathVariable Integer answerId,
                                @PathVariable Integer commentId, @Valid @RequestBody Comment comment) {
         commentService.setQuestionAndAnswer(questionId, answerId, comment);

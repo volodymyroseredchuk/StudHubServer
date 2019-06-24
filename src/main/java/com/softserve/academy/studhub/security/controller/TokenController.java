@@ -20,6 +20,7 @@ public class TokenController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/refresh")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> refreshAccessToken() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -30,7 +31,7 @@ public class TokenController {
     }
 
     @PostMapping("/verify")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> verifyAccessToken() {
 
         return ResponseEntity.ok(new MessageResponse("token is valid"));

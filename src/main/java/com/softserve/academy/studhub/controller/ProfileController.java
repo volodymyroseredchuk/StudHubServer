@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ public class ProfileController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/my")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> gerCurrentUser() {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -31,6 +33,7 @@ public class ProfileController {
     }
 
     @GetMapping("/foreign/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
         return new ResponseEntity<>(modelMapper.

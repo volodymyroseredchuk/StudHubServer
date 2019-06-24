@@ -38,18 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/profile/**",
-            "/sock/**",
-            "/addVote",
-            "/tags/**",
-            "/getSocketToken",
-            "/signin",
-            "/signup",
-            "/forgot-password",
-            "/reset-password",
-            "/tags/**",
-            "/universities",
-            "/questions/**"
+            "/sock/**"
     };
 
     @Bean
@@ -85,8 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers(AUTH_WHITELIST)
                         .permitAll()
-                .anyRequest()
-                    .authenticated()
                 .and()
                 .exceptionHandling()
                     .authenticationEntryPoint(unauthorizedHandler)
