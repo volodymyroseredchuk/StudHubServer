@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.entity.Feedback;
 import com.softserve.academy.studhub.service.FeedbackService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class FeedbackController {
     }
 
     @GetMapping(path = "/teacher/{teacherId}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<FeedbackDTO>> getFeedbackByTeacher(@PathVariable Integer teacherId) {
         List<Feedback> feedbacks = feedbackService.findByTeacherId(teacherId);
         List<FeedbackDTO> feedbackDTOS = feedbacks.stream()
@@ -40,12 +42,14 @@ public class FeedbackController {
     }
 
     @PostMapping(path = "/feedback")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));
         return ResponseEntity.ok(modelMapper.map(result, FeedbackDTO.class));
     }
 
     @GetMapping(path = "/university/{universityId}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<FeedbackDTO>> getFeedbackByUniversuty(@PathVariable Integer universityId) {
         List<Feedback> feedbacks = feedbackService.findByUniversityId(universityId);
         List<FeedbackDTO> feedbackDTOS = feedbacks.stream()

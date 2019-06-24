@@ -17,10 +17,10 @@ public class JwtProvider {
     private String jwtSecret;
 
     @Value("${studhub.app.accessTokenExpiration}")
-    private long accessTokenExpiration;
+    private int accessTokenExpiration;
 
     @Value("${studhub.app.refreshTokenExpiration}")
-    private long refreshTokenExpiration;
+    private int refreshTokenExpiration;
 
     public String generateAccessToken(Authentication authentication) {
 
@@ -29,7 +29,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject((userPrincipal.getId().toString()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + accessTokenExpiration))
+                .setExpiration(new Date((new Date()).getTime() + accessTokenExpiration*1000))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
@@ -41,7 +41,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject((userPrincipal.getId().toString()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + refreshTokenExpiration))
+                .setExpiration(new Date((new Date()).getTime() + refreshTokenExpiration*1000))
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
     }

@@ -70,7 +70,7 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @Column(name = "email_subscription")
-    private Boolean emailSubscription;
+    @Column(name = "email_subscription", columnDefinition = "boolean default true")
+    private Boolean emailSubscription = true;
 
 }
