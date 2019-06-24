@@ -22,9 +22,9 @@ public interface IQuestionService {
 
     String deleteById(Integer questionId);
 
-    List<Question> sortByAge();
+    Page<Question> sortByAge(Pageable pageable);
 
-    List<Question> sortByTags(String[] tags, Pageable pageable);
+    Page<Question> sortByTags(String[] tags, Pageable pageable);
 
     Page<Question> search(String[] keywords, Pageable pageable);
 }

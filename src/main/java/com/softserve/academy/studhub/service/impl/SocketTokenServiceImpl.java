@@ -19,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SocketTokenServiceImpl implements SocketTokenService {
 
+    private SocketTokenEncoder encoder = new SocketTokenEncoder();
+
     private static LoadingCache<String, Integer> tokenIdMap = CacheBuilder.newBuilder()
             .maximumSize(100000)
             .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -28,8 +30,6 @@ public class SocketTokenServiceImpl implements SocketTokenService {
                     return tokenIdMap.get(s);
                 }
             });
-
-    private SocketTokenEncoder encoder = new SocketTokenEncoder();
 
     @Override
     public Integer checkAccess(String token) {
