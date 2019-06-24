@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -63,11 +65,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> reviewTagList(List<Tag> tagList) {
+    public Set<Tag> reviewTagList(Set<Tag> tagList) {
         if (tagList == null) {
             return null;
         }
-        List<Tag> dbTagsList = new ArrayList<>();
+        Set<Tag> dbTagsList = new HashSet<>();
         Tag tempTag;
         for (Tag tag : tagList) {
             try {
@@ -81,11 +83,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> reviewTagList(String[] tags) {
+    public Set<Tag> reviewTagList(String[] tags) {
         if (tags == null) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
-        List<Tag> dbTagsList = new ArrayList<>();
+        Set<Tag> dbTagsList = new HashSet<>();
         Tag tempTag;
         for (String tag : tags) {
             try {

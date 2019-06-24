@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,5 +19,5 @@ public class QuestionForListDTO {
 
     private LocalDateTime creationDate;
 
-    private List<Tag> tagList;
+    private Set<Tag> tagList;
 }
