@@ -40,7 +40,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**",
             "/profile/**",
             "/sock/**",
-            "/addVote",
             "/tags/**",
             "/getSocketToken",
             "/signin",
