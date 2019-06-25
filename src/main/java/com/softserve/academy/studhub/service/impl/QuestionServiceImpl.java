@@ -103,4 +103,11 @@ public class QuestionServiceImpl implements IQuestionService {
     public Page<Question> search(String[] keywords, Pageable pageable) {
         return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
+
+    @Override
+    public List<Question> findQuestionByUserUsername(String username){
+
+        return repository.findQuestionByUserUsername(username);
+    }
+
 }
