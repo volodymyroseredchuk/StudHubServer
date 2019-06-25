@@ -23,4 +23,6 @@ public class ErrorMessage {
 
     public static final String SERVER_ERROR = "Ooops... Server doesn't feel good. Try to connect later.";
 
+    public static final String WRONG_METHOD = " method is not allowed for this operation";
+
 }

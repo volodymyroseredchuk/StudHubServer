@@ -40,7 +40,9 @@ public class UserServiceImpl implements UserService {
                 throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
             }
         } else {
+
             throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_EMAIL);
+
         }
     }
 
