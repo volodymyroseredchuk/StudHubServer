@@ -52,16 +52,6 @@ public class QuestionServiceImpl implements IQuestionService {
         return subscrQuestion;
 
     }
-// TODO: Delete after ui is ready.
-
-    @Override
-    public Question saveNoUser(Question question) {
-        question.setCreationDate(LocalDateTime.now());
-
-        question.setTagList(tagService.reviewTagList(question.getTagList()));
-
-        return repository.saveAndFlush(question);
-    }
 
     @Override
 
@@ -100,8 +90,10 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
+
     public Page<Question> sortByAge(Pageable pageable) {
-        return repository.findAllByOrderByCreationDateAsc(pageable);
+        return repository.findAllByOrderByCreationDateDesc(pageable);
+
     }
 
     @Override

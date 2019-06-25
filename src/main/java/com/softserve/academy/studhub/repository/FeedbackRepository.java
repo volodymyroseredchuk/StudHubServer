@@ -11,4 +11,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     List<Feedback> findByTeacherId(Integer teacher);
 
     List<Feedback> findByUniversityId(Integer university);
+
+    List<Feedback> findAll();
 }
