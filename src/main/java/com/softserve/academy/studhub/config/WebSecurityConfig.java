@@ -37,10 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/ui",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**",
-        "/feedback/**",
-        "/feedback",
-        "/feedback/feedback"
+            "/webjars/**"
     };
 
     @Bean
