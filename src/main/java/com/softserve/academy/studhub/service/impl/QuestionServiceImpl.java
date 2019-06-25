@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.service.*;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@AllArgsConstructor
 @Service
 public class QuestionServiceImpl implements IQuestionService {
 
@@ -25,32 +26,27 @@ public class QuestionServiceImpl implements IQuestionService {
     private ChannelService channelService;
     private UserService userService;
 
-    public QuestionServiceImpl(QuestionRepository repository, TagService tagService, UserService userService) {
-        this.repository = repository;
-        this.tagService = tagService;
-        this.userService = userService;
-    }
-
     @Override
     public Question save(Question question, Principal principal) {
         question.setCreationDate(LocalDateTime.now());
         User user = userService.findByUsername(principal.getName());
         question.setUser(user);
         question.setTagList(tagService.reviewTagList(question.getTagList()));
+        Question resultQuestion  = repository.saveAndFlush(question);
 
-        Question subscrQuestion  = repository.saveAndFlush(question);
+        makeSubscription(resultQuestion, user);
+        return resultQuestion;
+
+    }
+
+    private void makeSubscription(Question question, User user) {
         Channel channel = new Channel();
-        channel.setQuestion(subscrQuestion);
+        channel.setQuestion(question);
         channel = channelService.save(channel);
-
         Subscription subscription = new Subscription();
         subscription.setChannel(channel);
         subscription.setUser(user);
-
-        System.out.println("Channel: " + subscription.getChannel().getId() + ", User: " + subscription.getUser().getId());
         subscriptionService.save(subscription);
-        return subscrQuestion;
-
     }
 
     @Override
