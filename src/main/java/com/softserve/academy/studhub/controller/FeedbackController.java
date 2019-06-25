@@ -26,6 +26,7 @@ public class FeedbackController {
     }
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     public List<Feedback> getAllFeedbacks() {
 
         return feedbackService.findAll();
