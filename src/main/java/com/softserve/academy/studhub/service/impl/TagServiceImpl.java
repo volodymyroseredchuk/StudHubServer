@@ -4,15 +4,18 @@ import com.softserve.academy.studhub.dto.TagsDTO;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.repository.TagRepository;
 import com.softserve.academy.studhub.service.TagService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class TagServiceImpl implements TagService {
+
     private final TagRepository tagRepository;
 
     public TagServiceImpl(TagRepository tagRepository) {
@@ -26,20 +29,14 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag findById(Integer id) {
-        Optional<Tag> resultTag = tagRepository.findById(id);
-        if (resultTag.isPresent()) {
-            return resultTag.get();
-        }
-        throw new IllegalArgumentException("Tag is not found");
+        return tagRepository.findById(id).orElseThrow(
+            () -> new IllegalArgumentException("Tag is not found"));
     }
 
     @Override
     public Tag findByName(String name) {
-        Optional<Tag> resultTag = tagRepository.findByNameIgnoreCase(name);
-        if (resultTag.isPresent()) {
-            return resultTag.get();
-        }
-        throw new IllegalArgumentException("Tag is not found");
+        return tagRepository.findByNameIgnoreCase(name).orElseThrow(
+            () -> new IllegalArgumentException("Tag is not found"));
     }
 
     @Override
@@ -63,16 +60,16 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public TagsDTO findAllSorted(Pageable pageable) {
-        return new TagsDTO(tagRepository.findAllSorted(pageable));
+    public Page<Tag> findAllSorted(Pageable pageable) {
+        return tagRepository.findAllSorted(pageable);
     }
 
     @Override
-    public List<Tag> reviewTagList(List<Tag> tagList) {
+    public Set<Tag> reviewTagList(Set<Tag> tagList) {
         if (tagList == null) {
             return null;
         }
-        List<Tag> dbTagsList = new ArrayList<>();
+        Set<Tag> dbTagsList = new HashSet<>();
         Tag tempTag;
         for (Tag tag : tagList) {
             try {
@@ -80,6 +77,25 @@ public class TagServiceImpl implements TagService {
             } catch (IllegalArgumentException e) {
                 tempTag = save(tag);
             }
+            dbTagsList.add(tempTag);
+        }
+        return dbTagsList;
+    }
+
+    @Override
+    public Set<Tag> reviewTagList(String[] tags) {
+        if (tags == null) {
+            return new HashSet<>();
+        }
+        Set<Tag> dbTagsList = new HashSet<>();
+        Tag tempTag;
+        for (String tag : tags) {
+            try {
+                tempTag = findByName(tag);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+
             dbTagsList.add(tempTag);
         }
         return dbTagsList;

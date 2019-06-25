@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service;
 
+import com.softserve.academy.studhub.dto.VotePostDTO;
 import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Feedback;
 import com.softserve.academy.studhub.entity.User;
@@ -15,8 +16,9 @@ public interface VoteService {
     List<Vote> findByFeedback(Feedback feedback);
     List<Vote> findAll();
 
+    List<Vote> findByUsernameAndQuestionId(String username, Integer questionId);
     Vote save(Vote vote);
-    Vote update(Vote vote);
+    Vote update(VotePostDTO votePostDTO, String username);
     void delete(Vote vote);
 
 }

@@ -6,9 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -44,7 +47,7 @@ public class Question {
     @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)
     @JoinTable(name = "questions_tags", joinColumns = {@JoinColumn(name = "question_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-    private List<Tag> tagList;
+    private Set<Tag> tagList;
 
 
 }

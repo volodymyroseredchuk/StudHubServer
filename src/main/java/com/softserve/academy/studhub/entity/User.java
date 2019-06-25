@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 @Entity
 @Table(name = "users")
 public class User {
@@ -67,5 +68,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @Column(name = "email_subscription", columnDefinition = "boolean default true")
+    private Boolean emailSubscription = true;
 
 }

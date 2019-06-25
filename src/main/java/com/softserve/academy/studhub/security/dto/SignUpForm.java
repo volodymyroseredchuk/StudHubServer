@@ -1,8 +1,10 @@
-package com.softserve.academy.studhub.dto.message.request;
+package com.softserve.academy.studhub.security.dto;
 
+import com.softserve.academy.studhub.entity.University;
 import lombok.Data;
 
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 
 @Data
 public class SignUpForm {
@@ -19,4 +21,8 @@ public class SignUpForm {
     private String password;
 
     private String imageUrl;
+
+    private LocalDate creationDate;
+
+    private University university;
 }

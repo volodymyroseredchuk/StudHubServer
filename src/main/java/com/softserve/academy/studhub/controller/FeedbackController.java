@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/feedback")
 public class FeedbackController {
@@ -24,8 +25,15 @@ public class FeedbackController {
         this.modelMapper = modelMapper;
     }
 
+    @GetMapping
+    @PreAuthorize("permitAll()")
+    public List<Feedback> getAllFeedbacks() {
+
+        return feedbackService.findAll();
+    }
+
     @GetMapping(path = "/teacher/{teacherId}")
-//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<FeedbackDTO>> getFeedbackByTeacher(@PathVariable Integer teacherId) {
         List<Feedback> feedbacks = feedbackService.findByTeacherId(teacherId);
         List<FeedbackDTO> feedbackDTOS = feedbacks.stream()
@@ -35,14 +43,15 @@ public class FeedbackController {
     }
 
     @PostMapping(path = "/feedback")
-//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
+
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));
         return ResponseEntity.ok(modelMapper.map(result, FeedbackDTO.class));
     }
 
     @GetMapping(path = "/university/{universityId}")
-//    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<FeedbackDTO>> getFeedbackByUniversuty(@PathVariable Integer universityId) {
         List<Feedback> feedbacks = feedbackService.findByUniversityId(universityId);
         List<FeedbackDTO> feedbackDTOS = feedbacks.stream()

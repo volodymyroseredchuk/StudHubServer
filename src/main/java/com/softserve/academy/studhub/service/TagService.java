@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TagService {
 
@@ -23,7 +24,9 @@ public interface TagService {
 
     List<Tag> findAll(Pageable pageable);
 
-    TagsDTO findAllSorted(Pageable pageable);
+    Page<Tag> findAllSorted(Pageable pageable);
 
-    List<Tag> reviewTagList(List<Tag> tagList);
+    Set<Tag> reviewTagList(Set<Tag> tagList);
+
+    Set<Tag> reviewTagList(String[] tags);
 }
