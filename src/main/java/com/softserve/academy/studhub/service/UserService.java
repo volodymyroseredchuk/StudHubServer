@@ -29,4 +29,5 @@ public interface UserService {
 
     boolean isUserPrivilegedByRole(Integer userId, RoleName roleName);
 
+    User getCurrentUser();
 }

@@ -25,6 +25,12 @@ public class FeedbackController {
         this.modelMapper = modelMapper;
     }
 
+    @GetMapping
+    public List<Feedback> getAllFeedbacks() {
+
+        return feedbackService.findAll();
+    }
+
     @GetMapping(path = "/teacher/{teacherId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<FeedbackDTO>> getFeedbackByTeacher(@PathVariable Integer teacherId) {
@@ -38,6 +44,7 @@ public class FeedbackController {
     @PostMapping(path = "/feedback")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
+
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));
         return ResponseEntity.ok(modelMapper.map(result, FeedbackDTO.class));
     }
