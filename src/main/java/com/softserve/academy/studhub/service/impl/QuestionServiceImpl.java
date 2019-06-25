@@ -56,7 +56,7 @@ public class QuestionServiceImpl implements IQuestionService {
         updatable.setTitle(question.getTitle());
         updatable.setBody(question.getBody());
         updatable.setModifiedDate(LocalDateTime.now());
-        updatable.setTagList(tagService.reviewTagList(updatable.getTagList()));
+        updatable.setTagList(tagService.reviewTagList(question.getTagList()));
 
         return repository.saveAndFlush(updatable);
     }
