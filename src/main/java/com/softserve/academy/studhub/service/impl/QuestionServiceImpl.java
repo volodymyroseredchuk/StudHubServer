@@ -1,13 +1,10 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.entity.Question;
-import com.softserve.academy.studhub.entity.Tag;
+import com.softserve.academy.studhub.entity.*;
 import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
-import com.softserve.academy.studhub.service.IQuestionService;
-import com.softserve.academy.studhub.service.TagService;
-import com.softserve.academy.studhub.service.UserService;
+import com.softserve.academy.studhub.service.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +21,8 @@ public class QuestionServiceImpl implements IQuestionService {
     private QuestionRepository repository;
 
     private TagService tagService;
-
+    private SubscriptionService subscriptionService;
+    private ChannelService channelService;
     private UserService userService;
 
     public QuestionServiceImpl(QuestionRepository repository, TagService tagService, UserService userService) {
@@ -36,11 +34,23 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public Question save(Question question, Principal principal) {
         question.setCreationDate(LocalDateTime.now());
-        question.setUser(userService.findByUsername(principal.getName()));
-
+        User user = userService.findByUsername(principal.getName());
+        question.setUser(user);
         question.setTagList(tagService.reviewTagList(question.getTagList()));
 
-        return repository.saveAndFlush(question);
+        Question subscrQuestion  = repository.saveAndFlush(question);
+        Channel channel = new Channel();
+        channel.setQuestion(subscrQuestion);
+        channel = channelService.save(channel);
+
+        Subscription subscription = new Subscription();
+        subscription.setChannel(channel);
+        subscription.setUser(user);
+
+        System.out.println("Channel: " + subscription.getChannel().getId() + ", User: " + subscription.getUser().getId());
+        subscriptionService.save(subscription);
+        return subscrQuestion;
+
     }
 // TODO: Delete after ui is ready.
 
