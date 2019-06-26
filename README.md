@@ -4,17 +4,30 @@ RESTfull application created by students of SoftServe IT Academy
 
 ## Getting Started
 
-To start working on this project please add `application.properties` file in the resources folder
-that contains next info along with credentials for your local MySql instance
+To start working on this project please add `application.properties` file in the root
+directory of the project (next to `README.md` and `.gitignore`) containing the same
+info as `application.properties` file in `src/main/resources/` directory, but 
+change `${...}` values to your local credentials.
 
 
+## Running Application
+
+To automatically create database with test data run the next command prompt
+(run only once)
 ```
-spring.datasource.url = jdbc:mysql://localhost:3306/studhub?createDatabaseIfNotExist=true
-spring.datasource.username = 
-spring.datasource.password = 
+mvn clean install -D skip.db.init=false
 ```
 
+To run the application
+```
+mvn spring-boot:run
+```
 
+To recompile the application
+(run always if db is already created)
+```
+mvn clean install
+```
 
 ## Authors
 
