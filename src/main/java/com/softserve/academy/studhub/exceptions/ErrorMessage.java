@@ -16,6 +16,7 @@ public class ErrorMessage {
     public static final String TAG_NOTFOUND = "Requested tag does not exist by this id: ";
     public static final String FEEDBACK_NOTFOUND = "Requested feedback does not exist by this id: ";
     public static final String VOTE_NOTFOUND = "Requested vote does not exist by this id: ";
+    public static final String TASK_NOT_FOUND_BY_ID = "The task does not exist by this id: ";
 
     public static final String NOT_AUTHORISED = "You don't have rights to access this resource ";
 

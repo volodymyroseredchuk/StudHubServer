@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,11 +8,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"title", "body", "modifiedDate", "expectedPrice"})
+@EqualsAndHashCode(exclude = {"title", "body", "modifiedDate", "expectedPrice", "deadlineDate", "proposalList"})
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -42,4 +44,8 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
+    @JsonManagedReference
+    private List<Proposal> proposalList;
 }
