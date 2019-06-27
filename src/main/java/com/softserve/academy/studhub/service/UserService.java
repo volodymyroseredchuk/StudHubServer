@@ -3,6 +3,8 @@ package com.softserve.academy.studhub.service;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 
+import java.nio.file.AccessDeniedException;
+import java.rmi.activation.ActivateFailedException;
 import java.util.List;
 
 public interface UserService {
@@ -30,4 +32,6 @@ public interface UserService {
     boolean isUserPrivilegedByRole(Integer userId, RoleName roleName);
 
     User getCurrentUser();
+
+    boolean isUserActivated(String username);
 }

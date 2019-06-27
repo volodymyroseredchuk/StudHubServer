@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.exceptions.ErrorDetails;
 import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.exceptions.NotConfirmedException;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.ForbiddenException;
 
 @ControllerAdvice
 @Slf4j
@@ -82,6 +84,13 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
         ex.printStackTrace();
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotConfirmedException.class)
+    public ResponseEntity<Object> handleNotConfirmedException(NotConfirmedException ex) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.FORBIDDEN, ex.getMessage());
+        ex.printStackTrace();
+        return new ResponseEntity<>(details, HttpStatus.FORBIDDEN);
     }
 
     // This is supposed to catch errors thrown by @Valid, @NotNull etc.
