@@ -18,6 +18,7 @@ public class ErrorMessage {
     public static final String VOTE_NOTFOUND = "Requested vote does not exist by this id: ";
 
     public static final String NOT_AUTHORISED = "You don't have rights to access this resource ";
+    public static final String WRONG_GOOGLE_ID_TOKEN = "Invalid Google Id Token.";
 
     public static final String BAD_ARGUMENT = "One or more passed parameters is wrong.";
 

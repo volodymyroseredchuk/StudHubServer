@@ -42,7 +42,7 @@ public class User {
     private String email;
 
     @NonNull
-    @Size(min=3, max = 16)
+    @Size(min=3, max = 30)
     @Column(name = "user_name", nullable = false, unique = true)
     private String username;
 
