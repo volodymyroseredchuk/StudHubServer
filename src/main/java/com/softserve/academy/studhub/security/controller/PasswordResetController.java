@@ -39,7 +39,7 @@ public class PasswordResetController {
 
         emailService.sendResetPasswordEmail(user, token);
 
-        return ResponseEntity.ok(new MessageResponse("The reset-password link has been sent on your email"));
+        return ResponseEntity.ok(new MessageResponse("The reset-password link has been sent to " + user.getEmail()));
     }
 
     @PostMapping("/reset-password")
