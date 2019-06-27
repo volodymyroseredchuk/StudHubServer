@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.security.dto.JwtResponse;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
@@ -34,6 +35,6 @@ public class TokenController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> verifyAccessToken() {
 
-        return ResponseEntity.ok(new MessageResponse("token is valid"));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.VALID_TOKEN));
     }
 }

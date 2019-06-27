@@ -37,6 +37,12 @@ public class EmailServiceImpl implements EmailService {
     @Value("${client.host}")
     private String clientHost;
 
+    @Value("${studhub.mail.noreply}")
+    private String senderMail;
+
+    @Value("${client.signature}")
+    private String signature;
+
     @Override
     public void sendResetPasswordEmail(User receiver, PasswordResetToken token) {
 
@@ -45,11 +51,11 @@ public class EmailServiceImpl implements EmailService {
             Map<String, Object> model = new HashMap<>();
             model.put("token", token);
             model.put("user", receiver);
-            model.put("signature", "https://studhub.com");
+            model.put("signature", signature);
             model.put("resetUrl", clientHost + "/password_reset?token=" + token.getToken());
 
             Mail mail = new Mail(
-                    "no-reply@studhub-supp.com",
+                    senderMail,
                     receiver.getEmail(),
                     "Password reset request",
                     model
@@ -70,11 +76,11 @@ public class EmailServiceImpl implements EmailService {
             Map<String, Object> model = new HashMap<>();
             model.put("token", token);
             model.put("user", receiver);
-            model.put("signature", "https://studhub.com");
+            model.put("signature", signature);
             model.put("resetUrl", clientHost + "/signin?token=" + token.getToken());
 
             Mail mail = new Mail(
-                    "no-reply@studhub-supp.com",
+                    senderMail,
                     receiver.getEmail(),
                     "Confirm account request",
                     model
@@ -94,12 +100,12 @@ public class EmailServiceImpl implements EmailService {
 
             Map<String, Object> model = new HashMap<>();
             model.put("user", receiver);
-            model.put("signature", "https://studhub.com");
+            model.put("signature", signature);
             model.put("questionUrl", clientHost + "/questions/" + question.getId());
             model.put("questionName", question.getTitle());
 
             Mail mail = new Mail(
-                    "no-reply@studhub-supp.com",
+                    senderMail,
                     receiver.getEmail(),
                     "Question news",
                     model

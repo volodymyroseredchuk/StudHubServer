@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.security.controller;
 
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.security.dto.PasswordForgotDto;
@@ -39,7 +40,7 @@ public class PasswordResetController {
 
         emailService.sendResetPasswordEmail(user, token);
 
-        return ResponseEntity.ok(new MessageResponse("The reset-password link has been sent to " + user.getEmail()));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_RESET_PASSWORD_LINK + user.getEmail()));
     }
 
     @PostMapping("/reset-password")
@@ -53,7 +54,7 @@ public class PasswordResetController {
         userService.updatePassword(updatedPassword, user.getId());
         passwordResetTokenService.delete(token);
 
-        return ResponseEntity.ok(new MessageResponse("The password has been successfully changed"));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.RESET_PASSWORD));
     }
 
 }

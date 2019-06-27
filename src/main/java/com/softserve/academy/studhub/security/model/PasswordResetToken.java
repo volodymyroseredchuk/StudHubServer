@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.security.model;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.constants.ExpirationConstants;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class PasswordResetToken {
     public PasswordResetToken(User user) {
         this.user = user;
         this.token = UUID.randomUUID().toString();
-        setExpiryDate(30);
+        setExpiryDate(ExpirationConstants.PASSWORD_RESET_TOKEN_EXPIRATION_IN_MINUTES);
     }
 
     public PasswordResetToken(){}

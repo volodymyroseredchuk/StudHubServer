@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
@@ -52,16 +53,13 @@ public class AuthController {
                 )
         );
 
-        if (userService.findByUsername(loginRequest.getUsername()).getIsActivated()) {
+        userService.isUserActivated(loginRequest.getUsername());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String accessTokenString = jwtProvider.generateAccessToken(authentication);
-            String refreshToken = jwtProvider.generateRefreshToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String accessTokenString = jwtProvider.generateAccessToken(authentication);
+        String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
-            return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
-        } else {
-            return ResponseEntity.status(403).body(new MessageResponse("Please, activate your account"));
-        }
+        return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
 
     }
 
@@ -80,7 +78,7 @@ public class AuthController {
         confirmTokenService.save(token);
         emailService.sendConfirmAccountEmail(user, token);
 
-        return ResponseEntity.ok(new MessageResponse("Confirm your account at " + user.getEmail()));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_CONFIRM_ACC_LINK + user.getEmail()));
     }
 
     @PostMapping("/confirm-account")
@@ -93,6 +91,6 @@ public class AuthController {
         userService.update(user);
         confirmTokenService.delete(token);
 
-        return ResponseEntity.ok(new MessageResponse("You have been successfully confirmed your account!"));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.CONFIRM_ACC));
     }
 }
