@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.model.ConfirmToken;
 import com.softserve.academy.studhub.security.model.Mail;
 import com.softserve.academy.studhub.security.model.PasswordResetToken;
 import com.softserve.academy.studhub.service.EmailService;
@@ -54,7 +55,32 @@ public class EmailServiceImpl implements EmailService {
                     model
             );
 
-            MimeMessage message = createEmailTemplate(mail, "email-template");
+            MimeMessage message = createEmailTemplate(mail, "email-forgot-password");
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendConfirmAccountEmail(User receiver, ConfirmToken token) {
+
+        try {
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("token", token);
+            model.put("user", receiver);
+            model.put("signature", "https://studhub.com");
+            model.put("resetUrl", clientHost + "/signin?token=" + token.getToken());
+
+            Mail mail = new Mail(
+                    "no-reply@studhub-supp.com",
+                    receiver.getEmail(),
+                    "Confirm account request",
+                    model
+            );
+
+            MimeMessage message = createEmailTemplate(mail, "email-confirm-registration");
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
