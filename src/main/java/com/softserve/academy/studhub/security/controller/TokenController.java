@@ -20,6 +20,7 @@ public class TokenController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/refresh")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> refreshAccessToken() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

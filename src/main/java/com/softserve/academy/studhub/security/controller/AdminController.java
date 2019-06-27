@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.controller;
+package com.softserve.academy.studhub.security.controller;
 
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.MessageResponse;

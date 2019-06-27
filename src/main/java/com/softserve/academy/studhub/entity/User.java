@@ -73,4 +73,7 @@ public class User {
     @Column(name = "email_subscription", columnDefinition = "boolean default true")
     private Boolean emailSubscription = true;
 
+    @EqualsAndHashCode.Exclude
+    @Column(name = "is_activated", columnDefinition = "boolean default false")
+    private Boolean isActivated = false;
 }

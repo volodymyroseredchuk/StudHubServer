@@ -1,7 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.exceptions.ErrorDetails;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
 import lombok.extern.slf4j.Slf4j;

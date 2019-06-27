@@ -3,9 +3,11 @@ package com.softserve.academy.studhub.security.controller;
 
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
+import com.softserve.academy.studhub.security.dto.PasswordForgotDto;
 import com.softserve.academy.studhub.security.dto.PasswordResetDto;
 import com.softserve.academy.studhub.security.model.PasswordResetToken;
 import com.softserve.academy.studhub.security.services.PasswordResetTokenService;
+import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +21,28 @@ import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/reset-password")
 @AllArgsConstructor
 public class PasswordResetController {
 
     private final UserService userService;
     private final PasswordResetTokenService passwordResetTokenService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    @PostMapping
+    @PostMapping("/forgot-password")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> processForgotPasswordForm(@Valid @RequestBody PasswordForgotDto form) {
+
+        User user = userService.findByEmail(form.getEmail());
+        PasswordResetToken token = new PasswordResetToken(user);
+        passwordResetTokenService.save(token);
+
+        emailService.sendResetPasswordEmail(user, token);
+
+        return ResponseEntity.ok(new MessageResponse("The reset-password link has been sent on your email"));
+    }
+
+    @PostMapping("/reset-password")
     @Transactional
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> handlePasswordReset(@Valid @RequestBody PasswordResetDto form) {

@@ -4,7 +4,7 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
 import com.softserve.academy.studhub.repository.UserRepository;

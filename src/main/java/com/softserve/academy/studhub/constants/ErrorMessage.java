@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.exceptions;
+package com.softserve.academy.studhub.constants;
 
 public class ErrorMessage {
 
