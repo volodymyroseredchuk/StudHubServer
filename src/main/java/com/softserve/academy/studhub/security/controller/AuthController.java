@@ -8,6 +8,10 @@ import com.softserve.academy.studhub.security.dto.SignUpForm;
 import com.softserve.academy.studhub.security.dto.JwtResponse;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
+import com.softserve.academy.studhub.security.model.ConfirmToken;
+import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.services.ConfirmTokenService;
+import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -34,6 +38,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final RoleService roleService;
+    private final ConfirmTokenService confirmTokenService;
+    private final EmailService emailService;
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
     private final ModelMapper modelMapper;
@@ -65,8 +71,14 @@ public class AuthController {
         user.setRoles(new HashSet<Role>(){{
             add(roleService.findByName(RoleName.ROLE_USER));
         }});
+
+        ConfirmToken token = new ConfirmToken(user);
+        confirmTokenService.save(token);
+
+        emailService.sendConfirmAccountEmail(user, token);
+
         userService.add(user);
 
-        return ResponseEntity.ok(new MessageResponse("User has been successfully registered"));
+        return ResponseEntity.ok(new MessageResponse("Confirm your account at " + user.getEmail()));
     }
 }
