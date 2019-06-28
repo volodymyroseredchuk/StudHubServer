@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TaskPaginatedDTO {
 
-    private List<TaskDTO> tasks;
+    private List<TaskForListDTO> tasks;
 
     private Long tasksTotalCount;
 

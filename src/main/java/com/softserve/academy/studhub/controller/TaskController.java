@@ -31,8 +31,8 @@ public class TaskController {
 
         Page<Task> taskPage = taskService.findAll(pageable);
 
-        List<TaskDTO> taskDTOs = taskPage.getContent().stream()
-            .map(task -> modelMapper.map(task, TaskDTO.class))
+        List<TaskForListDTO> taskDTOs = taskPage.getContent().stream()
+            .map(task -> modelMapper.map(task, TaskForListDTO.class))
             .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new TaskPaginatedDTO(taskDTOs, taskPage.getTotalElements()));

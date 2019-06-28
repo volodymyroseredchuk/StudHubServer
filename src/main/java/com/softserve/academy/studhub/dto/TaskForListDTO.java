@@ -9,17 +9,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TaskDTO {
+public class TaskForListDTO {
 
     private Integer id;
 
     private String title;
 
-    private String body;
-
     private LocalDateTime creationDate;
-
-    private LocalDateTime modifiedDate;
 
     private LocalDateTime deadlineDate;
 
