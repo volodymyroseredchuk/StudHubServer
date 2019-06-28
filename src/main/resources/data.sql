@@ -455,7 +455,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1);
+INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1, NULL),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1, NULL),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1, NULL),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1, NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
