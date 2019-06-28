@@ -22,7 +22,6 @@ import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.ForbiddenException;
 
 @ControllerAdvice
 @Slf4j
@@ -114,6 +113,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers, HttpStatus status,
                                                                          WebRequest request) {
+
         ErrorDetails details = new ErrorDetails(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage());
         ex.printStackTrace();
         return new ResponseEntity<>(details, HttpStatus.METHOD_NOT_ALLOWED);

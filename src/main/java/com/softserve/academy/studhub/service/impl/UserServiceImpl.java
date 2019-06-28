@@ -16,9 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.ForbiddenException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -34,15 +32,12 @@ public class UserServiceImpl implements UserService {
 
             if (!(userRepository.existsByUsername(user.getUsername()))) {
 
-                Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
-                return optionalUser.orElseGet(() -> userRepository.save(user));
+                return userRepository.save(user);
             } else {
                 throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
             }
         } else {
-
             throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_EMAIL);
-
         }
     }
 
@@ -51,8 +46,7 @@ public class UserServiceImpl implements UserService {
 
         String username = user.getUsername();
 
-        User updatable = userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("No user found with username: " + username));
+        User updatable = findByUsername(username);
 
         if (!user.getFirstName().equals("")) {
             updatable.setFirstName(user.getFirstName());
@@ -149,6 +143,4 @@ public class UserServiceImpl implements UserService {
             throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
         }
     }
-
-
 }

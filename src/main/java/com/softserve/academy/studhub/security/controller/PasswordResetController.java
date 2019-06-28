@@ -50,6 +50,7 @@ public class PasswordResetController {
 
         PasswordResetToken token = passwordResetTokenService.findByToken(form.getToken());
         User user = token.getUser();
+
         String updatedPassword = passwordEncoder.encode(form.getPassword());
         userService.updatePassword(updatedPassword, user.getId());
         passwordResetTokenService.delete(token);

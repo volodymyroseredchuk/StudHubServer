@@ -1,11 +1,8 @@
 package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.security.model.ConfirmToken;
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
 import com.softserve.academy.studhub.security.repository.ConfirmTokenRepository;
-import com.softserve.academy.studhub.security.repository.PasswordResetTokenRepository;
 import com.softserve.academy.studhub.security.services.ConfirmTokenService;
-import com.softserve.academy.studhub.security.services.PasswordResetTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
