@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
         if (!(userRepository.existsByEmail(user.getEmail()))) {
 
             if (!(userRepository.existsByUsername(user.getUsername()))) {
-
+                user.setCreationDate(LocalDate.now());
                 return userRepository.save(user);
             } else {
                 throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);

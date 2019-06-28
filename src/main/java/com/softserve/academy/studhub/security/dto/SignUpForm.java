@@ -20,9 +20,5 @@ public class SignUpForm {
     @Size(min=6, max = 16)
     private String password;
 
-    private String imageUrl;
-
-    private LocalDate creationDate;
-
     private University university;
 }
