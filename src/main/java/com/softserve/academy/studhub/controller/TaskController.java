@@ -31,11 +31,11 @@ public class TaskController {
 
         Page<Task> taskPage = taskService.findAll(pageable);
 
-        List<TaskForListDTO> taskForListDTOs = taskPage.getContent().stream()
-            .map(task -> modelMapper.map(task, TaskForListDTO.class))
+        List<TaskDTO> taskDTOs = taskPage.getContent().stream()
+            .map(task -> modelMapper.map(task, TaskDTO.class))
             .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOs, taskPage.getTotalElements()));
+        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskDTOs, taskPage.getTotalElements()));
     }
 
     @GetMapping("/{taskId}")

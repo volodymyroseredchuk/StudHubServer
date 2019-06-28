@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TaskForListDTO {
+public class ProposalDTO {
 
     private Integer id;
 
-    private String title;
+    private String body;
+
+    private Integer price;
+
+    private Integer daysCount;
 
     private LocalDateTime creationDate;
-
-    private LocalDateTime deadlineDate;
-
-    private Integer expectedPrice;
 
     private UserGeneralInfoDTO user;
 }

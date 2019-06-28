@@ -7,10 +7,9 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class TaskPaginatedDTO {
+public class ProposalPaginatedDTO {
 
-    private List<TaskDTO> tasks;
+    private List<ProposalDTO> proposals;
 
-    private Long tasksTotalCount;
-
+    private Long proposalsTotalCount;
 }
