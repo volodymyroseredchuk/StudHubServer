@@ -4,7 +4,7 @@ import com.softserve.academy.studhub.security.model.ConfirmToken;
 
 public interface ConfirmTokenService {
 
-    ConfirmToken findByToken(String token);
+    ConfirmToken findByValidToken(String token);
 
     ConfirmToken save(ConfirmToken confirmToken);
 

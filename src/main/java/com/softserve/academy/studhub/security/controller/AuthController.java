@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
@@ -59,7 +60,6 @@ public class AuthController {
         String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
         return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
-
     }
 
     @PostMapping("/signup")
@@ -84,7 +84,8 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> confirmAccount(@Valid @RequestBody ConfirmDto form) {
 
-        ConfirmToken token = confirmTokenService.findByToken(form.getToken());
+        ConfirmToken token = confirmTokenService.findByValidToken(form.getToken());
+
         User user = token.getUser();
         user.setIsActivated(true);
         userService.update(user);
@@ -92,4 +93,5 @@ public class AuthController {
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.CONFIRM_ACC));
     }
+
 }

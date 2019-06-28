@@ -30,4 +30,6 @@ public class ErrorMessage {
     public static final String USER_IS_ALREADY = "This user is already ";
     public static final String USER_IS_NOT = "This user isn't ";
 
+    public static final String LINK_IS_EXPIRED_OR_INVALID =  "This link is expired or is invalid. Please issue a new e-mail confirmation request.";
+
 }

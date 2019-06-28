@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.security.controller;
 
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
@@ -14,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,11 +44,11 @@ public class PasswordResetController {
     }
 
     @PostMapping("/reset-password")
-    @Transactional
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> handlePasswordReset(@Valid @RequestBody PasswordResetDto form) {
 
-        PasswordResetToken token = passwordResetTokenService.findByToken(form.getToken());
+        PasswordResetToken token = passwordResetTokenService.findByValidToken(form.getToken());
+
         User user = token.getUser();
 
         String updatedPassword = passwordEncoder.encode(form.getPassword());

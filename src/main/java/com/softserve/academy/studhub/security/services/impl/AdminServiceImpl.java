@@ -24,7 +24,7 @@ public class AdminServiceImpl implements AdminService {
 
         User user = userService.findById(userId);
 
-        if(userService.isUserPrivilegedByRole(userId, roleName) == false){
+        if (userService.isUserPrivilegedByRole(userId, roleName) == false) {
 
             Set<Role> roles = user.getRoles();
             Role role = roleService.findByName(roleName);
@@ -41,7 +41,7 @@ public class AdminServiceImpl implements AdminService {
 
         User user = userService.findById(userId);
 
-        if(userService.isUserPrivilegedByRole(userId, roleName)){
+        if (userService.isUserPrivilegedByRole(userId, roleName)) {
 
             Set<Role> roles = user.getRoles();
             Role role = roleService.findByName(roleName);

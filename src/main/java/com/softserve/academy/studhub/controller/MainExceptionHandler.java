@@ -1,10 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.exceptions.ErrorDetails;
+import com.softserve.academy.studhub.exceptions.*;
 import com.softserve.academy.studhub.constants.ErrorMessage;
-import com.softserve.academy.studhub.exceptions.NotConfirmedException;
-import com.softserve.academy.studhub.exceptions.NotFoundException;
-import com.softserve.academy.studhub.exceptions.UserAlreadyExistsAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -82,13 +79,23 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUserAlreadyExistsAuthenticationException(UserAlreadyExistsAuthenticationException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
         ex.printStackTrace();
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<Object> handleExpiredTokenException(ExpiredTokenException ex) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.GONE, ex.getMessage());
+        ex.printStackTrace();
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(details, HttpStatus.GONE);
     }
 
     @ExceptionHandler(NotConfirmedException.class)
     public ResponseEntity<Object> handleNotConfirmedException(NotConfirmedException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.FORBIDDEN, ex.getMessage());
         ex.printStackTrace();
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.FORBIDDEN);
     }
 
