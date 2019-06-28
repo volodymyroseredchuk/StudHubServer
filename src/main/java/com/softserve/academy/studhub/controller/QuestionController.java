@@ -90,7 +90,7 @@ public class QuestionController {
 
 
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("hasRole('ADMIN') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));
