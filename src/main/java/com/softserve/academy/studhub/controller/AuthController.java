@@ -1,9 +1,5 @@
 package com.softserve.academy.studhub.controller;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
@@ -15,10 +11,6 @@ import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,9 +30,9 @@ import java.util.HashSet;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final GoogleVerifierService googleVerifier;
     private final UserService userService;
     private final RoleService roleService;
-    private final GoogleVerifierService googleVerifier;
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
     private final ModelMapper modelMapper;
@@ -70,25 +62,17 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateGoogleUser(@Valid @RequestBody GoogleUserData userData) {
 
-        googleVerifier.isValidToken(userData.getIdToken());
-        User user = userData.toUser(roleService);
+        LoginForm form = googleVerifier.authenticateUser(userData);
 
-        if (!userService.existsByUsername(user.getEmail())) {
-            User addUser = userData.toUser(roleService);
-            addUser.setPassword(encoder.encode(userData.getId()));
-            userService.add(addUser);
-        }
-
-        return authenticate(modelMapper.map(user, LoginForm.class));
+        return authenticate(form);
 
     }
 
-    private ResponseEntity<?> authenticate(LoginForm form) {
-
+    private ResponseEntity<?> authenticate(LoginForm loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        form.getUsername(),
-                        form.getPassword()
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
                 )
         );
 
@@ -97,6 +81,6 @@ public class AuthController {
         String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
         return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
-
     }
+
 }

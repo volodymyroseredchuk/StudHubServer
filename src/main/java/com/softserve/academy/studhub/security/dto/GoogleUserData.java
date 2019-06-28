@@ -35,6 +35,7 @@ public class GoogleUserData {
         User user = new User();
         user.setEmail(email);
         user.setPassword(id);
+        user.setGooglePassword(id);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setCreationDate(LocalDate.now());
