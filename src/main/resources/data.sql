@@ -587,7 +587,7 @@ END */;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 /*!50003 SET @saved_time_zone      = @@time_zone */ ;
 /*!50003 SET time_zone             = 'SYSTEM' */ ;
-/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `delete_unactivated_users` ON SCHEDULE EVERY 1 DAY STARTS '2019-06-28 23:28:42' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM users where DATEDIFF(CURDATE(), users.creation_date) >= 1 AND users.is_activated = 0 */ ;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `delete_unactivated_users` ON SCHEDULE EVERY 1 DAY STARTS '2019-06-28 23:28:42' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM users where DATEDIFF(CURDATE(), users.creation_date) > 1 AND users.is_activated = 0 */ ;
 /*!50003 SET time_zone             = @saved_time_zone */ ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
