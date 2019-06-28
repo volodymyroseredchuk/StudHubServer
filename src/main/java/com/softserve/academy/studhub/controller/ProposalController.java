@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
+import com.softserve.academy.studhub.dto.DeleteDTO;
 import com.softserve.academy.studhub.dto.ProposalDTO;
 import com.softserve.academy.studhub.dto.ProposalPaginatedDTO;
 import com.softserve.academy.studhub.entity.Proposal;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +29,7 @@ public class ProposalController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    public ResponseEntity<ProposalPaginatedDTO> getProposalsByTaskId(@PathVariable Integer taskId, Pageable pageable) {
+    public ResponseEntity<ProposalPaginatedDTO> getAllProposalsByTaskId(@PathVariable Integer taskId, Pageable pageable) {
 
         Page<Proposal> proposalPage = proposalService.findAllByTaskId(taskId, pageable);
 
@@ -35,5 +38,34 @@ public class ProposalController {
             .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new ProposalPaginatedDTO(proposalDTOs, proposalPage.getTotalElements()));
+    }
+
+    @GetMapping("/{proposalId}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<ProposalDTO> getProposal(@PathVariable Integer proposalId) {
+
+        Proposal proposal = proposalService.findById(proposalId);
+
+        return ResponseEntity.ok().body(modelMapper.map(proposal, ProposalDTO.class));
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ProposalDTO> createProposal(@Valid @RequestBody ProposalDTO proposalDTO,
+                                                  @PathVariable Integer taskId,
+                                                  Principal principal) {
+
+        Proposal proposal = proposalService.save(modelMapper.map(proposalDTO, Proposal.class), taskId, principal);
+
+        return ResponseEntity.ok().body(modelMapper.map(proposal, ProposalDTO.class));
+    }
+
+    @DeleteMapping("/{proposalId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+        "@proposalServiceImpl.findById(#proposalId).getUser().getUsername()== principal.username")
+    public ResponseEntity<DeleteDTO> deleteProposal(@PathVariable Integer proposalId) {
+
+        return ResponseEntity.ok().body(new DeleteDTO(proposalService.deleteById(proposalId)));
+
     }
 }

@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.ProposalRepository;
 import com.softserve.academy.studhub.service.ProposalService;
+import com.softserve.academy.studhub.service.TaskService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,11 +22,13 @@ public class ProposalServiceImpl implements ProposalService {
 
     private ProposalRepository proposalRepository;
     private UserService userService;
+    private TaskService taskService;
 
     @Override
-    public Proposal save(Proposal proposal, Principal principal) {
+    public Proposal save(Proposal proposal, Integer taskId, Principal principal) {
         proposal.setCreationDate(LocalDateTime.now());
         proposal.setUser(userService.findByUsername(principal.getName()));
+        proposal.setTask(taskService.findById(taskId));
         return proposalRepository.saveAndFlush(proposal);
     }
 

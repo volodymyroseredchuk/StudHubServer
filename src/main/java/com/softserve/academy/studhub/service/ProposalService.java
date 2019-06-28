@@ -8,7 +8,7 @@ import java.security.Principal;
 
 public interface ProposalService {
 
-    Proposal save(Proposal proposal, Principal principal);
+    Proposal save(Proposal proposal, Integer taskId, Principal principal);
 
     Proposal findById(Integer proposalId);
 
