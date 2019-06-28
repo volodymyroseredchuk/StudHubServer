@@ -22,7 +22,6 @@ import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.ForbiddenException;
 
 @ControllerAdvice
 @Slf4j
