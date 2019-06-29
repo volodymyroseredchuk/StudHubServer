@@ -499,19 +499,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 
-/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRate` BEFORE INSERT ON `votes` FOR EACH ROW BEGIN
-IF NEW.answer_id IS NOT NULL THEN
-UPDATE answers SET rate = 0 WHERE id = NEW.answer_id AND rate IS NULL;
-UPDATE answers
-  SET rate = rate + NEW.value
-    WHERE id = NEW.answer_id;
-ELSEIF NEW.feedback_id IS NOT NULL THEN
-UPDATE feedbacks SET rate = 0 WHERE id = NEW.feedback_id AND rate IS NULL;
-UPDATE feedbacks
-  SET rate = rate + NEW.value
-    WHERE id = NEW.feedback_id;
-END IF;
-END */;
+
 
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -526,19 +514,7 @@ END */;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 
-/*!50003 CREATE*/  /*!50003 TRIGGER `recalcVoteRateUpdate` BEFORE UPDATE ON `votes` FOR EACH ROW BEGIN
-IF NEW.answer_id IS NOT NULL THEN
-UPDATE answers SET rate = 0 WHERE id = NEW.answer_id AND rate IS NULL;
-UPDATE answers
-  SET rate = rate - OLD.value + NEW.value
-    WHERE id = NEW.answer_id;
-ELSEIF NEW.feedback_id IS NOT NULL THEN
-UPDATE feedbacks SET rate = 0 WHERE id = NEW.feedback_id AND rate IS NULL;
-UPDATE feedbacks
-  SET rate = rate - OLD.value + NEW.value
-    WHERE id = NEW.feedback_id;
-END IF;
-END */;
+
 
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
