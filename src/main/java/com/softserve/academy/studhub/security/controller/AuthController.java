@@ -1,11 +1,18 @@
-package com.softserve.academy.studhub.controller;
+package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
+<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/controller/AuthController.java
 import com.softserve.academy.studhub.security.services.GoogleVerifierService;
+=======
+import com.softserve.academy.studhub.security.entity.ConfirmToken;
+import com.softserve.academy.studhub.security.services.ConfirmTokenService;
+import com.softserve.academy.studhub.service.EmailService;
+>>>>>>> e489905d78109b8b864fe30b9e7c188359ebb75e:src/main/java/com/softserve/academy/studhub/security/controller/AuthController.java
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -33,6 +40,8 @@ public class AuthController {
     private final GoogleVerifierService googleVerifier;
     private final UserService userService;
     private final RoleService roleService;
+    private final ConfirmTokenService confirmTokenService;
+    private final EmailService emailService;
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
     private final ModelMapper modelMapper;
@@ -41,7 +50,25 @@ public class AuthController {
     @PostMapping("/signin")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
+<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/controller/AuthController.java
         return authenticate(loginRequest);
+=======
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        userService.isUserActivated(loginRequest.getUsername());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String accessTokenString = jwtProvider.generateAccessToken(authentication);
+        String refreshToken = jwtProvider.generateRefreshToken(authentication);
+
+        return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
+>>>>>>> e489905d78109b8b864fe30b9e7c188359ebb75e:src/main/java/com/softserve/academy/studhub/security/controller/AuthController.java
     }
 
     @PostMapping("/signup")
@@ -50,14 +77,19 @@ public class AuthController {
 
         User user = modelMapper.map(signUpRequest, User.class);
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<Role>(){{
+        user.setRoles(new HashSet<Role>() {{
             add(roleService.findByName(RoleName.ROLE_USER));
         }});
         userService.add(user);
 
-        return ResponseEntity.ok(new MessageResponse("User has been successfully registered"));
+        ConfirmToken token = new ConfirmToken(user);
+        confirmTokenService.save(token);
+        emailService.sendConfirmAccountEmail(user, token);
+
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_CONFIRM_ACC_LINK + user.getEmail()));
     }
 
+<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/controller/AuthController.java
     @PostMapping("/signinGoogle")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateGoogleUser(@Valid @RequestBody GoogleUserData userData) {
@@ -81,6 +113,20 @@ public class AuthController {
         String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
         return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
+=======
+    @PostMapping("/confirm-account")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> confirmAccount(@Valid @RequestBody ConfirmDto form) {
+
+        ConfirmToken token = confirmTokenService.findByValidToken(form.getToken());
+
+        User user = token.getUser();
+        user.setIsActivated(true);
+        userService.update(user);
+        confirmTokenService.delete(token);
+
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.CONFIRM_ACC));
+>>>>>>> e489905d78109b8b864fe30b9e7c188359ebb75e:src/main/java/com/softserve/academy/studhub/security/controller/AuthController.java
     }
 
 }

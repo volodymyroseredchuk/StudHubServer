@@ -2,8 +2,9 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.security.model.Mail;
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.entity.ConfirmToken;
+import com.softserve.academy.studhub.security.entity.Mail;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 import com.softserve.academy.studhub.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,12 @@ public class EmailServiceImpl implements EmailService {
     @Value("${client.host}")
     private String clientHost;
 
+    @Value("${studhub.mail.noreply}")
+    private String senderMail;
+
+    @Value("${client.signature}")
+    private String signature;
+
     @Override
     public void sendResetPasswordEmail(User receiver, PasswordResetToken token) {
 
@@ -43,17 +50,42 @@ public class EmailServiceImpl implements EmailService {
             Map<String, Object> model = new HashMap<>();
             model.put("token", token);
             model.put("user", receiver);
-            model.put("signature", "https://studhub.com");
+            model.put("signature", signature);
             model.put("resetUrl", clientHost + "/password_reset?token=" + token.getToken());
 
             Mail mail = new Mail(
-                    "no-reply@studhub-supp.com",
+                    senderMail,
                     receiver.getEmail(),
                     "Password reset request",
                     model
             );
 
-            MimeMessage message = createEmailTemplate(mail, "email-template");
+            MimeMessage message = createEmailTemplate(mail, "email-forgot-password");
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendConfirmAccountEmail(User receiver, ConfirmToken token) {
+
+        try {
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("token", token);
+            model.put("user", receiver);
+            model.put("signature", signature);
+            model.put("resetUrl", clientHost + "/signin?token=" + token.getToken());
+
+            Mail mail = new Mail(
+                    senderMail,
+                    receiver.getEmail(),
+                    "Confirm account request",
+                    model
+            );
+
+            MimeMessage message = createEmailTemplate(mail, "email-confirm-registration");
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -67,12 +99,12 @@ public class EmailServiceImpl implements EmailService {
 
             Map<String, Object> model = new HashMap<>();
             model.put("user", receiver);
-            model.put("signature", "https://studhub.com");
+            model.put("signature", signature);
             model.put("questionUrl", clientHost + "/questions/" + question.getId());
             model.put("questionName", question.getTitle());
 
             Mail mail = new Mail(
-                    "no-reply@studhub-supp.com",
+                    senderMail,
                     receiver.getEmail(),
                     "Question news",
                     model
