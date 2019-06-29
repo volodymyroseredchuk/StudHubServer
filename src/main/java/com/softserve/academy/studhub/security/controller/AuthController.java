@@ -6,13 +6,10 @@ import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
-<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/controller/AuthController.java
 import com.softserve.academy.studhub.security.services.GoogleVerifierService;
-=======
 import com.softserve.academy.studhub.security.entity.ConfirmToken;
 import com.softserve.academy.studhub.security.services.ConfirmTokenService;
 import com.softserve.academy.studhub.service.EmailService;
->>>>>>> e489905d78109b8b864fe30b9e7c188359ebb75e:src/main/java/com/softserve/academy/studhub/security/controller/AuthController.java
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -50,25 +47,9 @@ public class AuthController {
     @PostMapping("/signin")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
-<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/controller/AuthController.java
+
         return authenticate(loginRequest);
-=======
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        userService.isUserActivated(loginRequest.getUsername());
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String accessTokenString = jwtProvider.generateAccessToken(authentication);
-        String refreshToken = jwtProvider.generateRefreshToken(authentication);
-
-        return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
->>>>>>> e489905d78109b8b864fe30b9e7c188359ebb75e:src/main/java/com/softserve/academy/studhub/security/controller/AuthController.java
     }
 
     @PostMapping("/signup")
@@ -89,7 +70,6 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_CONFIRM_ACC_LINK + user.getEmail()));
     }
 
-<<<<<<< HEAD:src/main/java/com/softserve/academy/studhub/controller/AuthController.java
     @PostMapping("/signinGoogle")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateGoogleUser(@Valid @RequestBody GoogleUserData userData) {
@@ -113,7 +93,8 @@ public class AuthController {
         String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
         return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
-=======
+    }
+
     @PostMapping("/confirm-account")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> confirmAccount(@Valid @RequestBody ConfirmDto form) {
@@ -126,7 +107,6 @@ public class AuthController {
         confirmTokenService.delete(token);
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.CONFIRM_ACC));
->>>>>>> e489905d78109b8b864fe30b9e7c188359ebb75e:src/main/java/com/softserve/academy/studhub/security/controller/AuthController.java
     }
 
 }

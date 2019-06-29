@@ -5,7 +5,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.security.dto.GoogleUserData;
 import com.softserve.academy.studhub.security.dto.LoginForm;
 import com.softserve.academy.studhub.security.services.GoogleVerifierService;
