@@ -48,8 +48,8 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
+        userService.isUserActivated(loginRequest.getUsername());
         return authenticate(loginRequest);
-
     }
 
     @PostMapping("/signup")
@@ -77,10 +77,10 @@ public class AuthController {
         LoginForm form = googleVerifier.authenticateUser(userData);
 
         return authenticate(form);
-
     }
 
     private ResponseEntity<?> authenticate(LoginForm loginRequest) {
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
