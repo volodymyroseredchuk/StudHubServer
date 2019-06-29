@@ -2,7 +2,7 @@ package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.ExpiredTokenException;
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 import com.softserve.academy.studhub.security.repository.PasswordResetTokenRepository;
 import com.softserve.academy.studhub.security.services.PasswordResetTokenService;
 import lombok.AllArgsConstructor;

@@ -2,8 +2,8 @@ package com.softserve.academy.studhub.service;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.security.model.ConfirmToken;
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.entity.ConfirmToken;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 
 public interface EmailService {
 

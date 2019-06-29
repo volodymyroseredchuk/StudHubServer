@@ -1,13 +1,12 @@
 package com.softserve.academy.studhub.security.controller;
 
 
-import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.security.dto.PasswordForgotDto;
 import com.softserve.academy.studhub.security.dto.PasswordResetDto;
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 import com.softserve.academy.studhub.security.services.PasswordResetTokenService;
 import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.UserService;

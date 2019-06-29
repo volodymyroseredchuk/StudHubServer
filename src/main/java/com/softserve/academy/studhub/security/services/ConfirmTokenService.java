@@ -1,6 +1,6 @@
 package com.softserve.academy.studhub.security.services;
 
-import com.softserve.academy.studhub.security.model.ConfirmToken;
+import com.softserve.academy.studhub.security.entity.ConfirmToken;
 
 public interface ConfirmTokenService {
 

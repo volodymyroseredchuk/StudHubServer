@@ -1,13 +1,12 @@
 package com.softserve.academy.studhub.security.controller;
 
-import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
-import com.softserve.academy.studhub.security.model.ConfirmToken;
+import com.softserve.academy.studhub.security.entity.ConfirmToken;
 import com.softserve.academy.studhub.security.services.ConfirmTokenService;
 import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.RoleService;

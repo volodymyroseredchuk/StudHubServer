@@ -2,13 +2,12 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.security.model.ConfirmToken;
-import com.softserve.academy.studhub.security.model.Mail;
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.entity.ConfirmToken;
+import com.softserve.academy.studhub.security.entity.Mail;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 import com.softserve.academy.studhub.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
