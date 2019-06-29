@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
+import com.softserve.academy.studhub.security.services.GoogleVerifierService;
 import com.softserve.academy.studhub.security.entity.ConfirmToken;
 import com.softserve.academy.studhub.security.services.ConfirmTokenService;
 import com.softserve.academy.studhub.service.EmailService;
@@ -33,6 +34,7 @@ import java.util.HashSet;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final GoogleVerifierService googleVerifier;
     private final UserService userService;
     private final RoleService roleService;
     private final ConfirmTokenService confirmTokenService;
@@ -41,24 +43,13 @@ public class AuthController {
     private final JwtProvider jwtProvider;
     private final ModelMapper modelMapper;
 
+
     @PostMapping("/signin")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-
         userService.isUserActivated(loginRequest.getUsername());
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String accessTokenString = jwtProvider.generateAccessToken(authentication);
-        String refreshToken = jwtProvider.generateRefreshToken(authentication);
-
-        return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
+        return authenticate(loginRequest);
     }
 
     @PostMapping("/signup")
@@ -77,6 +68,31 @@ public class AuthController {
         emailService.sendConfirmAccountEmail(user, token);
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_CONFIRM_ACC_LINK + user.getEmail()));
+    }
+
+    @PostMapping("/signinGoogle")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> authenticateGoogleUser(@Valid @RequestBody GoogleUserData userData) {
+
+        LoginForm form = googleVerifier.authenticateUser(userData);
+
+        return authenticate(form);
+    }
+
+    private ResponseEntity<?> authenticate(LoginForm loginRequest) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String accessTokenString = jwtProvider.generateAccessToken(authentication);
+        String refreshToken = jwtProvider.generateRefreshToken(authentication);
+
+        return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
     }
 
     @PostMapping("/confirm-account")

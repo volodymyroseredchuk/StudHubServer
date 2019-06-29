@@ -144,4 +144,5 @@ public class UserServiceImpl implements UserService {
             throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
         }
     }
+
 }
