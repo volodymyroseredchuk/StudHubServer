@@ -1,16 +1,14 @@
-package com.softserve.academy.studhub.controller;
+package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.security.services.AdminService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -26,7 +24,7 @@ public class AdminController {
     public ResponseEntity<?> raiseUserToModerator(@PathVariable("userId") Integer userId) {
 
         adminService.addRole(userId, RoleName.ROLE_MODERATOR);
-        return ResponseEntity.ok(new MessageResponse("User has been successfully raised to Moderator"));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.USER_RAISED));
     }
 
     @PostMapping("/downToUser/{userId}")
@@ -34,7 +32,7 @@ public class AdminController {
     public ResponseEntity<?> downModeratorToUser(@PathVariable("userId") Integer moderatorId) {
 
         adminService.removeRole(moderatorId, RoleName.ROLE_MODERATOR);
-        return ResponseEntity.ok(new MessageResponse("Moderator has been successfully downed to user"));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.MODERATOR_DOWNED));
     }
 
 }

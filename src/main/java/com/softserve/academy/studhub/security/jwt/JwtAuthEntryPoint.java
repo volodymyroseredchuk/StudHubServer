@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.jwt;
 
+import com.softserve.academy.studhub.security.constants.JwtConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -17,7 +18,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException e) throws IOException {
 
-        log.error("Unauthorized error. Message - {}", e.getMessage());
+        log.error(JwtConstants.UNAUTHORISED_JWT, e.getMessage());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
     }
 }
