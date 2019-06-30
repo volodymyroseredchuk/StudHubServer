@@ -1,9 +1,13 @@
-package com.softserve.academy.studhub.security.model;
+package com.softserve.academy.studhub.security.entity;
 
+import com.softserve.academy.studhub.constants.ValidationConstants;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.constants.ExpirationConstants;
 import lombok.Data;
+import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -16,20 +20,23 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @NonNull
+    @NotBlank(message = ValidationConstants.EMPTY_TOKEN)
+    @Column(unique = true)
     private String token;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(nullable = false)
+    @NonNull
+    @Column
     private Date expiryDate;
 
     public PasswordResetToken(User user) {
         this.user = user;
         this.token = UUID.randomUUID().toString();
-        setExpiryDate(30);
+        setExpiryDate(ExpirationConstants.PASSWORD_RESET_TOKEN_EXPIRATION_IN_MINUTES);
     }
 
     public PasswordResetToken(){}

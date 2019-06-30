@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.services.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.RoleName;
@@ -23,7 +24,7 @@ public class AdminServiceImpl implements AdminService {
 
         User user = userService.findById(userId);
 
-        if(userService.isUserPrivilegedByRole(userId, roleName) == false){
+        if (userService.isUserPrivilegedByRole(userId, roleName) == false) {
 
             Set<Role> roles = user.getRoles();
             Role role = roleService.findByName(roleName);
@@ -31,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
             user.setRoles(roles);
             userService.update(user);
         } else {
-            throw new IllegalArgumentException("This user is already " + roleName);
+            throw new IllegalArgumentException(ErrorMessage.USER_IS_ALREADY + roleName);
         }
     }
 
@@ -40,7 +41,7 @@ public class AdminServiceImpl implements AdminService {
 
         User user = userService.findById(userId);
 
-        if(userService.isUserPrivilegedByRole(userId, roleName)){
+        if (userService.isUserPrivilegedByRole(userId, roleName)) {
 
             Set<Role> roles = user.getRoles();
             Role role = roleService.findByName(roleName);
@@ -48,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
             user.setRoles(roles);
             userService.update(user);
         } else {
-            throw new IllegalArgumentException("This user isn't " + roleName);
+            throw new IllegalArgumentException(ErrorMessage.USER_IS_NOT + roleName);
         }
     }
 }

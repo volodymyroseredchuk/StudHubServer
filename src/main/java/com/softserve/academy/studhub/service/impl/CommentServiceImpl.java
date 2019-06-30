@@ -1,7 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Comment;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.CommentRepository;
 import com.softserve.academy.studhub.service.AnswerService;
@@ -69,7 +69,7 @@ public class CommentServiceImpl implements ICommentService {
         List<Comment> commentList = null;
         try {
             commentList = commentRepository.findByAnswerIdOrderByCreationDateDesc(answerId);
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             e.getMessage();
         }
         return commentList;

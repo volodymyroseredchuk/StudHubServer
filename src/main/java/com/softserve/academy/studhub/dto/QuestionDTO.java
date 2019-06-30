@@ -22,7 +22,7 @@ public class QuestionDTO {
     private LocalDate modifiedDate;
     private User user;
     private List<AnswerDTO> answerList;
-    private Set<Tag> tagsList;
+    private Set<Tag> tagList;
 
 
 }

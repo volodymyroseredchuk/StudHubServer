@@ -1,22 +1,32 @@
 package com.softserve.academy.studhub.security.services.impl;
 
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.exceptions.ExpiredTokenException;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 import com.softserve.academy.studhub.security.repository.PasswordResetTokenRepository;
 import com.softserve.academy.studhub.security.services.PasswordResetTokenService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class PasswordResetTokenServiceImpl implements PasswordResetTokenService {
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public PasswordResetTokenServiceImpl(PasswordResetTokenRepository passwordResetTokenRepository) {
-        this.passwordResetTokenRepository = passwordResetTokenRepository;
-    }
-
     @Override
-    public PasswordResetToken findByToken(String token) {
-        return passwordResetTokenRepository.findByToken(token);
+    public PasswordResetToken findByValidToken(String token) {
+
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() ->
+                new ExpiredTokenException(ErrorMessage.LINK_IS_EXPIRED_OR_INVALID));
+
+        if (passwordResetToken.isExpired()) {
+
+            delete(passwordResetToken);
+            throw new ExpiredTokenException(ErrorMessage.LINK_IS_EXPIRED_OR_INVALID);
+        }
+
+        return passwordResetToken;
     }
 
     @Override

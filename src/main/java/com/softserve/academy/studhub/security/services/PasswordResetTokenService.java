@@ -1,10 +1,10 @@
 package com.softserve.academy.studhub.security.services;
 
-import com.softserve.academy.studhub.security.model.PasswordResetToken;
+import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 
 public interface PasswordResetTokenService {
 
-    PasswordResetToken findByToken(String token);
+    PasswordResetToken findByValidToken(String token);
 
     PasswordResetToken save(PasswordResetToken passwordResetToken);
 

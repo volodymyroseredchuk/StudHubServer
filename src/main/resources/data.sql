@@ -183,7 +183,7 @@ CREATE TABLE `password_reset_token` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `password_reset_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `password_reset_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -194,6 +194,33 @@ CREATE TABLE `password_reset_token` (
 LOCK TABLES `password_reset_token` WRITE;
 /*!40000 ALTER TABLE `password_reset_token` DISABLE KEYS */;
 /*!40000 ALTER TABLE `password_reset_token` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `confirm_token`
+--
+
+DROP TABLE IF EXISTS `confirm_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `confirm_token` (
+                                        `id` int(11) NOT NULL AUTO_INCREMENT,
+                                        `token` varchar(200) DEFAULT NULL,
+                                        `expiry_date` date DEFAULT NULL,
+                                        `user_id` int(11) DEFAULT NULL,
+                                        PRIMARY KEY (`id`),
+                                        KEY `user_id` (`user_id`),
+                                        CONSTRAINT `confirm_token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `confirm_token`
+--
+
+LOCK TABLES `confirm_token` WRITE;
+/*!40000 ALTER TABLE `confirm_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `confirm_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -408,7 +435,7 @@ CREATE TABLE `user_roles` (
   PRIMARY KEY (`user_id`,`role_id`),
   KEY `FKh8ciramu9cc9q3qcqiv4ue8a6` (`role_id`),
   CONSTRAINT `FKh8ciramu9cc9q3qcqiv4ue8a6` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
-  CONSTRAINT `FKhfh9dx7w3ubf1co1vdev94g3f` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `FKhfh9dx7w3ubf1co1vdev94g3f` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -440,6 +467,8 @@ CREATE TABLE `users` (
   `user_name` varchar(255) NOT NULL,
   `university_id` int(11) DEFAULT NULL,
    `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
+   `google_password` varchar(255) DEFAULT NULL,
+  `is_activated` bit(2) NOT NULL DEFAULT _binary '\0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UK_k8d0f2n7n88w1a16yhua64onx` (`user_name`),
@@ -454,7 +483,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1);
+INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1, NULL, 1),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1, NULL, 1),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1, NULL, 1),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1, NULL, 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -539,11 +568,33 @@ UPDATE feedbacks
     WHERE id = NEW.feedback_id;
 END IF;
 END */;
-
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Dumping events for database 'studhub'
+--
+/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
+/*!50106 DROP EVENT IF EXISTS `delete_unactivated_users` */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;
+/*!50106 CREATE*/ /*!50117 */ /*!50106 EVENT `delete_unactivated_users` ON SCHEDULE EVERY 1 DAY STARTS '2019-06-28 23:28:42' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM users where DATEDIFF(CURDATE(), users.creation_date) > 1 AND users.is_activated = 0 */ ;
+/*!50003 SET time_zone             = @saved_time_zone */ ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50106 SET TIME_ZONE= @save_time_zone */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -554,4 +605,4 @@ END */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-14 21:19:27
+-- Dump completed on 2019-06-28 23:28:54

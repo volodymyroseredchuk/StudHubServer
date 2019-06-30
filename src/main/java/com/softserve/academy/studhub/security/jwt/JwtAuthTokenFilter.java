@@ -1,9 +1,8 @@
 package com.softserve.academy.studhub.security.jwt;
 
+import com.softserve.academy.studhub.security.constants.JwtConstants;
 import com.softserve.academy.studhub.security.services.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,7 +44,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            log.error("Can NOT set user authentication -> Message: {}", e.getMessage());
+            log.error(JwtConstants.CANNOT_SET_USER_JWT, e.getMessage());
         }
 
         filterChain.doFilter(request, response);
@@ -53,10 +52,10 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private String getJwt(HttpServletRequest request) {
 
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader(JwtConstants.JWT_HEADER);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.replace("Bearer ", "");
+        if (authHeader != null && authHeader.startsWith(JwtConstants.JWT_TYPE)) {
+            return authHeader.replace(JwtConstants.JWT_TYPE, "");
         }
 
         return null;
