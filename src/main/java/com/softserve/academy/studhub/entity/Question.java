@@ -29,10 +29,11 @@ public class Question {
     private String title;
     @Column(columnDefinition = "TEXT", name = "body")
     private String body;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    //TODO: Use beautiful date format for serialisation and DEserialisation
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
@@ -43,6 +44,7 @@ public class Question {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
     @JsonManagedReference
+    @OrderBy(value = "creationDate DESC ")
     private List<Answer> answerList;
 
     @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)

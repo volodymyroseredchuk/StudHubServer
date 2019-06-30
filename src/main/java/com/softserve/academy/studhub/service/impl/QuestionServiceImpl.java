@@ -1,7 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
-import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
