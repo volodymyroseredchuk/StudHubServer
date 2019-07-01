@@ -13,6 +13,7 @@ import com.softserve.academy.studhub.service.AnswerService;
 import com.softserve.academy.studhub.service.SubscriptionService;
 import com.softserve.academy.studhub.service.impl.AnswerServiceImpl;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -32,16 +33,24 @@ import java.util.Optional;
 public class AnswerServiceTests {
 
     @Mock
-    AnswerRepository answerRepository;
+    private AnswerRepository answerRepository;
 
     @Mock
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Mock
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     @Mock
-    SubscriptionService subscriptionService;
+    private SubscriptionService subscriptionService;
+
+    private AnswerService answerService;
+
+    @Before
+    public void initAnswerService(){
+        answerService = new AnswerServiceImpl(answerRepository, questionRepository,
+                userRepository, subscriptionService);
+    }
 
     @Test
     public void createAnswerPositive() {
@@ -73,8 +82,7 @@ public class AnswerServiceTests {
 
         SocketMessage socketMessage = new SocketMessage(question.getId().toString());
 
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
+
 
         Answer returnedAnswer = answerService.save(answerCreateDTO, 1, "testUsername");
         Assert.assertEquals(returnedAnswer, answerResponse);
@@ -105,9 +113,6 @@ public class AnswerServiceTests {
         );
         Mockito.when(answerRepository.saveAndFlush(Mockito.any())).thenReturn(answerResponse);
 
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
-
         answerService.save(answerCreateDTO, 1, "unknownUsername");
     }
 
@@ -135,17 +140,11 @@ public class AnswerServiceTests {
         );
         Mockito.when(answerRepository.saveAndFlush(Mockito.any())).thenReturn(answerResponse);
 
-
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
-
         answerService.save(answerCreateDTO, 1, "testUsername");
     }
 
     @Test
     public void deleteAnswerPositive() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         Answer answerToDelete = new Answer();
         answerToDelete.setApproved(false);
         Mockito.when(answerRepository.findById(1)).thenReturn(Optional.of(answerToDelete));
@@ -156,8 +155,6 @@ public class AnswerServiceTests {
 
     @Test
     public void deleteAnswerPositiveShouldNotDeleteApproved() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         Answer answerToDelete = new Answer();
         answerToDelete.setApproved(true);
         Mockito.when(answerRepository.findById(1)).thenReturn(Optional.of(answerToDelete));
@@ -168,8 +165,6 @@ public class AnswerServiceTests {
 
     @Test
     public void deleteAnswerPositiveShouldNotDeleteUnexistingAnswer() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
 
         Mockito.when(answerRepository.findById(Mockito.any())).thenReturn(Optional.empty());
 
@@ -179,8 +174,6 @@ public class AnswerServiceTests {
 
     @Test
     public void approveAnswerPositive() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();
         answerApproveDTO.setAnswerId(1);
         answerApproveDTO.setApproved(true);
@@ -199,8 +192,6 @@ public class AnswerServiceTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void approveAnswerShouldThrowIllegalArgumentException() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();
         answerApproveDTO.setAnswerId(1);
         answerApproveDTO.setApproved(true);
@@ -218,8 +209,6 @@ public class AnswerServiceTests {
 
     @Test
     public void findByIdPositive() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         Answer answer = new Answer();
         answer.setId(1);
         Mockito.when(answerRepository.findById(1)).thenReturn(Optional.of(answer));
@@ -228,16 +217,12 @@ public class AnswerServiceTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void findByIdShouldThrowIllegalArgumentException() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         Mockito.when(answerRepository.findById(1)).thenReturn(Optional.empty());
         answerService.findById(1);
     }
 
     @Test
     public void findByQuestionIdPositive() {
-        AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
-                userRepository, subscriptionService);
         List<Answer> answerList = new ArrayList<>();
         Mockito.when(answerRepository.findByQuestionIdOrderByCreationDateDesc(1)).thenReturn(answerList);
         Assert.assertEquals(answerService.findAllByQuestionId(1), answerList);

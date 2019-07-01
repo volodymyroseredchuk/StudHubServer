@@ -42,11 +42,7 @@ public class AnswerServiceImpl implements AnswerService {
 
     @Override
     public List<Answer> findAllByQuestionId(Integer questionId) {
-
-        List<Answer> answers = answerRepository.findByQuestionIdOrderByCreationDateDesc(questionId);
-
-
-        return answers;
+        return answerRepository.findByQuestionIdOrderByCreationDateDesc(questionId);
     }
 
     @Override

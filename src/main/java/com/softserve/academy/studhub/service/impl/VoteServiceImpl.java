@@ -34,14 +34,14 @@ public class VoteServiceImpl implements VoteService {
         if (userResponse.isPresent() && questionResponse.isPresent()) {
             return voteRepository.findByUserAndAnswer_Question(userResponse.get(), questionResponse.get());
         } else {
-            return new ArrayList<Vote>();
+            return new ArrayList<>();
         }
     }
 
 
     @Transactional
     @Override
-    public Vote update(VotePostDTO voteDTO, String username) throws NullPointerException, IllegalArgumentException {
+    public Vote update(VotePostDTO voteDTO, String username) {
 
         Optional<Vote> optionalVote = findVoteByVoteDTO(voteDTO, username);
 
@@ -53,7 +53,7 @@ public class VoteServiceImpl implements VoteService {
                 answerRepository.saveAndFlush(answer);
                 vote.setAnswer(answer);
             } else if (vote.getFeedback() != null) {
-                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).get();
+                Feedback feedback = vote.getFeedback();
                 feedback.setRate(feedback.getRate() - vote.getValue() + voteDTO.getValue());
                 feedbackRepository.saveAndFlush(feedback);
                 vote.setFeedback(feedback);
@@ -64,17 +64,23 @@ public class VoteServiceImpl implements VoteService {
             Vote vote = new Vote();
             vote.setValue(voteDTO.getValue());
             if (voteDTO.getAnswerId() != null) {
-                Answer answer = answerRepository.findById(voteDTO.getAnswerId()).get();
+                Answer answer = answerRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
+                        new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND)
+                );
                 answer.setRate(answer.getRate() + voteDTO.getValue());
                 answerRepository.saveAndFlush(answer);
                 vote.setAnswer(answer);
             } else if (voteDTO.getFeedbackId() != null) {
-                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).get();
+                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).orElseThrow(() ->
+                        new IllegalArgumentException(ErrorMessage.FEEDBACK_NOTFOUND)
+                );
                 feedback.setRate(feedback.getRate() + voteDTO.getValue());
                 feedbackRepository.saveAndFlush(feedback);
                 vote.setFeedback(feedback);
             }
-            vote.setUser(userRepository.findByUsername(username).get());
+            vote.setUser(userRepository.findByUsername(username).orElseThrow(() ->
+                    new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME)
+            ));
             return voteRepository.saveAndFlush(vote);
         }
     }

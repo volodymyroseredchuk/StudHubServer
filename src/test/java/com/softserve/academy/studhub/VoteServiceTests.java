@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.repository.*;
 import com.softserve.academy.studhub.service.VoteService;
 import com.softserve.academy.studhub.service.impl.VoteServiceImpl;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -37,10 +38,16 @@ public class VoteServiceTests {
     @Mock
     private QuestionRepository questionRepository;
 
+    private VoteService voteService;
+
+    @Before
+    public void initializeVoteService() {
+        voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
+                feedbackRepository, questionRepository);
+    }
+
     @Test
     public void findAllByUsernameAndQuestionIdPositive() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
 
         Question question = new Question();
         question.setId(1);
@@ -60,8 +67,6 @@ public class VoteServiceTests {
 
     @Test
     public void findAllByUsernameAndQuestionIdPositiveUnexistingQuestionShouldReturnEmptyList() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
 
         Question question = new Question();
         question.setId(1);
@@ -80,8 +85,6 @@ public class VoteServiceTests {
 
     @Test
     public void findAllByUsernameAndQuestionIdPositiveUnexistingUserShouldReturnEmptyList() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
 
         Question question = new Question();
         question.setId(1);
@@ -100,8 +103,6 @@ public class VoteServiceTests {
 
     @Test
     public void updateVoteForAnswerExsisting() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
         VotePostDTO votePostDTO = new VotePostDTO();
         votePostDTO.setAnswerId(1);
         votePostDTO.setValue(1);
@@ -142,8 +143,6 @@ public class VoteServiceTests {
 
     @Test
     public void updateVoteForFeedbackExsisting() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
         VotePostDTO votePostDTO = new VotePostDTO();
         votePostDTO.setFeedbackId(1);
         votePostDTO.setValue(1);
@@ -185,8 +184,6 @@ public class VoteServiceTests {
 
     @Test
     public void updateVoteForAnswerUnexsisting() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
         VotePostDTO votePostDTO = new VotePostDTO();
         votePostDTO.setAnswerId(1);
         votePostDTO.setValue(1);
@@ -222,8 +219,6 @@ public class VoteServiceTests {
 
     @Test
     public void updateVoteForFeedbackUnexsisting() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
         VotePostDTO votePostDTO = new VotePostDTO();
         votePostDTO.setFeedbackId(1);
         votePostDTO.setValue(1);
@@ -262,8 +257,6 @@ public class VoteServiceTests {
 
     @Test(expected = NullPointerException.class)
     public void updateVoteShouldThrowNullReferenceException() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
         VotePostDTO votePostDTO = new VotePostDTO();
         votePostDTO.setValue(1);
         User user = new User();
@@ -276,8 +269,6 @@ public class VoteServiceTests {
 
     @Test(expected = IllegalArgumentException.class)
     public void updateVoteShouldThrowIllegalArgumentException() {
-        VoteService voteService = new VoteServiceImpl(voteRepository, userRepository, answerRepository,
-                feedbackRepository, questionRepository);
         VotePostDTO votePostDTO = new VotePostDTO();
         votePostDTO.setValue(1);
         Mockito.when(userRepository.findByUsername("testUsername")).thenReturn(Optional.empty());
