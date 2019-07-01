@@ -88,7 +88,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             for (User user : userList) {
                 try {
                     socketService.sendNotification(user.getId(), new TextMessage(encoder.encode(message)));
-                } catch (IOException | EncodeException e) {
+                } catch (EncodeException e) {
                     e.printStackTrace();
                 }
             }

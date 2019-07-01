@@ -74,11 +74,17 @@ public class GoogleVerifierServiceImpl implements GoogleVerifierService {
             form.setPassword(userData.getId());
         } else {
             User foundUser = userService.findByEmail(userData.getEmail());
+            if (foundUser.getGooglePassword() == null) {
+                foundUser.setGooglePassword(encoder.encode(userData.getId()));
+                userService.update(foundUser);
+            }
+
             form.setUsername(foundUser.getUsername());
             form.setPassword(userData.getId());
         }
 
         return form;
+
     }
 
 }
