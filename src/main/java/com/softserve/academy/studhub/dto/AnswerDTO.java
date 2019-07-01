@@ -1,7 +1,5 @@
 package com.softserve.academy.studhub.dto;
 
-import com.softserve.academy.studhub.entity.Comment;
-import com.softserve.academy.studhub.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,4 +25,6 @@ public class AnswerDTO {
     private LocalDateTime creationDate;
 
     private Integer rate;
+
+
 }
