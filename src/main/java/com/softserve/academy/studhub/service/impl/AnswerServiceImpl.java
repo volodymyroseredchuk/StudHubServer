@@ -53,8 +53,12 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setComment(new ArrayList<Comment>());
         answer.setApproved(false);
         answer.setRate(0);
-        answer.setQuestion(questionRepository.findById(questionId).get());
-        answer.setUser(userRepository.findByUsername(username).get());
+        answer.setQuestion(questionRepository.findById(questionId).orElseThrow(
+                () -> new IllegalArgumentException("Question does not exists")
+        ));
+        answer.setUser(userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("User does not exists")
+        ));
         Answer returnAnswer = answerRepository.saveAndFlush(answer);
         subscriptionService.handleMessage(
                 new SocketMessage(returnAnswer.getQuestion().getId().toString()));
@@ -65,9 +69,9 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Boolean deleteById(Integer answerId) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-        if(optionalAnswer.isPresent()){
+        if (optionalAnswer.isPresent()) {
             Answer answer = optionalAnswer.get();
-            if(answer.getApproved()) {
+            if (answer.getApproved()) {
                 return false;
             } else {
                 answerRepository.deleteById(answerId);
