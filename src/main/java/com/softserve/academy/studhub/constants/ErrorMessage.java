@@ -13,7 +13,8 @@ public class ErrorMessage {
     public static final String COMMENT_NOTFOUND = "Requested comment does not exist by this id: ";
     public static final String TEACHER_NOTFOUND = "Requested teacher does not exist by this id: ";
     public static final String UNIVERSITY_NOTFOUND = "Requested university does not exist by this id: ";
-    public static final String TAG_NOTFOUND = "Requested tag does not exist by this id: ";
+    public static final String TAG_NOT_FOUND_BY_ID = "Requested tag does not exist by this id: ";
+    public static final String TAG_NOT_FOUND_BY_NAME = "Requested tag does not exist by this name: ";
     public static final String FEEDBACK_NOTFOUND = "Requested feedback does not exist by this id: ";
     public static final String VOTE_NOTFOUND = "Requested vote does not exist by this id: ";
 
@@ -33,4 +34,5 @@ public class ErrorMessage {
 
     public static final String LINK_IS_EXPIRED_OR_INVALID =  "This link is expired or is invalid. Please issue a new e-mail confirmation request.";
 
+    public static final String QUESTION_NOT_DELETED = "This question already has answers and can not be deleted";
 }

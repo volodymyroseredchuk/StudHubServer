@@ -18,6 +18,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     Page<Question> findAllDistinctByTagListInOrderByCreationDateDesc(Set<Tag> chosenTags, Pageable pageable);
 
+
     @Query(
         value = "select * from Questions q where match(q.title, q.body) against(:pattern) order by :#{#pageable}",
         countQuery = "select count(*) from Questions q where match(q.title, q.body) against(:pattern)",
