@@ -58,18 +58,19 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
-    public void deleteById(Integer commentId) {
+    public String deleteById(Integer commentId) {
         findById(commentId);
         commentRepository.deleteById(commentId);
+        return "Comment deleted";
     }
 
     @Override
-    public List<Comment> findByAnswer(Integer answerId) throws IllegalArgumentException {
+    public List<Comment> findByAnswer(Integer answerId) {
         List<Comment> commentList = null;
         try {
-            commentList = commentRepository.findAllByAnswer_Id(answerId);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            commentList = commentRepository.findByAnswerIdOrderByCreationDateDesc(answerId);
+        } catch (NotFoundException e) {
+            e.getMessage();
         }
         return commentList;
     }
