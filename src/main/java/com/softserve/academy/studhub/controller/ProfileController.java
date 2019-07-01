@@ -1,9 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.dto.FeedbackDTO;
 import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.UserDTO;
-import com.softserve.academy.studhub.entity.Feedback;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.UserService;
@@ -56,7 +54,7 @@ public class ProfileController {
             map(userService.update(user), UserDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping("/getQuestions")
+    @GetMapping("/questions")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByUser(Principal principal) {
 
