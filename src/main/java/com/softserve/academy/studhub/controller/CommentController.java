@@ -37,14 +37,11 @@ public class CommentController {
     public ResponseEntity<CommentDTO> editComment(@PathVariable Integer commentId, @Valid @RequestBody CommentDTO commentDTO) {
         Comment result = commentService.update(commentId, modelMapper.map(commentDTO, Comment.class));
         return ResponseEntity.ok(modelMapper.map(result, CommentDTO.class));
-
     }
 
     @DeleteMapping("comments/{commentId}")
-    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
-    public ResponseEntity<String> deleteComment(@PathVariable Integer commentId) {
-
-        commentService.deleteById(commentId);
-        return ResponseEntity.ok("Comment deleted");
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    public ResponseEntity<String> deleteComment(@PathVariable Integer answerId, @PathVariable Integer commentId) {
+        return ResponseEntity.ok(commentService.deleteById(commentId));
     }
 }

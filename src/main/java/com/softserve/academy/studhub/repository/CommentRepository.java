@@ -10,5 +10,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     List<Comment> findAllByAnswer_Id(Integer id);
 
+    List<Comment> findByAnswerIdOrderByCreationDateDesc(Integer answerId);
+
 
 }

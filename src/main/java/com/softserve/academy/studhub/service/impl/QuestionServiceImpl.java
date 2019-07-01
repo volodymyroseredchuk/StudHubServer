@@ -31,7 +31,7 @@ public class QuestionServiceImpl implements IQuestionService {
         User user = userService.findByUsername(principal.getName());
         question.setUser(user);
         question.setTagList(tagService.reviewTagList(question.getTagList()));
-        Question resultQuestion  = repository.saveAndFlush(question);
+        Question resultQuestion = repository.saveAndFlush(question);
 
         makeSubscription(resultQuestion, user);
         return resultQuestion;

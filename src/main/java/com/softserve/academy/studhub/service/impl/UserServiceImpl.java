@@ -136,7 +136,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUserActivated(String username) {
 
-        User user = findByUsername(username);
+        User user = null;
+
+        try {
+            user = findByUsername(username);
+        } catch (UsernameNotFoundException ex) {
+            return false;
+        }
 
         if (user.getIsActivated()) {
             return true;
