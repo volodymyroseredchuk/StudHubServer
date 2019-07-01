@@ -14,7 +14,8 @@ import java.util.Set;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    Page<Question> findAllByOrderByCreationDateAsc(Pageable pageable);
+    Page<Question> findAllByOrderByCreationDateDesc(Pageable pageable);
+
 
     Page<Question> findAllDistinctByTagListInOrderByCreationDateDesc(Set<Tag> chosenTags, Pageable pageable);
 

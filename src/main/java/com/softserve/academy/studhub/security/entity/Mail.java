@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.security.model;
+package com.softserve.academy.studhub.security.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -12,8 +12,6 @@ public interface IQuestionService {
 
     Question save(Question question, Principal principal);
 
-    Question saveNoUser(Question question);
-
     Question update(Integer questionId, Question question);
 
     List<Question> findAll();

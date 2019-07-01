@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/feedback")
@@ -25,6 +25,13 @@ public class FeedbackController {
         this.modelMapper = modelMapper;
     }
 
+    @GetMapping
+    @PreAuthorize("permitAll()")
+    public List<Feedback> getAllFeedbacks() {
+
+        return feedbackService.findAll();
+    }
+
     @GetMapping(path = "/teacher/{teacherId}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<List<FeedbackDTO>> getFeedbackByTeacher(@PathVariable Integer teacherId) {
@@ -32,18 +39,13 @@ public class FeedbackController {
         List<FeedbackDTO> feedbackDTOS = feedbacks.stream()
             .map(feedback -> modelMapper.map(feedback, FeedbackDTO.class))
             .collect(Collectors.toList());
-
-//        List<FeedbackDTO> feedbackDTOS = new ArrayList<>();
-//        for (Feedback feedback:feedbacks) {
-//            feedbackDTOS.add(modelMapper.map(feedback, FeedbackDTO.class));
-//        }
-
         return ResponseEntity.ok(feedbackDTOS);
     }
 
     @PostMapping(path = "/feedback")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
+
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));
         return ResponseEntity.ok(modelMapper.map(result, FeedbackDTO.class));
     }
@@ -59,4 +61,4 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackDTOS);
     }
 
-    }
+}

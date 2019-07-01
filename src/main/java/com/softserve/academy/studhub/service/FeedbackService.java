@@ -12,4 +12,6 @@ public interface FeedbackService {
 
     List<Feedback> findByUniversityId(Integer universityId);
 
+    List<Feedback> findAll();
+
 }
