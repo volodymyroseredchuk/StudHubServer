@@ -60,7 +60,7 @@ public class ProfileController {
 
     @GetMapping("/questions")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByUser(Principal principal) {
+    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
 
         return new ResponseEntity<>(questionService.
                 findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
@@ -70,7 +70,7 @@ public class ProfileController {
 
     @GetMapping("/feedbacks")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByUser(Principal principal) {
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
 
         return new ResponseEntity<>(feedbackService.
                 findFeedbackByUserUsernameOrderByCreationDateDesc(principal.getName()).
