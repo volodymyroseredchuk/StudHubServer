@@ -24,35 +24,7 @@ public class VoteServiceImpl implements VoteService {
 
     private QuestionRepository questionRepository;
 
-    @Override
-    public Vote findById(Integer id) {
-        Optional<Vote> resultVote = voteRepository.findById(id);
-        if (resultVote.isPresent()) {
-            return resultVote.get();
-        } else {
-            throw new IllegalArgumentException("Vote not found.");
-        }
-    }
 
-    @Override
-    public List<Vote> findByUser(User user) {
-        return voteRepository.findByUser(user);
-    }
-
-    @Override
-    public List<Vote> findByAnswer(Answer answer) {
-        return voteRepository.findByAnswer(answer);
-    }
-
-    @Override
-    public List<Vote> findByFeedback(Feedback feedback) {
-        return voteRepository.findByFeedback(feedback);
-    }
-
-    @Override
-    public List<Vote> findAll() {
-        return voteRepository.findAll();
-    }
 
     @Override
     public List<Vote> findByUsernameAndQuestionId(String username, Integer questionId) {
@@ -63,11 +35,6 @@ public class VoteServiceImpl implements VoteService {
         } else {
             return new ArrayList<Vote>();
         }
-    }
-
-    @Override
-    public Vote save(Vote vote) {
-        return voteRepository.saveAndFlush(vote);
     }
 
 
@@ -129,11 +96,6 @@ public class VoteServiceImpl implements VoteService {
             throw new NullPointerException("Vote can`t have all null fields");
         }
     }
-
-    @Override
-    public void delete(Vote vote) {
-        voteRepository.delete(vote);
-    }
-
+    
 
 }
