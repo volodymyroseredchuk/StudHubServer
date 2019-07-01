@@ -1,8 +1,10 @@
 package com.softserve.academy.studhub.controller;
 
+import com.softserve.academy.studhub.dto.FeedbackDTO;
 import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.UserDTO;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.service.FeedbackService;
 import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,8 @@ public class ProfileController {
     private final UserService userService;
 
     private final IQuestionService questionService;
+
+    private final FeedbackService feedbackService;
 
     private final ModelMapper modelMapper;
 
@@ -63,4 +67,15 @@ public class ProfileController {
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
                 collect(Collectors.toList()), HttpStatus.OK);
     }
+
+    @GetMapping("/feedbacks")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByUser(Principal principal) {
+
+        return new ResponseEntity<>(feedbackService.
+                findFeedbackByUserUsernameOrderByCreationDateDesc(principal.getName()).
+                stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
+                collect(Collectors.toList()), HttpStatus.OK);
+    }
+
 }
