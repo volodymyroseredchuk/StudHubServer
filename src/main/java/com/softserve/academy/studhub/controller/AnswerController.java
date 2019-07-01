@@ -3,6 +3,7 @@ package com.softserve.academy.studhub.controller;
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.dto.AnswerDTO;
 import com.softserve.academy.studhub.dto.AnswerApproveDTO;
+import com.softserve.academy.studhub.dto.DeleteResultDTO;
 import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
 import com.softserve.academy.studhub.service.AnswerService;
@@ -45,22 +46,19 @@ public class AnswerController {
     public ResponseEntity<?> createAnswer(@Valid @RequestBody AnswerCreateDTO answerCreateDTO,
                                           @PathVariable Integer questionId,
                                           Principal principal) {
-
-        String username = principal.getName();
-
         return ResponseEntity.ok(modelMapper.map(
-                answerService.save(answerCreateDTO, questionId, username), AnswerDTO.class)
+                answerService.save(answerCreateDTO, questionId, principal.getName()), AnswerDTO.class)
         );
     }
 
 
     @DeleteMapping("/questions/{questionId}/answers/{answerId}/delete")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
-    public ResponseEntity<String> deleteAnswer(@PathVariable Integer answerId) {
-
-        answerService.deleteById(answerId);
-
-        return ResponseEntity.ok("Answer deleted");
+    public ResponseEntity<?> deleteAnswer(@PathVariable Integer answerId) {
+        Boolean isDeleted = answerService.deleteById(answerId);
+        DeleteResultDTO deleteResultDTO = new DeleteResultDTO();
+        deleteResultDTO.setIsDeleted(isDeleted);
+        return ResponseEntity.ok(deleteResultDTO);
     }
 
 
@@ -71,12 +69,7 @@ public class AnswerController {
         AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();
         answerApproveDTO.setAnswerId(answerId);
         answerApproveDTO.setApproved(approved);
-        try {
-            return ResponseEntity.ok(answerService.approve(answerApproveDTO));
-        } catch (IllegalArgumentException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+        return ResponseEntity.ok(answerService.approve(answerApproveDTO));
     }
 
 }
