@@ -14,5 +14,5 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
 
     List<Feedback> findAll();
 
-    List<Feedback> findFeedbackByUserUsernameOrderByCreationDateDesc(String username);
+    List<Feedback> findFeedbackByUserUsername(String username);
 }

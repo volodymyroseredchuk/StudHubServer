@@ -73,7 +73,7 @@ public class ProfileController {
     public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
 
         return new ResponseEntity<>(feedbackService.
-                findFeedbackByUserUsernameOrderByCreationDateDesc(principal.getName()).
+                findFeedbackByUserUsername(principal.getName()).
                 stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
                 collect(Collectors.toList()), HttpStatus.OK);
     }

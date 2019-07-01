@@ -48,9 +48,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<Feedback> findFeedbackByUserUsernameOrderByCreationDateDesc(String username) {
+    public List<Feedback> findFeedbackByUserUsername(String username) {
 
-        return feedbackRepository.findFeedbackByUserUsernameOrderByCreationDateDesc(username);
+        return feedbackRepository.findFeedbackByUserUsername(username);
     }
 
 
