@@ -1,56 +1,51 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.entity.Question;
-import com.softserve.academy.studhub.entity.Tag;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.entity.*;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.QuestionRepository;
-import com.softserve.academy.studhub.service.IQuestionService;
-import com.softserve.academy.studhub.service.TagService;
-import com.softserve.academy.studhub.service.UserService;
+import com.softserve.academy.studhub.service.*;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-
+@AllArgsConstructor
 @Service
 public class QuestionServiceImpl implements IQuestionService {
 
     private QuestionRepository repository;
 
     private TagService tagService;
-
+    private SubscriptionService subscriptionService;
+    private ChannelService channelService;
     private UserService userService;
-
-    public QuestionServiceImpl(QuestionRepository repository, TagService tagService, UserService userService) {
-        this.repository = repository;
-        this.tagService = tagService;
-        this.userService = userService;
-    }
 
     @Override
     public Question save(Question question, Principal principal) {
         question.setCreationDate(LocalDateTime.now());
-        question.setUser(userService.findByUsername(principal.getName()));
-
+        User user = userService.findByUsername(principal.getName());
+        question.setUser(user);
         question.setTagList(tagService.reviewTagList(question.getTagList()));
+        Question resultQuestion  = repository.saveAndFlush(question);
 
-        return repository.saveAndFlush(question);
+        makeSubscription(resultQuestion, user);
+        return resultQuestion;
+
     }
-// TODO: Delete after ui is ready.
 
-    @Override
-    public Question saveNoUser(Question question) {
-        question.setCreationDate(LocalDateTime.now());
-
-        question.setTagList(tagService.reviewTagList(question.getTagList()));
-
-        return repository.saveAndFlush(question);
+    private void makeSubscription(Question question, User user) {
+        Channel channel = new Channel();
+        channel.setQuestion(question);
+        channel = channelService.save(channel);
+        Subscription subscription = new Subscription();
+        subscription.setChannel(channel);
+        subscription.setUser(user);
+        subscriptionService.save(subscription);
     }
 
     @Override
@@ -60,7 +55,7 @@ public class QuestionServiceImpl implements IQuestionService {
         updatable.setTitle(question.getTitle());
         updatable.setBody(question.getBody());
         updatable.setModifiedDate(LocalDateTime.now());
-        updatable.setTagList(tagService.reviewTagList(updatable.getTagList()));
+        updatable.setTagList(tagService.reviewTagList(question.getTagList()));
 
         return repository.saveAndFlush(updatable);
     }
@@ -90,8 +85,10 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
+
     public Page<Question> sortByAge(Pageable pageable) {
-        return repository.findAllByOrderByCreationDateAsc(pageable);
+        return repository.findAllByOrderByCreationDateDesc(pageable);
+
     }
 
     @Override

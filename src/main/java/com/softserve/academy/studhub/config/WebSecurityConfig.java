@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.config;
 
 import com.softserve.academy.studhub.security.jwt.JwtAuthEntryPoint;
 import com.softserve.academy.studhub.security.jwt.JwtAuthTokenFilter;
+import com.softserve.academy.studhub.security.services.impl.GoogleAuthenticationProvider;
 import com.softserve.academy.studhub.security.services.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthEntryPoint unauthorizedHandler;
 
+    @Autowired
+    private GoogleAuthenticationProvider googleAuthenticationProvider;
+
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
             "/swagger-resources",
@@ -47,6 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+
+        authenticationManagerBuilder.authenticationProvider(googleAuthenticationProvider);
+
         authenticationManagerBuilder
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
