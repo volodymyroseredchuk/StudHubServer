@@ -26,6 +26,6 @@ public interface IQuestionService {
 
     Page<Question> search(String[] keywords, Pageable pageable);
 
-    List<Question> findQuestionByUserUsername(String username);
+    List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username);
 
 }

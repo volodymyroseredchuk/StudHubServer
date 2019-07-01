@@ -102,9 +102,9 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public List<Question> findQuestionByUserUsername(String username){
+    public List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username){
 
-        return repository.findQuestionByUserUsername(username);
+        return repository.findQuestionByUserUsernameOrderByCreationDateDesc(username);
     }
 
 }

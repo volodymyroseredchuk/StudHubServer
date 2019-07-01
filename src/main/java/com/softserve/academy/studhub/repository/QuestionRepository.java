@@ -28,5 +28,5 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
         @Param("pattern") String searchPattern,
         @Param("pageable") Pageable pageable);
 
-    List<Question> findQuestionByUserUsername(String username);
+    List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username);
 }
