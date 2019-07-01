@@ -18,12 +18,12 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     public PasswordResetToken findByValidToken(String token) {
 
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(() ->
-                new ExpiredTokenException(ErrorMessage.LINK_IS_EXPIRED_OR_INVALID));
+                new ExpiredTokenException(ErrorMessage.PASSWORD_RESET_LINK_IS_EXPIRED_OR_INVALID));
 
         if (passwordResetToken.isExpired()) {
 
             delete(passwordResetToken);
-            throw new ExpiredTokenException(ErrorMessage.LINK_IS_EXPIRED_OR_INVALID);
+            throw new ExpiredTokenException(ErrorMessage.PASSWORD_RESET_LINK_IS_EXPIRED_OR_INVALID);
         }
 
         return passwordResetToken;
