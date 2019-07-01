@@ -123,7 +123,6 @@ public class VoteServiceTests {
         Mockito.when(voteRepository.findByUserAndAnswer(user, answer)).thenReturn(Optional.of(vote));
 
 
-
         Vote resultVote = new Vote();
         resultVote.setValue(1);
         resultVote.setAnswer(answer);
@@ -164,7 +163,6 @@ public class VoteServiceTests {
         vote.setUser(user);
         vote.setValue(-1);
         Mockito.when(voteRepository.findByUserAndFeedback(user, feedback)).thenReturn(Optional.of(vote));
-
 
 
         Vote resultVote = new Vote();
@@ -242,7 +240,6 @@ public class VoteServiceTests {
 
 
         Mockito.when(voteRepository.findByUserAndFeedback(user, feedback)).thenReturn(Optional.empty());
-
 
 
         Vote resultVote = new Vote();

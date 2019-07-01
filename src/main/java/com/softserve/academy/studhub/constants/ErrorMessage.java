@@ -34,4 +34,5 @@ public class ErrorMessage {
     public static final String CONFIRMATION_LINK_IS_EXPIRED_OR_INVALID =  "This link is expired or is invalid. Please issue a new e-mail confirmation request.";
     public static final String PASSWORD_RESET_LINK_IS_EXPIRED_OR_INVALID =  "This link is expired or is invalid. Please issue a new password-reset request.";
 
+    public static final String VOTE_POST_DTO_NULL_FIELDS = "Way too much null fields in VotePostDTO. BMake sure you are sending valid VotePostDTO object";
 }

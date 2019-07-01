@@ -112,7 +112,7 @@ public class AnswerServiceTests {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void createAnswerUnknownQuestion(){
+    public void createAnswerUnknownQuestion() {
         AnswerCreateDTO answerCreateDTO = new AnswerCreateDTO();
         answerCreateDTO.setBody("Test data");
 
@@ -134,7 +134,6 @@ public class AnswerServiceTests {
                 0
         );
         Mockito.when(answerRepository.saveAndFlush(Mockito.any())).thenReturn(answerResponse);
-
 
 
         AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
@@ -218,7 +217,7 @@ public class AnswerServiceTests {
     }
 
     @Test
-    public void findByIdPositive(){
+    public void findByIdPositive() {
         AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
                 userRepository, subscriptionService);
         Answer answer = new Answer();
@@ -228,7 +227,7 @@ public class AnswerServiceTests {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void findByIdShouldThrowIllegalArgumentException(){
+    public void findByIdShouldThrowIllegalArgumentException() {
         AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
                 userRepository, subscriptionService);
         Mockito.when(answerRepository.findById(1)).thenReturn(Optional.empty());
@@ -236,11 +235,11 @@ public class AnswerServiceTests {
     }
 
     @Test
-    public void findByQuestionIdPositive(){
+    public void findByQuestionIdPositive() {
         AnswerService answerService = new AnswerServiceImpl(answerRepository, questionRepository,
                 userRepository, subscriptionService);
         List<Answer> answerList = new ArrayList<>();
-        Mockito.when(answerRepository.findByQuestionIdOrderByCreationDateAsc(1)).thenReturn(answerList);
+        Mockito.when(answerRepository.findByQuestionIdOrderByCreationDateDesc(1)).thenReturn(answerList);
         Assert.assertEquals(answerService.findAllByQuestionId(1), answerList);
     }
 }

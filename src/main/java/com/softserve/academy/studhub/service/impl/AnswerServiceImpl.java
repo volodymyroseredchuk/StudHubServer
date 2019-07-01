@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.dto.AnswerApproveDTO;
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.entity.Answer;
@@ -34,7 +35,7 @@ public class AnswerServiceImpl implements AnswerService {
     public Answer findById(Integer answerId) {
         Optional<Answer> result = answerRepository.findById(answerId);
         if (!result.isPresent()) {
-            throw new IllegalArgumentException("Requested answer does not exist");
+            throw new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND);
         }
         return result.get();
     }
@@ -43,7 +44,6 @@ public class AnswerServiceImpl implements AnswerService {
     public List<Answer> findAllByQuestionId(Integer questionId) {
 
         List<Answer> answers = answerRepository.findByQuestionIdOrderByCreationDateDesc(questionId);
-
 
 
         return answers;
@@ -58,10 +58,10 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setApproved(false);
         answer.setRate(0);
         answer.setQuestion(questionRepository.findById(questionId).orElseThrow(
-                () -> new IllegalArgumentException("Question does not exists")
+                () -> new IllegalArgumentException(ErrorMessage.QUESTION_NOTFOUND)
         ));
         answer.setUser(userRepository.findByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("User does not exists")
+                () -> new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME)
         ));
         Answer returnAnswer = answerRepository.saveAndFlush(answer);
         subscriptionService.handleMessage(
@@ -96,7 +96,7 @@ public class AnswerServiceImpl implements AnswerService {
             answerRepository.saveAndFlush(answer);
             return answerApproveDTO;
         } else {
-            throw new IllegalArgumentException("Requested answer does not exist");
+            throw new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND);
         }
     }
 

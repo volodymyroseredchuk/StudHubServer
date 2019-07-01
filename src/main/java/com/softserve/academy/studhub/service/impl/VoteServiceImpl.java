@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.dto.VotePostDTO;
 import com.softserve.academy.studhub.entity.*;
 import com.softserve.academy.studhub.repository.*;
@@ -80,20 +81,20 @@ public class VoteServiceImpl implements VoteService {
 
     private Optional<Vote> findVoteByVoteDTO(VotePostDTO voteDTO, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("User with this username is not existing")
+                new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME)
         );
         if (voteDTO.getAnswerId() != null) {
             Answer answer = answerRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
-                    new IllegalArgumentException("Answer you want to set vote for is not existing")
+                    new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND)
             );
             return voteRepository.findByUserAndAnswer(user, answer);
         } else if (voteDTO.getFeedbackId() != null) {
             Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).orElseThrow(() ->
-                    new IllegalArgumentException("Feedback you want to set vote for is not existing")
+                    new IllegalArgumentException(ErrorMessage.FEEDBACK_NOTFOUND)
             );
             return voteRepository.findByUserAndFeedback(user, feedback);
         } else {
-            throw new NullPointerException("Vote can`t have all null fields");
+            throw new NullPointerException(ErrorMessage.VOTE_POST_DTO_NULL_FIELDS);
         }
     }
     
