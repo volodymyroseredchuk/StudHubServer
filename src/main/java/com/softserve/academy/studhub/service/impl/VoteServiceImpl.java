@@ -79,7 +79,6 @@ public class VoteServiceImpl implements VoteService {
 
         if (optionalVote.isPresent()) {
             Vote vote = optionalVote.get();
-            vote.setValue(voteDTO.getValue());
             if (vote.getAnswer() != null) {
                 Answer answer = vote.getAnswer();
                 answer.setRate(answer.getRate() - vote.getValue() + voteDTO.getValue());
@@ -91,6 +90,7 @@ public class VoteServiceImpl implements VoteService {
                 feedbackRepository.saveAndFlush(feedback);
                 vote.setFeedback(feedback);
             }
+            vote.setValue(voteDTO.getValue());
             return voteRepository.saveAndFlush(vote);
         } else {
             Vote vote = new Vote();
@@ -121,7 +121,7 @@ public class VoteServiceImpl implements VoteService {
             );
             return voteRepository.findByUserAndAnswer(user, answer);
         } else if (voteDTO.getFeedbackId() != null) {
-            Feedback feedback = feedbackRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
+            Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).orElseThrow(() ->
                     new IllegalArgumentException("Feedback you want to set vote for is not existing")
             );
             return voteRepository.findByUserAndFeedback(user, feedback);
