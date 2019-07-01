@@ -58,7 +58,7 @@ public class VoteServiceImpl implements VoteService {
     public List<Vote> findByUsernameAndQuestionId(String username, Integer questionId) {
         Optional<User> userResponse = userRepository.findByUsername(username);
         Optional<Question> questionResponse = questionRepository.findById(questionId);
-        if(userResponse.isPresent() && questionResponse.isPresent()){
+        if (userResponse.isPresent() && questionResponse.isPresent()) {
             return voteRepository.findByUserAndAnswer_Question(userResponse.get(), questionResponse.get());
         } else {
             return new ArrayList<Vote>();
@@ -70,70 +70,63 @@ public class VoteServiceImpl implements VoteService {
         return voteRepository.saveAndFlush(vote);
     }
 
-    @Override
+
     @Transactional
+    @Override
     public Vote update(VotePostDTO voteDTO, String username) throws NullPointerException, IllegalArgumentException {
-        Optional<User> userResponse = userRepository.findByUsername(username);
-        if (userResponse.isPresent()) {
-            User user = userResponse.get();
-            if (voteDTO.getAnswerId() != null) {
-                Optional<Answer> answerResponse = answerRepository.findById(voteDTO.getAnswerId());
-                if (answerResponse.isPresent()) {
-                    Answer answer = answerResponse.get();
 
-                    Optional<Vote> voteResponse = voteRepository
-                            .findByUserAndAnswer(user, answer);
-                    if (voteResponse.isPresent()) {
-                        if(voteResponse.get().getValue() == voteDTO.getValue()) {
-                            return voteResponse.get();
-                        } else {
-                            Vote dbVote = voteResponse.get();
-                            dbVote.setValue(voteDTO.getValue());
-                            return voteRepository.saveAndFlush(dbVote);
-                        }
-                    } else {
-                        Vote vote = new Vote();
-                        vote.setValue(voteDTO.getValue());
-                        vote.setAnswer(answer);
-                        vote.setUser(user);
-                        return this.save(vote);
-                    }
+        Optional<Vote> optionalVote = findVoteByVoteDTO(voteDTO, username);
 
-                } else {
-                    throw new NullPointerException("Answer does not exist.");
-                }
-
-            } else if (voteDTO.getFeedbackId() != null) {
-
-                Optional<Feedback> feedbackResponse = feedbackRepository.findById(voteDTO.getFeedbackId());
-                if (feedbackResponse.isPresent()) {
-                    Feedback feedback = feedbackResponse.get();
-
-                    Optional<Vote> voteResponse = voteRepository.findByUserAndFeedback(user, feedback);
-                    if (voteResponse.isPresent()) {
-                        if(voteResponse.get().getValue() == voteDTO.getValue()) {
-                            return voteResponse.get();
-                        } else {
-                            Vote dbVote = voteResponse.get();
-                            dbVote.setValue(voteDTO.getValue());
-                            return voteRepository.saveAndFlush(dbVote);
-                        }
-                    } else {
-                        Vote vote = new Vote();
-                        vote.setUser(user);
-                        vote.setFeedback(feedback);
-                        vote.setValue(voteDTO.getValue());
-                        return this.save(vote);
-                    }
-
-                } else {
-                    throw new NullPointerException("Feedback does not exist.");
-                }
-            } else {
-                throw new IllegalArgumentException("Got invalid vote.");
+        if (optionalVote.isPresent()) {
+            Vote vote = optionalVote.get();
+            vote.setValue(voteDTO.getValue());
+            if (vote.getAnswer() != null) {
+                Answer answer = vote.getAnswer();
+                answer.setRate(answer.getRate() - vote.getValue() + voteDTO.getValue());
+                answerRepository.saveAndFlush(answer);
+                vote.setAnswer(answer);
+            } else if (vote.getFeedback() != null) {
+                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).get();
+                feedback.setRate(feedback.getRate() - vote.getValue() + voteDTO.getValue());
+                feedbackRepository.saveAndFlush(feedback);
+                vote.setFeedback(feedback);
             }
+            return voteRepository.saveAndFlush(vote);
         } else {
-            throw new NullPointerException("User does not exist.");
+            Vote vote = new Vote();
+            vote.setValue(voteDTO.getValue());
+            if (voteDTO.getAnswerId() != null) {
+                Answer answer = answerRepository.findById(voteDTO.getAnswerId()).get();
+                answer.setRate(answer.getRate() + voteDTO.getValue());
+                answerRepository.saveAndFlush(answer);
+                vote.setAnswer(answer);
+            } else if (voteDTO.getFeedbackId() != null) {
+                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).get();
+                feedback.setRate(feedback.getRate() + voteDTO.getValue());
+                feedbackRepository.saveAndFlush(feedback);
+                vote.setFeedback(feedback);
+            }
+            vote.setUser(userRepository.findByUsername(username).get());
+            return voteRepository.saveAndFlush(vote);
+        }
+    }
+
+    private Optional<Vote> findVoteByVoteDTO(VotePostDTO voteDTO, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() ->
+                new IllegalArgumentException("User with this username is not existing")
+        );
+        if (voteDTO.getAnswerId() != null) {
+            Answer answer = answerRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
+                    new IllegalArgumentException("Answer you want to set vote for is not existing")
+            );
+            return voteRepository.findByUserAndAnswer(user, answer);
+        } else if (voteDTO.getFeedbackId() != null) {
+            Feedback feedback = feedbackRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
+                    new IllegalArgumentException("Feedback you want to set vote for is not existing")
+            );
+            return voteRepository.findByUserAndFeedback(user, feedback);
+        } else {
+            throw new NullPointerException("Vote can`t have all null fields");
         }
     }
 
