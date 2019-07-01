@@ -49,17 +49,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public void handleMessage(SocketMessage msg) {
-        try {
+        if (msg != null) {
+            try {
 
-            Integer subjectId = Integer.parseInt(msg.getId());
-            List<User> userList = subscriptionRepository.findUserByChannelQuestionId(subjectId);
-            Question question = questionRepository.findById(subjectId).orElseThrow(
-                    () -> new IllegalArgumentException("Question not found."));
-            sendSocketNotifications(userList);
-            sendEmailNotifications(userList, question);
+                Integer subjectId = Integer.parseInt(msg.getId());
+                List<User> userList = subscriptionRepository.findUserByChannelQuestionId(subjectId);
+                Question question = questionRepository.findById(subjectId).orElseThrow(
+                        () -> new IllegalArgumentException("Question not found."));
+                sendSocketNotifications(userList);
+                sendEmailNotifications(userList, question);
 
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid message arguments.");
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid message arguments.");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot handle an empty message.");
         }
 
     }

@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -18,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SocketServiceImplTest {
 
     @InjectMocks
@@ -49,7 +52,7 @@ public class SocketServiceImplTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void sendGreetings() {
+    public void sendGreetingsNull() {
 
         socketService.sendGreetings(null, null);
         socketService.sendGreetings(session, null);
@@ -58,14 +61,14 @@ public class SocketServiceImplTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void removeSession() {
+    public void removeSessionNull() {
 
         socketService.removeSession(null);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void sendCustomMessage() {
+    public void sendCustomMessageNull() {
 
         socketService.sendCustomMessage(null, null);
         socketService.sendCustomMessage(session, null);

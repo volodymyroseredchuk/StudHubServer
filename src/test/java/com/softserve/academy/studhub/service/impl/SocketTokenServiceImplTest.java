@@ -1,23 +1,34 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.service.SocketTokenService;
+import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SocketTokenServiceImplTest {
 
-    @Test
-    public void checkAccess() {
+    private SocketTokenService tokenService = new SocketTokenServiceImpl();
 
-
-
+    @After
+    public void finalize() {
+        tokenService = null;
     }
 
-    @Test
-    public void generateToken() {
+    @Test(expected = IllegalArgumentException.class)
+    public void checkAccessNull() {
+        tokenService.checkAccess(null);
     }
 
-    @Test
-    public void removeToken() {
+    @Test(expected = IllegalArgumentException.class)
+    public void generateTokenNull() {
+        tokenService.generateToken(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void removeTokenNull() {
+        tokenService.removeToken(null);
     }
 }
