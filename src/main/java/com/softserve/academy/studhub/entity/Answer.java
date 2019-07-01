@@ -39,6 +39,7 @@ public class Answer {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "answer")
     @JsonManagedReference
+    @OrderBy(value = "creationDate DESC ")
     private List<Comment> comment;
 
     @ManyToOne

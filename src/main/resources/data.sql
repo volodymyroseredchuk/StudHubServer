@@ -466,7 +466,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `university_id` int(11) DEFAULT NULL,
-  `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
+   `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
+   `google_password` varchar(255) DEFAULT NULL,
   `is_activated` bit(2) NOT NULL DEFAULT _binary '\0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
@@ -482,7 +483,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1, 1),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1, 1),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1, 1),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1, 1);
+INSERT INTO `users` VALUES (1,'2019-05-05','tarasgl@gmail.com','Taras',NULL,'Hlukhovetskyi','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','tarasgl',NULL, 1, NULL, 1),(2,'2019-06-05','sample@gmail.com','Olha',NULL,'Lozinska','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','olozh',NULL, 1, NULL, 1),(3,'2019-06-07','admin@gmail.com','Admin',NULL,'Admin','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','admin',NULL, 1, NULL, 1),(4,'2019-06-08','sample2@gmail.com','Andrii',NULL,'Vashchenok','$2a$10$vY8c10iRdFKLZLk55C1P/eLHLFF.mn2.IaOcGCWsFLMVlsD4DXPK2','avash',NULL, 1, NULL, 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -558,7 +559,7 @@ UNLOCK TABLES;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 /*!50003 SET @saved_time_zone      = @@time_zone */ ;
 /*!50003 SET time_zone             = 'SYSTEM' */ ;
-/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `delete_unactivated_users` ON SCHEDULE EVERY 1 DAY STARTS '2019-06-28 23:28:42' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM users where DATEDIFF(CURDATE(), users.creation_date) > 1 AND users.is_activated = 0 */ ;
+/*!50106 CREATE*/ /*!50117 */ /*!50106 EVENT `delete_unactivated_users` ON SCHEDULE EVERY 1 DAY STARTS '2019-06-28 23:28:42' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM users where DATEDIFF(CURDATE(), users.creation_date) > 1 AND users.is_activated = 0 */ ;
 /*!50003 SET time_zone             = @saved_time_zone */ ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;

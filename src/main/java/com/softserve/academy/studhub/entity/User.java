@@ -57,6 +57,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "google_password")
+    private String googlePassword;
+
     @NonNull
     @Column(name = "creation_date")
     private LocalDate creationDate;
