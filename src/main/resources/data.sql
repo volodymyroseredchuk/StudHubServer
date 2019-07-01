@@ -362,7 +362,7 @@ CREATE TABLE `proposals` (
   PRIMARY KEY (`id`),
   KEY `FK3u94vfp3i629csukvqetmy997` (`task_id`),
   KEY `FKo0nyqm5ghqcdte7g3xwn2gsmj` (`user_id`),
-  CONSTRAINT `FK3u94vfp3i629csukvqetmy997` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
+  CONSTRAINT `FK3u94vfp3i629csukvqetmy997` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FKo0nyqm5ghqcdte7g3xwn2gsmj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
