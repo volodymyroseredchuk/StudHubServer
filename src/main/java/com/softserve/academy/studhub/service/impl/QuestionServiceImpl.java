@@ -100,4 +100,11 @@ public class QuestionServiceImpl implements IQuestionService {
 
         return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
+
+    @Override
+    public List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username){
+
+        return repository.findQuestionByUserUsernameOrderByCreationDateDesc(username);
+    }
+
 }

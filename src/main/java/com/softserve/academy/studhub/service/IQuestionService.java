@@ -22,5 +22,7 @@ public interface IQuestionService {
 
     Page<Question> searchByTags(String[] tags, Pageable pageable);
 
+    List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username);
+
     Page<Question> searchByKeywords(String[] keywords, Pageable pageable);
 }
