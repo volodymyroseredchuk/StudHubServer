@@ -3,21 +3,21 @@ package com.softserve.academy.studhub.service.impl;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.graph.Graph;
 import com.softserve.academy.studhub.coders.SocketTokenEncoder;
 import com.softserve.academy.studhub.entity.SocketToken;
+import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.SocketTokenService;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.websocket.EncodeException;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class SocketTokenServiceImpl implements SocketTokenService {
+
+    @Autowired
+    private SocketService socketService;
 
     private SocketTokenEncoder encoder = new SocketTokenEncoder();
 
@@ -50,9 +50,9 @@ public class SocketTokenServiceImpl implements SocketTokenService {
     @Override
     public String generateToken(Integer id) {
         if (id != null) {
+            socketService.removeSession(id);
             String generatedString = RandomStringUtils.random(20, true, true);
             tokenIdMap.put(generatedString, id);
-
             SocketToken socketToken = new SocketToken(generatedString);
 
             try {

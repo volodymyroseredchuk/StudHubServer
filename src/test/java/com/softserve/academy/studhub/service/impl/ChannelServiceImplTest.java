@@ -6,21 +6,29 @@ import com.softserve.academy.studhub.repository.ChannelRepository;
 import com.softserve.academy.studhub.service.ChannelService;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ChannelServiceImplTest {
 
     @Mock
     private ChannelRepository channelRepository;
 
-    @InjectMocks
-    private ChannelService channelService = new ChannelServiceImpl(channelRepository);
+    private ChannelService channelService;
+
+    @Before
+    public void initialize() {
+        channelService = new ChannelServiceImpl(channelRepository);
+    }
 
     @After
     public void finalize() {

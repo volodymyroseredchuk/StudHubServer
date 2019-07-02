@@ -19,6 +19,7 @@ import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @ControllerAdvice
 @Slf4j
@@ -59,13 +60,13 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
-    // This is for all other errors
+    /*// This is for all other errors
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.SERVER_ERROR);
         ex.printStackTrace();
         return new ResponseEntity<>(details, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
 
     // This one for wrong url params (letter instead of number etc)
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
