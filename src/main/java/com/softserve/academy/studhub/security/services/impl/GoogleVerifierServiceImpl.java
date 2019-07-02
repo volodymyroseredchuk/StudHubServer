@@ -47,38 +47,53 @@ public class GoogleVerifierServiceImpl implements GoogleVerifierService {
 
     @Override
     public boolean isValidToken(String clientIdToken) {
-        GoogleIdToken idToken;
-        try {
-            idToken = verifier.verify(clientIdToken);
-            if (idToken != null) {
-                return true;
-            } else {
+        if (clientIdToken != null) {
+            GoogleIdToken idToken;
+            try {
+                idToken = verifier.verify(clientIdToken);
+                if (idToken != null) {
+                    return true;
+                } else {
+                    throw new IllegalArgumentException(ErrorMessage.WRONG_GOOGLE_DATA);
+                }
+            } catch (GeneralSecurityException | IOException e) {
                 throw new IllegalArgumentException(ErrorMessage.WRONG_GOOGLE_DATA);
             }
-        } catch (GeneralSecurityException | IOException e) {
-            throw new IllegalArgumentException(ErrorMessage.WRONG_GOOGLE_DATA);
+        } else {
+            throw new IllegalArgumentException("Cannot check validity of an empty client token.");
         }
     }
 
     @Override
     public LoginForm authenticateUser(GoogleUserData userData) throws IllegalArgumentException {
-        isValidToken(userData.getIdToken());
-        LoginForm form = new LoginForm();
+        if (userData != null) {
+            isValidToken(userData.getIdToken());
+            LoginForm form = new LoginForm();
 
-        if (!userService.existsByEmail(userData.getEmail())) {
-            User addUser = userData.toUser(roleService);
-            addUser.setPassword(encoder.encode(userData.getId()));
-            addUser.setGooglePassword(encoder.encode(userData.getId()));
-            userService.add(addUser);
-            form.setUsername(userData.getEmail());
-            form.setPassword(userData.getId());
+            if (!userService.existsByEmail(userData.getEmail())) {
+                User addUser = userData.toUser(roleService);
+                addUser.setPassword(encoder.encode(userData.getId()));
+                addUser.setGooglePassword(encoder.encode(userData.getId()));
+                userService.add(addUser);
+                form.setUsername(userData.getEmail());
+                form.setPassword(userData.getId());
+            } else {
+                User foundUser = userService.findByEmail(userData.getEmail());
+                if (foundUser.getGooglePassword() == null) {
+                    foundUser.setGooglePassword(encoder.encode(userData.getId()));
+                    userService.update(foundUser);
+                }
+
+                form.setUsername(foundUser.getUsername());
+                form.setPassword(userData.getId());
+            }
+
+            return form;
+
         } else {
-            User foundUser = userService.findByEmail(userData.getEmail());
-            form.setUsername(foundUser.getUsername());
-            form.setPassword(userData.getId());
+            throw new IllegalArgumentException("Cannot authenticate an empty user data.");
         }
 
-        return form;
     }
 
 }

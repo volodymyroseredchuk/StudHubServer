@@ -12,4 +12,6 @@ public class SuccessMessage {
     public static final String MODERATOR_DOWNED = "The moderator has been successfully downed to user";
 
     public static final String VALID_TOKEN = "token is valid";
+
+    public static final String QUESTION_DELETED_SUCCESSFULLY = "Question deleted";
 }

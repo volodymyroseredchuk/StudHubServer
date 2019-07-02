@@ -14,18 +14,15 @@ public interface IQuestionService {
 
     Question update(Integer questionId, Question question);
 
-    List<Question> findAll();
-
     Question findById(Integer questionId);
 
     String deleteById(Integer questionId);
 
-    Page<Question> sortByAge(Pageable pageable);
+    Page<Question> findAllSortedByAge(Pageable pageable);
 
-    Page<Question> sortByTags(String[] tags, Pageable pageable);
-
-    Page<Question> search(String[] keywords, Pageable pageable);
+    Page<Question> searchByTags(String[] tags, Pageable pageable);
 
     List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username);
 
+    Page<Question> searchByKeywords(String[] keywords, Pageable pageable);
 }
