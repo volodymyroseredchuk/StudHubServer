@@ -85,7 +85,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().requiresChannel()
+            .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+            .requiresSecure();
+
+
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
