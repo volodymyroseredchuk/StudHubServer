@@ -9,9 +9,9 @@ import java.io.IOException;
 public interface SocketService {
 
     void addSession(Integer id, WebSocketSession session);
-    void sendNotification(Integer userId, TextMessage message) throws IOException;
-    void sendGreetings(WebSocketSession session, Integer textId) throws IOException, EncodeException;
-    void sendCustomMessage(WebSocketSession session, String msg) throws EncodeException, IOException;
+    void sendNotification(Integer userId, TextMessage message);
+    void sendGreetings(WebSocketSession session, Integer textId);
+    void sendCustomMessage(WebSocketSession session, String msg);
     void removeSession(WebSocketSession session);
 
 }

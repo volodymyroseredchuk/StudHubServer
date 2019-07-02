@@ -2,10 +2,7 @@ package com.softserve.academy.studhub.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -17,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+@AllArgsConstructor
 @Entity
 @Table(name="answers")
 public class Answer {

@@ -21,7 +21,7 @@ public class SocketTokenServiceImpl implements SocketTokenService {
 
     private SocketTokenEncoder encoder = new SocketTokenEncoder();
 
-    private static LoadingCache<String, Integer> tokenIdMap = CacheBuilder.newBuilder()
+    private LoadingCache<String, Integer> tokenIdMap = CacheBuilder.newBuilder()
             .maximumSize(100000)
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .build(new CacheLoader<String, Integer>() {
@@ -33,31 +33,46 @@ public class SocketTokenServiceImpl implements SocketTokenService {
 
     @Override
     public Integer checkAccess(String token) {
-
-        try {
-            Integer id = tokenIdMap.asMap().get(token);
-            removeToken(token);
-            return id;
-        } catch (NullPointerException e) {
-            return 0;
+        if (token != null) {
+            try {
+                Integer id = tokenIdMap.asMap().get(token);
+                removeToken(token);
+                return id;
+            } catch (NullPointerException e) {
+                return 0;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot check access of an empty token.");
         }
 
     }
 
     @Override
-    public String generateToken(Integer id) throws EncodeException {
+    public String generateToken(Integer id) {
+        if (id != null) {
+            String generatedString = RandomStringUtils.random(20, true, true);
+            tokenIdMap.put(generatedString, id);
 
-        String generatedString = RandomStringUtils.random(20, true, true);
-        tokenIdMap.put(generatedString, id);
+            SocketToken socketToken = new SocketToken(generatedString);
 
-        SocketToken socketToken = new SocketToken(generatedString);
+            try {
+                return encoder.encode(socketToken);
+            } catch (EncodeException e) {
+                throw new IllegalArgumentException("Could not generate token.");
+            }
 
-        return encoder.encode(socketToken);
+        } else {
+            throw new IllegalArgumentException("Cannot generate token for an empty ID.");
+        }
     }
 
     @Override
     public void removeToken(String token) {
-        tokenIdMap.asMap().remove(token);
+        if (token != null) {
+            tokenIdMap.asMap().remove(token);
+        } else {
+            throw new IllegalArgumentException("Cannot remove an empty token.");
+        }
     }
 
 }

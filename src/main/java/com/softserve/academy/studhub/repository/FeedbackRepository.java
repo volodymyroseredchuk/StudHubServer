@@ -13,4 +13,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Integer> {
     List<Feedback> findByUniversityId(Integer university);
 
     List<Feedback> findAll();
+
+    List<Feedback> findFeedbackByUserUsername(String username);
 }

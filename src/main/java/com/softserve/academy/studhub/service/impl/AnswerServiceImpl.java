@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.dto.AnswerApproveDTO;
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.entity.Answer;
@@ -34,19 +35,14 @@ public class AnswerServiceImpl implements AnswerService {
     public Answer findById(Integer answerId) {
         Optional<Answer> result = answerRepository.findById(answerId);
         if (!result.isPresent()) {
-            throw new IllegalArgumentException("Requested answer does not exist");
+            throw new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND);
         }
         return result.get();
     }
 
     @Override
     public List<Answer> findAllByQuestionId(Integer questionId) {
-
-        List<Answer> answers = answerRepository.findByQuestionIdOrderByCreationDateDesc(questionId);
-
-
-
-        return answers;
+        return answerRepository.findByQuestionIdOrderByCreationDateDesc(questionId);
     }
 
     @Override
@@ -57,8 +53,12 @@ public class AnswerServiceImpl implements AnswerService {
         answer.setComment(new ArrayList<Comment>());
         answer.setApproved(false);
         answer.setRate(0);
-        answer.setQuestion(questionRepository.findById(questionId).get());
-        answer.setUser(userRepository.findByUsername(username).get());
+        answer.setQuestion(questionRepository.findById(questionId).orElseThrow(
+                () -> new IllegalArgumentException(ErrorMessage.QUESTION_NOTFOUND)
+        ));
+        answer.setUser(userRepository.findByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME)
+        ));
         Answer returnAnswer = answerRepository.saveAndFlush(answer);
         subscriptionService.handleMessage(
                 new SocketMessage(returnAnswer.getQuestion().getId().toString()));
@@ -69,9 +69,9 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     public Boolean deleteById(Integer answerId) {
         Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
-        if(optionalAnswer.isPresent()){
+        if (optionalAnswer.isPresent()) {
             Answer answer = optionalAnswer.get();
-            if(answer.getApproved()) {
+            if (answer.getApproved()) {
                 return false;
             } else {
                 answerRepository.deleteById(answerId);
@@ -92,7 +92,7 @@ public class AnswerServiceImpl implements AnswerService {
             answerRepository.saveAndFlush(answer);
             return answerApproveDTO;
         } else {
-            throw new IllegalArgumentException("Requested answer does not exist");
+            throw new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND);
         }
     }
 

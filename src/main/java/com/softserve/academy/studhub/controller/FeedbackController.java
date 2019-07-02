@@ -4,10 +4,12 @@ import com.softserve.academy.studhub.dto.FeedbackDTO;
 import com.softserve.academy.studhub.entity.Feedback;
 import com.softserve.academy.studhub.service.FeedbackService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,6 +61,16 @@ public class FeedbackController {
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(feedbackDTOS);
+    }
+
+    @GetMapping("/current")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
+
+        return new ResponseEntity<>(feedbackService.
+                findFeedbackByUserUsername(principal.getName()).
+                stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
+                collect(Collectors.toList()), HttpStatus.OK);
     }
 
 }

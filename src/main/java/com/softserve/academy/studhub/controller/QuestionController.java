@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,11 +33,12 @@ public class QuestionController {
     @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<QuestionPaginatedDTO> getAllQuestions(Pageable pageable) {
-        Page<Question> questionPage = questionService.sortByAge(pageable);
+
+        Page<Question> questionPage = questionService.findAllSortedByAge(pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-                .collect(Collectors.toList());
+            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+            .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -44,19 +46,20 @@ public class QuestionController {
 
     @GetMapping("/{questionId}")
     @PreAuthorize("permitAll()")
-    public Question showQuestionPage(@PathVariable Integer questionId) {
-        return questionService.findById(questionId);
+    public Question getQuestionById(@PathVariable Integer questionId) {
 
+        return questionService.findById(questionId);
     }
 
     @GetMapping("/search/{keywords}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<QuestionPaginatedDTO> getSearched(@PathVariable String[] keywords, Pageable pageable) {
-        Page<Question> questionPage = questionService.search(keywords, pageable);
+    public ResponseEntity<QuestionPaginatedDTO> getSearchedByKeywordsQuestions(@PathVariable String[] keywords, Pageable pageable) {
+
+        Page<Question> questionPage = questionService.searchByKeywords(keywords, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-                .collect(Collectors.toList());
+            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+            .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -64,18 +67,21 @@ public class QuestionController {
 
     @GetMapping("/tagged/{tags}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<QuestionPaginatedDTO> getAllSortByTags(@PathVariable String[] tags, Pageable pageable) {
-        Page<Question> questionPage = questionService.sortByTags(tags, pageable);
+    public ResponseEntity<QuestionPaginatedDTO> getSearchedByTagsQuestions(@PathVariable String[] tags, Pageable pageable) {
+
+        Page<Question> questionPage = questionService.searchByTags(tags, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-                .collect(Collectors.toList());
+            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+            .collect(Collectors.toList());
+
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
+
         Question result = questionService.save(modelMapper.map(questionDto, Question.class), principal);
         return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
     }
@@ -83,9 +89,9 @@ public class QuestionController {
     @PutMapping("/{questionId}")
     @PreAuthorize("isAuthenticated() and @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<QuestionDTO> editQuestion(@PathVariable Integer questionId, @RequestBody QuestionDTO questionDto) {
+
         Question result = questionService.update(questionId, modelMapper.map(questionDto, Question.class));
         return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
-
     }
 
 
@@ -96,5 +102,14 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.deleteById(questionId));
     }
 
+    @GetMapping("/current")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
+
+        return new ResponseEntity<>(questionService.
+                findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
+                stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
+                collect(Collectors.toList()), HttpStatus.OK);
+    }
 
 }

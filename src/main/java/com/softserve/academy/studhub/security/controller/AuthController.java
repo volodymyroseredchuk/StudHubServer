@@ -79,6 +79,20 @@ public class AuthController {
         return authenticate(form);
     }
 
+    @PostMapping("/confirm-account")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> confirmAccount(@Valid @RequestBody ConfirmDto form) {
+
+        ConfirmToken token = confirmTokenService.findByValidToken(form.getToken());
+
+        User user = token.getUser();
+        user.setIsActivated(true);
+        userService.update(user);
+        confirmTokenService.delete(token);
+
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.CONFIRM_ACC));
+    }
+
     private ResponseEntity<?> authenticate(LoginForm loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -94,19 +108,4 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtResponse(accessTokenString, refreshToken));
     }
-
-    @PostMapping("/confirm-account")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<?> confirmAccount(@Valid @RequestBody ConfirmDto form) {
-
-        ConfirmToken token = confirmTokenService.findByValidToken(form.getToken());
-
-        User user = token.getUser();
-        user.setIsActivated(true);
-        userService.update(user);
-        confirmTokenService.delete(token);
-
-        return ResponseEntity.ok(new MessageResponse(SuccessMessage.CONFIRM_ACC));
-    }
-
 }

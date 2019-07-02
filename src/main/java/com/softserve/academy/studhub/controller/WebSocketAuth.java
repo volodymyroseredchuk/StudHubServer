@@ -30,7 +30,7 @@ public class WebSocketAuth {
 
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (EncodeException | NullPointerException e) {
+        } catch (NullPointerException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Generating token error.");
         }
 

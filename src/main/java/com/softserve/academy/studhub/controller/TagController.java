@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.TagsDTO;
 import com.softserve.academy.studhub.service.TagService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,18 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin
 @RestController
+@AllArgsConstructor
 @RequestMapping("/tags")
 public class TagController {
 
     private final TagService tagService;
 
-    TagController(TagService tagService) {
-        this.tagService = tagService;
-    }
-
     @GetMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<TagsDTO> getAllTagsSortedWithPagination(Pageable pageable) {
+
         return ResponseEntity.ok().body(new TagsDTO(tagService.findAllSorted(pageable)));
     }
 }
