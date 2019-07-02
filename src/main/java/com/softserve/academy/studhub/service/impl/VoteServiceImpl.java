@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.dto.VotePostDTO;
 import com.softserve.academy.studhub.entity.*;
 import com.softserve.academy.studhub.repository.*;
@@ -24,35 +25,7 @@ public class VoteServiceImpl implements VoteService {
 
     private QuestionRepository questionRepository;
 
-    @Override
-    public Vote findById(Integer id) {
-        Optional<Vote> resultVote = voteRepository.findById(id);
-        if (resultVote.isPresent()) {
-            return resultVote.get();
-        } else {
-            throw new IllegalArgumentException("Vote not found.");
-        }
-    }
 
-    @Override
-    public List<Vote> findByUser(User user) {
-        return voteRepository.findByUser(user);
-    }
-
-    @Override
-    public List<Vote> findByAnswer(Answer answer) {
-        return voteRepository.findByAnswer(answer);
-    }
-
-    @Override
-    public List<Vote> findByFeedback(Feedback feedback) {
-        return voteRepository.findByFeedback(feedback);
-    }
-
-    @Override
-    public List<Vote> findAll() {
-        return voteRepository.findAll();
-    }
 
     @Override
     public List<Vote> findByUsernameAndQuestionId(String username, Integer questionId) {
@@ -61,79 +34,75 @@ public class VoteServiceImpl implements VoteService {
         if (userResponse.isPresent() && questionResponse.isPresent()) {
             return voteRepository.findByUserAndAnswer_Question(userResponse.get(), questionResponse.get());
         } else {
-            return new ArrayList<Vote>();
+            return new ArrayList<>();
         }
-    }
-
-    @Override
-    public Vote save(Vote vote) {
-        return voteRepository.saveAndFlush(vote);
     }
 
 
     @Transactional
     @Override
-    public Vote update(VotePostDTO voteDTO, String username) throws NullPointerException, IllegalArgumentException {
+    public Vote update(VotePostDTO voteDTO, String username) {
 
         Optional<Vote> optionalVote = findVoteByVoteDTO(voteDTO, username);
 
         if (optionalVote.isPresent()) {
             Vote vote = optionalVote.get();
-            vote.setValue(voteDTO.getValue());
             if (vote.getAnswer() != null) {
                 Answer answer = vote.getAnswer();
                 answer.setRate(answer.getRate() - vote.getValue() + voteDTO.getValue());
                 answerRepository.saveAndFlush(answer);
                 vote.setAnswer(answer);
             } else if (vote.getFeedback() != null) {
-                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).get();
+                Feedback feedback = vote.getFeedback();
                 feedback.setRate(feedback.getRate() - vote.getValue() + voteDTO.getValue());
                 feedbackRepository.saveAndFlush(feedback);
                 vote.setFeedback(feedback);
             }
+            vote.setValue(voteDTO.getValue());
             return voteRepository.saveAndFlush(vote);
         } else {
             Vote vote = new Vote();
             vote.setValue(voteDTO.getValue());
             if (voteDTO.getAnswerId() != null) {
-                Answer answer = answerRepository.findById(voteDTO.getAnswerId()).get();
+                Answer answer = answerRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
+                        new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND)
+                );
                 answer.setRate(answer.getRate() + voteDTO.getValue());
                 answerRepository.saveAndFlush(answer);
                 vote.setAnswer(answer);
             } else if (voteDTO.getFeedbackId() != null) {
-                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).get();
+                Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).orElseThrow(() ->
+                        new IllegalArgumentException(ErrorMessage.FEEDBACK_NOTFOUND)
+                );
                 feedback.setRate(feedback.getRate() + voteDTO.getValue());
                 feedbackRepository.saveAndFlush(feedback);
                 vote.setFeedback(feedback);
             }
-            vote.setUser(userRepository.findByUsername(username).get());
+            vote.setUser(userRepository.findByUsername(username).orElseThrow(() ->
+                    new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME)
+            ));
             return voteRepository.saveAndFlush(vote);
         }
     }
 
     private Optional<Vote> findVoteByVoteDTO(VotePostDTO voteDTO, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("User with this username is not existing")
+                new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME)
         );
         if (voteDTO.getAnswerId() != null) {
             Answer answer = answerRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
-                    new IllegalArgumentException("Answer you want to set vote for is not existing")
+                    new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND)
             );
             return voteRepository.findByUserAndAnswer(user, answer);
         } else if (voteDTO.getFeedbackId() != null) {
-            Feedback feedback = feedbackRepository.findById(voteDTO.getAnswerId()).orElseThrow(() ->
-                    new IllegalArgumentException("Feedback you want to set vote for is not existing")
+            Feedback feedback = feedbackRepository.findById(voteDTO.getFeedbackId()).orElseThrow(() ->
+                    new IllegalArgumentException(ErrorMessage.FEEDBACK_NOTFOUND)
             );
             return voteRepository.findByUserAndFeedback(user, feedback);
         } else {
-            throw new NullPointerException("Vote can`t have all null fields");
+            throw new NullPointerException(ErrorMessage.VOTE_POST_DTO_NULL_FIELDS);
         }
     }
-
-    @Override
-    public void delete(Vote vote) {
-        voteRepository.delete(vote);
-    }
-
+    
 
 }
