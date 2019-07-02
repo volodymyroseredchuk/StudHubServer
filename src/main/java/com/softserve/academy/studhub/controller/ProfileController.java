@@ -26,10 +26,6 @@ public class ProfileController {
 
     private final UserService userService;
 
-    private final IQuestionService questionService;
-
-    private final FeedbackService feedbackService;
-
     private final ModelMapper modelMapper;
 
     @GetMapping("/my")
