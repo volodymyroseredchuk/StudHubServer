@@ -16,14 +16,6 @@ public interface TagService {
 
     Tag findByName(String name);
 
-    Tag update(Tag tag);
-
-    void deleteById(Integer id);
-
-    List<Tag> findAll();
-
-    List<Tag> findAll(Pageable pageable);
-
     Page<Tag> findAllSorted(Pageable pageable);
 
     Set<Tag> reviewTagList(Set<Tag> tagList);
