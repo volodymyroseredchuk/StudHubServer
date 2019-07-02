@@ -58,24 +58,4 @@ public class ProfileController {
                 map(userService.update(user), UserDTO.class), HttpStatus.OK);
     }
 
-    @GetMapping("/questions")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
-
-        return new ResponseEntity<>(questionService.
-                findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
-                stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
-                collect(Collectors.toList()), HttpStatus.OK);
-    }
-
-    @GetMapping("/feedbacks")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
-
-        return new ResponseEntity<>(feedbackService.
-                findFeedbackByUserUsername(principal.getName()).
-                stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
-                collect(Collectors.toList()), HttpStatus.OK);
-    }
-
 }

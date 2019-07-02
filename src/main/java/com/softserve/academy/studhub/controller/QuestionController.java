@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -96,5 +97,13 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.deleteById(questionId));
     }
 
+    @GetMapping("/current")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
 
+        return new ResponseEntity<>(questionService.
+                findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
+                stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
+                collect(Collectors.toList()), HttpStatus.OK);
+    }
 }
