@@ -81,6 +81,9 @@ public class GoogleVerifierServiceImpl implements GoogleVerifierService {
                 User foundUser = userService.findByEmail(userData.getEmail());
                 if (foundUser.getGooglePassword() == null) {
                     foundUser.setGooglePassword(encoder.encode(userData.getId()));
+                    if (foundUser.getImageUrl() == null) {
+                        foundUser.setImageUrl(userData.getPhotoUrl());
+                    }
                     userService.update(foundUser);
                 }
 
