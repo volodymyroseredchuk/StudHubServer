@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.entity.enums.RoleName;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
+import com.softserve.academy.studhub.security.services.FacebookService;
 import com.softserve.academy.studhub.security.services.GoogleVerifierService;
 import com.softserve.academy.studhub.security.entity.ConfirmToken;
 import com.softserve.academy.studhub.security.services.ConfirmTokenService;
@@ -22,7 +23,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -42,6 +45,7 @@ public class AuthController {
     private final PasswordEncoder encoder;
     private final JwtProvider jwtProvider;
     private final ModelMapper modelMapper;
+    private FacebookService facebookService;
 
 
     @PostMapping("/signin")
@@ -78,6 +82,30 @@ public class AuthController {
 
         return authenticate(form);
     }
+
+    @GetMapping("/facebooklogin")
+    public RedirectView facebookLogin(){
+        RedirectView redirectView = new RedirectView();
+        String url = facebookService.facebookLogin();
+        redirectView.setUrl(url);
+        return redirectView;
+    }
+
+    @GetMapping("/facebook")
+    public String facebook(@RequestParam("code") String code){
+        String accessToken = facebookService.getFacebookAccessToken(code);
+        return "redirect:/facebookprofiledata/"+accessToken;
+    }
+    @GetMapping("/acebookprofiledata/{accessToken:.+}")
+    public String publicProfileData(@PathVariable String accessToken, Model model){
+        LoginForm form = facebookService.getFacebookUserProfile(accessToken);
+        User user = new User();
+        user.setUsername(form.getUsername());
+        user.setPassword(form.getPassword());
+        model.addAttribute(user);
+        return "view/profile";
+    }
+
 
     @PostMapping("/confirm-account")
     @PreAuthorize("permitAll()")
