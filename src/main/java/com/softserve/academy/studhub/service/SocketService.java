@@ -13,5 +13,6 @@ public interface SocketService {
     void sendGreetings(WebSocketSession session, Integer textId);
     void sendCustomMessage(WebSocketSession session, String msg);
     void removeSession(WebSocketSession session);
+    void removeSession(Integer id);
 
 }

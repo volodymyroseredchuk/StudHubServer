@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,10 +26,6 @@ import java.util.stream.Collectors;
 public class ProfileController {
 
     private final UserService userService;
-
-    private final IQuestionService questionService;
-
-    private final FeedbackService feedbackService;
 
     private final ModelMapper modelMapper;
 
@@ -52,10 +49,10 @@ public class ProfileController {
 
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody User user) {
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUser) {
 
         return new ResponseEntity<>(modelMapper.
-                map(userService.update(user), UserDTO.class), HttpStatus.OK);
+                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class), HttpStatus.OK);
     }
 
 }
