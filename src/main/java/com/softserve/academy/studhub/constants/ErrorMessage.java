@@ -39,4 +39,6 @@ public class ErrorMessage {
 
     public static final String QUESTION_NOT_DELETED = "This question already has answers and can not be deleted";
 
+    public static final String ROLE_NOT_FOUND_BY_NAME = "The role is not found by name: ";
+
 }
