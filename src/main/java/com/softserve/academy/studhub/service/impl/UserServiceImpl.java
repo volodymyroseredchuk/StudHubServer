@@ -118,4 +118,12 @@ public class UserServiceImpl implements UserService {
         return findByUsername(currentPrincipalName);
     }
 
+    @Override
+    public void isUserActivated(String username) {
+
+        if (!findByUsername(username).getIsActivated()) {
+            throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
+        }
+    }
+
 }

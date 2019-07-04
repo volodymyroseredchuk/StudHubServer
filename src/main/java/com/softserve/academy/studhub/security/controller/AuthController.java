@@ -103,10 +103,7 @@ public class AuthController {
                 )
         );
 
-        if(userService.findByUsername(loginRequest.getUsername()).getIsActivated() == false) {
-
-            throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
-        }
+        userService.isUserActivated(loginRequest.getUsername());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessTokenString = jwtProvider.generateAccessToken(authentication);
