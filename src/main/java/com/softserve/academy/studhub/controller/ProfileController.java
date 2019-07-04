@@ -51,8 +51,10 @@ public class ProfileController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUser) {
 
+        User user = modelMapper.map(updatedUser, User.class);
+
         return new ResponseEntity<>(modelMapper.
-                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class), HttpStatus.OK);
+                map(userService.update(user), UserDTO.class), HttpStatus.OK);
     }
 
 }

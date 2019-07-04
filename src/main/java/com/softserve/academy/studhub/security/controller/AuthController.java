@@ -1,8 +1,10 @@
 package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
+import com.softserve.academy.studhub.exceptions.NotConfirmedException;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
@@ -48,7 +50,6 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
-        userService.isUserActivated(loginRequest.getUsername());
         return authenticate(loginRequest);
     }
 
@@ -101,6 +102,11 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
+
+        if(userService.findByUsername(loginRequest.getUsername()).getIsActivated() == false) {
+
+            throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessTokenString = jwtProvider.generateAccessToken(authentication);

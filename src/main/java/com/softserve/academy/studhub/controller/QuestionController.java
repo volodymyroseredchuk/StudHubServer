@@ -106,8 +106,10 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
 
+        String username = principal.getName();
+
         return new ResponseEntity<>(questionService.
-                findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
+                findQuestionByUserUsernameOrderByCreationDateDesc(username).
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
                 collect(Collectors.toList()), HttpStatus.OK);
     }
