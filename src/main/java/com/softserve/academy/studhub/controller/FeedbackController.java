@@ -67,10 +67,11 @@ public class FeedbackController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
 
-        return new ResponseEntity<>(feedbackService.
-                findFeedbackByUserUsername(principal.getName()).
+        String username = principal.getName();
+
+        return ResponseEntity.ok(feedbackService.findFeedbackByUserUsername(username).
                 stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
-                collect(Collectors.toList()), HttpStatus.OK);
+                collect(Collectors.toList()));
     }
 
 }

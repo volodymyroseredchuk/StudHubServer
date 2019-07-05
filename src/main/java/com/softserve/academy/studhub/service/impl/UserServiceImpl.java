@@ -48,7 +48,8 @@ public class UserServiceImpl implements UserService {
 
         updatable.setFirstName(oldUser.getFirstName());
         updatable.setLastName(oldUser.getLastName());
-        updatable.setEmail(oldUser.getEmail());
+        updatable.setEmailSubscription(oldUser.getEmailSubscription());
+        updatable.setImageUrl(oldUser.getImageUrl());
 
         return userRepository.saveAndFlush(updatable);
     }

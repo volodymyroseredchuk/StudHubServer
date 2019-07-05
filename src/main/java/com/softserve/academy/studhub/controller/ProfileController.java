@@ -1,23 +1,16 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.dto.FeedbackDTO;
-import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.UserDTO;
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.service.FeedbackService;
-import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @CrossOrigin
@@ -35,24 +28,26 @@ public class ProfileController {
 
         String username = principal.getName();
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findByUsername(username), UserDTO.class));
     }
 
     @GetMapping("/foreign/{id}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findById(id), UserDTO.class), HttpStatus.OK);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findById(id), UserDTO.class));
     }
 
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUser) {
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUserDTO) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class), HttpStatus.OK);
+        User updatedUser = modelMapper.map(updatedUserDTO, User.class);
+
+        return ResponseEntity.ok(modelMapper.
+                map(userService.update(updatedUser), UserDTO.class));
     }
 
 }
