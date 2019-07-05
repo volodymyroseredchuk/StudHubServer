@@ -1,9 +1,8 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.config.Message;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Proposal;
 import com.softserve.academy.studhub.entity.Task;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TaskRepository;
 import com.softserve.academy.studhub.service.TaskService;
@@ -54,9 +53,9 @@ public class TaskServiceImpl implements TaskService {
         List<Proposal> proposalList = taskToDelete.getProposalList();
         if ((proposalList == null) || (proposalList.isEmpty())) {
             taskRepository.deleteById(taskId);
-            return Message.TASK_DELETED;
+            return ErrorMessage.TASK_DELETED;
         }
-        return Message.TASK_NOT_DELETED;
+        return ErrorMessage.TASK_NOT_DELETED;
     }
 
     @Override

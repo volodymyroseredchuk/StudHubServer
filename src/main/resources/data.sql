@@ -369,7 +369,32 @@ INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-1
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `tasks_tags`
+--
 
+DROP TABLE IF EXISTS `tasks_tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `tasks_tags` (
+                              `tasks_id` int(11) NOT NULL,
+                              `tags_id` int(11) NOT NULL,
+                              KEY `tasks_id` (`tasks_id`),
+                              KEY `tags_id` (`tags_id`),
+                              CONSTRAINT `tasks_tags_ibfk_1` FOREIGN KEY (`tasks_id`) REFERENCES `tasks` (`id`),
+                              CONSTRAINT `tasks_tags_ibfk_2` FOREIGN KEY (`tags_id`) REFERENCES `tags` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tasks_tags`
+--
+
+LOCK TABLES `tasks_tags` WRITE;
+/*!40000 ALTER TABLE `tasks_tags` DISABLE KEYS */;
+INSERT INTO `tasks_tags` VALUES (1,1),(2,4),(2,5);
+/*!40000 ALTER TABLE `tasks_tags` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `proposals`

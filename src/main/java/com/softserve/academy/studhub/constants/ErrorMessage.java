@@ -43,4 +43,10 @@ public class ErrorMessage {
 
     public static final String ROLE_NOT_FOUND_BY_NAME = "The role is not found by name: ";
 
+    public static final String TASK_DELETED = "Task was successfully deleted";
+
+    public static final String TASK_NOT_DELETED = "This task already has proposals and can not be deleted";
+
+    public static final String PROPOSAL_DELETED = "Proposal was successfully deleted";
+
 }

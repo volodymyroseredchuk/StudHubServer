@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -48,4 +49,9 @@ public class Task {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
     @JsonManagedReference
     private List<Proposal> proposalList;
+
+    @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "tasks_tags", joinColumns = {@JoinColumn(name = "tasks_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tags_id")})
+    private Set<Tag> tagList;
 }
