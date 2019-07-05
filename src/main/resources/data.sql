@@ -237,10 +237,12 @@ CREATE TABLE `questions` (
   `modified_date` datetime DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `team_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKjoo8hp6d3gfwctr68dl2iaemj` (`user_id`),
   FULLTEXT KEY `questions_search` (`title`,`body`),
-  CONSTRAINT `FKjoo8hp6d3gfwctr68dl2iaemj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FKjoo8hp6d3gfwctr68dl2iaemj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -250,7 +252,7 @@ CREATE TABLE `questions` (
 
 LOCK TABLES `questions` WRITE;
 /*!40000 ALTER TABLE `questions` DISABLE KEYS */;
-INSERT INTO `questions` VALUES (1,'Hi! I am applied math student, but i don\'t know math. Completely. I even don\'t know how to multiply numbes. Please help! ','2019-06-01 00:00:00',NULL,'How to math?',1),(2,'Hello! Please help me writing diploma. My theme is the philosophy of middle ages. What philosophers ere popular that days?','2019-06-01 00:00:00',NULL,'Philosophy diploma',4);
+INSERT INTO `questions` VALUES (1,'Hi! I am applied math student, but i don\'t know math. Completely. I even don\'t know how to multiply numbes. Please help! ','2019-06-01 00:00:00',NULL,'How to math?',1,1),(2,'Hello! Please help me writing diploma. My theme is the philosophy of middle ages. What philosophers ere popular that days?','2019-06-01 00:00:00',NULL,'Philosophy diploma',4,3);
 /*!40000 ALTER TABLE `questions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -488,6 +490,60 @@ LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
 INSERT INTO `teachers` VALUES (1,'2019-06-02 00:00:00','Bogdan',NULL,'Gnativ',NULL,1,3.5),(2,'2019-06-02 00:00:00','Petro',NULL,'Kostrobiy',NULL,1,0),(3,'2019-06-02 00:00:00','Petro',NULL,'Topulko',NULL,1,0),(4,'2019-06-02 00:00:00','Roman',NULL,'Kalyna',NULL,2,0),(5,'2019-06-02 00:00:00','Olexiy',NULL,'Pidlisnyi',NULL,2,0),(6,'2019-06-02 00:00:00','Oleg',NULL,'Petuchello',NULL,3,0),(7,'2019-06-02 00:00:00','Igor',NULL,'Kolega',NULL,4,0);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teams`
+--
+
+DROP TABLE IF EXISTS `teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `teams` (
+                         `id` int(11) NOT NULL AUTO_INCREMENT,
+                         `name` varchar(32) DEFAULT NULL,
+                         `creator_id` int(11) NOT NULL,
+                         PRIMARY KEY (`id`),
+                         KEY `creator_id` (`creator_id`),
+                         CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teams`
+--
+
+LOCK TABLES `teams` WRITE;
+/*!40000 ALTER TABLE `teams` DISABLE KEYS */;
+INSERT INTO `teams` VALUES (1,'dreamteam',3),(2,'adminteam',3),(3,'tarasteam',1);
+/*!40000 ALTER TABLE `teams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teams_users`
+--
+
+DROP TABLE IF EXISTS `teams_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `teams_users` (
+                               `team_id` int(11) NOT NULL,
+                               `user_id` int(11) NOT NULL,
+                               KEY `team_id` (`team_id`),
+                               KEY `user_id` (`user_id`),
+                               CONSTRAINT `teams_users_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`),
+                               CONSTRAINT `teams_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teams_users`
+--
+
+LOCK TABLES `teams_users` WRITE;
+/*!40000 ALTER TABLE `teams_users` DISABLE KEYS */;
+INSERT INTO `teams_users` VALUES (1,1),(1,2),(3,3);
+/*!40000 ALTER TABLE `teams_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
