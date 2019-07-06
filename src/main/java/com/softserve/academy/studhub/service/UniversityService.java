@@ -1,23 +1,24 @@
 package com.softserve.academy.studhub.service;
 
-import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.entity.University;
+import org.springframework.data.domain.Page;
 
+import java.awt.print.Pageable;
 import java.util.List;
-import java.util.Optional;
 
 public interface UniversityService {
     List<University> findAll();
 
-    Optional<University> findById(int id);
+    University findById(Integer universityId);
 
     University save(University university);
 
-    University update(University university);
+    University update(Integer universityId, University university);
 
-    void deleteById(int id);
+    String deleteById(Integer universityId);
 
-   // List<University> sortByAge();
+    Page<University> sortByAge(Pageable pageable);
 
-    //List<University> sortByMark();
+    Page<University> sortByMark(Pageable pageable);
+
 }

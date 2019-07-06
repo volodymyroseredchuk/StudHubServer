@@ -1,14 +1,16 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.entity.Teacher;
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.University;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.UniversityRepository;
 import com.softserve.academy.studhub.service.UniversityService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
+import java.time.LocalDateTime;
 import java.util.List;
-
-import java.util.Optional;
 
 @Service
 public class UniversityServiceImpl implements UniversityService {
@@ -24,33 +26,39 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public Optional<University> findById(int id) {
-        return universityRepository.findById(id);
+    public University findById(Integer universityId) {
+        return universityRepository.findById(universityId).orElseThrow(
+            () -> new NotFoundException(ErrorMessage.UNIVERSITY_NOTFOUND + universityId));
     }
 
     @Override
-    public University save(University teacher) {
-        return universityRepository.saveAndFlush(teacher);
-    }
-
-    @Override
-    public University update(University university) {
+    public University save(University university) {
+        university.setCreationDate(LocalDateTime.now());
         return universityRepository.saveAndFlush(university);
     }
 
-  /*  @Override
-    public List<University> sortByAge() {
-        return universityRepository.findAllByOrdeByCreationDateAsc();
+    @Override
+    public University update(Integer universityId, University university) {
+        University updatable = findById(universityId);
+        updatable.setImageUrl(university.getImageUrl());
+        updatable.setMark(university.getMark());
+        updatable.setModifiedDate(LocalDateTime.now());
+        return universityRepository.saveAndFlush(university);
     }
 
     @Override
-    public List<University> sortByMark() {
-        return universityRepository.findAllByTagListInOrderByMarkAsc();
-    }*/
-
-    @Override
-    public void deleteById(int id) {
-        universityRepository.deleteById(id);
+    public String deleteById(Integer universityId) {
+        universityRepository.deleteById(universityId);
+        return "University was deleted";
     }
 
+    @Override
+    public Page<University> sortByAge(Pageable pageable) {
+        return universityRepository.findAllOrderByCreationDateDesc(pageable);
+    }
+
+    @Override
+    public Page<University> sortByMark(Pageable pageable) {
+        return universityRepository.findAllOrderByMarkDesc(pageable);
+    }
 }

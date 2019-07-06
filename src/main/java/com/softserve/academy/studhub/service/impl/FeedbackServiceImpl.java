@@ -44,6 +44,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public Feedback save(Feedback feedback) {
 //        feedback.setUser(userService.getCurrentUser());
+//        feedback.setRate(feedback.getRate());
         return feedbackRepository.saveAndFlush(feedback);
     }
 

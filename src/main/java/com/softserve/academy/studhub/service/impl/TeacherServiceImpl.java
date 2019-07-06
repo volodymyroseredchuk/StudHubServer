@@ -1,12 +1,16 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Teacher;
+import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeacherRepository;
 import com.softserve.academy.studhub.service.TeacherService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -22,35 +26,42 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Optional<Teacher> findById(int id) {
-        return teacherRepository.findById(id);
+    public Teacher findById(Integer teacherId) throws NotFoundException {
+        return teacherRepository.findById(teacherId).orElseThrow(
+            () -> new NotFoundException(ErrorMessage.TEACHER_NOTFOUND + teacherId));
     }
 
     @Override
     public Teacher save(Teacher teacher) {
+        teacher.setCreationDate(LocalDateTime.now());
         return teacherRepository.saveAndFlush(teacher);
     }
 
     @Override
-    public Teacher update(Teacher teacher) {
+    public Teacher update(Integer teacherId, Teacher teacher) {
+        Teacher updatable = findById(teacherId);
+        updatable.setFirstName(teacher.getFirstName());
+        updatable.setLastName(teacher.getLastName());
+        updatable.setImageUrl(teacher.getImageUrl());
+        updatable.setMark(teacher.getMark());
+        updatable.setModifiedDate(LocalDateTime.now());
         return teacherRepository.saveAndFlush(teacher);
     }
 
-   /* @Override
-    public List<Teacher> sortByAge() {
-        return teacherRepository.findAllByOrdeByCreationDateAsc();
+    @Override
+    public String deleteById(Integer teacherId) {
+        teacherRepository.deleteById(teacherId);
+        return "Teacher was deleted";
     }
 
     @Override
-    public List<Teacher> sortByMark() {
-        return teacherRepository.findAllByTagListInOrderByMarkAsc();
-    }*/
-
-    @Override
-    public void deleteById(int id) {
-         teacherRepository.deleteById(id);
+    public Page<Teacher> sortByAge(Pageable pageable) {
+        return teacherRepository.findAllOrderByCreationDateDesc(pageable);
     }
 
-
+    @Override
+    public Page<Teacher> sortByMark(Pageable pageable) {
+        return teacherRepository.findAllOrderByMarkDesc(pageable);
+    }
 
 }

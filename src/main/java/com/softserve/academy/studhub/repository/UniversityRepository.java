@@ -1,13 +1,13 @@
 package com.softserve.academy.studhub.repository;
 
 import com.softserve.academy.studhub.entity.University;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.awt.print.Pageable;
 
 public interface UniversityRepository extends JpaRepository <University, Integer> {
-   // List<University> findAllByOrdeByCreationDateAsc();
+    Page<University> findAllOrderByCreationDateDesc(Pageable pageable);
 
-   // List<University> findAllByTagListInOrderByMarkAsc();
-
+    Page<University> findAllOrderByMarkDesc(Pageable pageable);
 }

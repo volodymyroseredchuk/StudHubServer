@@ -1,22 +1,24 @@
 package com.softserve.academy.studhub.service;
 
 import com.softserve.academy.studhub.entity.Teacher;
+import org.springframework.data.domain.Page;
 
+import java.awt.print.Pageable;
 import java.util.List;
-import java.util.Optional;
 
 public interface TeacherService {
     List<Teacher> findAll();
 
-    Optional<Teacher> findById(int id);
+    Teacher findById(Integer id);
 
     Teacher save(Teacher teacher);
 
-    Teacher update(Teacher teacher);
+    Teacher update(Integer teacherId, Teacher teacher);
 
-    void deleteById(int id);
+    String deleteById(Integer teacherId);
 
-    //List<Teacher> sortByAge();
+    Page<Teacher> sortByAge(Pageable pageable);
 
-    //List<Teacher> sortByMark();
+    Page<Teacher> sortByMark(Pageable pageable);
+
 }
