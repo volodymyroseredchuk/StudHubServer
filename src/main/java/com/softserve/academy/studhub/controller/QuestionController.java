@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.dto.QuestionDTO;
 import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.QuestionPaginatedDTO;
 import com.softserve.academy.studhub.entity.Question;
+import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.service.IQuestionService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -80,10 +81,10 @@ public class QuestionController {
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
+    public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
 
         Question result = questionService.save(modelMapper.map(questionDto, Question.class), principal);
-        return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
+        return ResponseEntity.ok(new MessageResponse("created!"));
     }
 
     @PutMapping("/{questionId}")

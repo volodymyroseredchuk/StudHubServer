@@ -242,7 +242,7 @@ CREATE TABLE `questions` (
   KEY `FKjoo8hp6d3gfwctr68dl2iaemj` (`user_id`),
   FULLTEXT KEY `questions_search` (`title`,`body`),
   CONSTRAINT `FKjoo8hp6d3gfwctr68dl2iaemj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+  CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -252,7 +252,7 @@ CREATE TABLE `questions` (
 
 LOCK TABLES `questions` WRITE;
 /*!40000 ALTER TABLE `questions` DISABLE KEYS */;
-INSERT INTO `questions` VALUES (1,'Hi! I am applied math student, but i don\'t know math. Completely. I even don\'t know how to multiply numbes. Please help! ','2019-06-01 00:00:00',NULL,'How to math?',1,1),(2,'Hello! Please help me writing diploma. My theme is the philosophy of middle ages. What philosophers ere popular that days?','2019-06-01 00:00:00',NULL,'Philosophy diploma',4,3);
+INSERT INTO `questions` VALUES (1,'Hi! I am applied math student, but i don\'t know math. Completely. I even don\'t know how to multiply numbes. Please help! ','2019-06-01 00:00:00',NULL,'How to math?',1,null),(2,'Hello! Please help me writing diploma. My theme is the philosophy of middle ages. What philosophers ere popular that days?','2019-06-01 00:00:00',NULL,'Philosophy diploma',4,null);
 /*!40000 ALTER TABLE `questions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,7 +383,7 @@ CREATE TABLE `tasks_tags` (
                               `tags_id` int(11) NOT NULL,
                               KEY `tasks_id` (`tasks_id`),
                               KEY `tags_id` (`tags_id`),
-                              CONSTRAINT `tasks_tags_ibfk_1` FOREIGN KEY (`tasks_id`) REFERENCES `tasks` (`id`),
+                              CONSTRAINT `tasks_tags_ibfk_1` FOREIGN KEY (`tasks_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
                               CONSTRAINT `tasks_tags_ibfk_2` FOREIGN KEY (`tags_id`) REFERENCES `tags` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -533,7 +533,7 @@ CREATE TABLE `teams_users` (
                                `user_id` int(11) NOT NULL,
                                KEY `team_id` (`team_id`),
                                KEY `user_id` (`user_id`),
-                               CONSTRAINT `teams_users_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`),
+                               CONSTRAINT `teams_users_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE,
                                CONSTRAINT `teams_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

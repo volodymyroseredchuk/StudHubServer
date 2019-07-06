@@ -1,22 +1,15 @@
 package com.softserve.academy.studhub.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@EqualsAndHashCode
 @Entity
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(exclude = {"name", "user", "modifiedDate", "userList"})
 @Table(name = "teams")
 public class Team {
 
@@ -38,9 +31,6 @@ public class Team {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @LazyCollection(LazyCollectionOption.EXTRA)
     @ManyToMany(targetEntity = User.class, mappedBy = "teamList")
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
     private List<User> userList;
 }

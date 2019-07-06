@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,8 +52,4 @@ public class Question {
     @JoinTable(name = "questions_tags", joinColumns = {@JoinColumn(name = "question_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private Set<Tag> tagList;
-
-    @ManyToOne
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
-    private Team team;
 }

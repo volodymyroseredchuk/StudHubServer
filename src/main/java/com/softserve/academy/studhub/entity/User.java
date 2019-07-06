@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"email", "username", "password", "university", "imageUrl", "roles", "isActivated"})
+@EqualsAndHashCode(exclude = {"email", "username", "password", "university", "imageUrl", "roles", "isActivated", "teamList"})
 @Table(name = "users")
 public class User {
 

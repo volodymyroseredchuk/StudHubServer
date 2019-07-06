@@ -6,18 +6,20 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class TeamDTO {
 
     private Integer id;
 
     private String name;
 
-    private User user;
+    private UserGeneralInfoDTO user;
 
     private LocalDateTime creationDate;
 
     private LocalDateTime modifiedDate;
 
-    private List<User> userList;
+    private List<UserGeneralInfoDTO> userList;
 }

@@ -1,17 +1,22 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.entity.User;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class TeamForListDTO {
 
     private Integer id;
 
     private String name;
 
-    private User user;
+    private UserGeneralInfoDTO user;
 
     private LocalDateTime creationDate;
 
