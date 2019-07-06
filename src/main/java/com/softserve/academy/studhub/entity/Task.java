@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,6 +52,7 @@ public class Task {
     private List<Proposal> proposalList;
 
     @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "tasks_tags", joinColumns = {@JoinColumn(name = "tasks_id")},
             inverseJoinColumns = {@JoinColumn(name = "tags_id")})
     private Set<Tag> tagList;

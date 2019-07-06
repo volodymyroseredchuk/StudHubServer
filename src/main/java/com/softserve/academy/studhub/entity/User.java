@@ -82,4 +82,9 @@ public class User {
 
     @Column(name = "is_activated", columnDefinition = "boolean default false")
     private Boolean isActivated = false;
+
+    @ManyToMany(targetEntity = Team.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "teams_users", joinColumns = {@JoinColumn(name = "team_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private Set<Team> teamList;
 }

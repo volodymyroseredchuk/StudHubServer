@@ -4,7 +4,6 @@ import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
-import com.softserve.academy.studhub.exceptions.NotConfirmedException;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
@@ -15,7 +14,6 @@ import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +30,6 @@ import java.util.HashSet;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @AllArgsConstructor
-@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

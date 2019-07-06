@@ -503,6 +503,8 @@ CREATE TABLE `teams` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
                          `name` varchar(32) DEFAULT NULL,
                          `creator_id` int(11) NOT NULL,
+                         `creation_date` datetime DEFAULT NULL,
+                         `modified_date` datetime DEFAULT NULL,
                          PRIMARY KEY (`id`),
                          KEY `creator_id` (`creator_id`),
                          CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
@@ -515,7 +517,7 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
-INSERT INTO `teams` VALUES (1,'dreamteam',3),(2,'adminteam',3),(3,'tarasteam',1);
+INSERT INTO `teams` VALUES (1,'dreamteam',3, '2019-06-02 00:00:00', '2019-06-02 00:01:01'),(2,'adminteam',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03'),(3,'tarasteam',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01');
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
 UNLOCK TABLES;
 

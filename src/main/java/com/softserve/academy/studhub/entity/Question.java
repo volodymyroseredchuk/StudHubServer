@@ -52,5 +52,7 @@ public class Question {
             inverseJoinColumns = {@JoinColumn(name = "tag_id")})
     private Set<Tag> tagList;
 
-
+    @ManyToOne
+    @JoinColumn(name = "team_id", referencedColumnName = "id")
+    private Team team;
 }
