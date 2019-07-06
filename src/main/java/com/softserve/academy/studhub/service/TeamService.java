@@ -10,7 +10,7 @@ public interface TeamService {
 
     Team save(Team team, Principal principal);
 
-    Team update(Team team);
+    Team update(Integer teamId, Team team);
 
     Team findById(Integer teamId);
 

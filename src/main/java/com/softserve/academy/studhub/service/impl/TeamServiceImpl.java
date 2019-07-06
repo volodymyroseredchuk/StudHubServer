@@ -29,9 +29,9 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team update(Team team) {
+    public Team update(Integer teamId, Team team) {
 
-        Team updatable = findById(team.getId());
+        Team updatable = findById(teamId);
 
         updatable.setName(team.getName());
         updatable.setUser(team.getUser());

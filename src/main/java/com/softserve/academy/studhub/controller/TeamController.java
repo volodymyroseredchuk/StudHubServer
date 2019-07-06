@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/teams")
 public class TeamController {
 
-    private TeamService teamService;
-    private ModelMapper modelMapper;
+    private final TeamService teamService;
+    private final ModelMapper modelMapper;
 
     @GetMapping
     @PreAuthorize("permitAll()")
@@ -58,10 +58,11 @@ public class TeamController {
     }
 
     @PutMapping("/{teamId}")
-    @PreAuthorize("isAuthenticated() and @teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username")
-    public ResponseEntity<TeamDTO> editTeam(@RequestBody TeamDTO teamDTO) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+            "(isAuthenticated() and @teamServiceImpl.findById(#teamId).getUser().username == principal.username)")
+    public ResponseEntity<TeamDTO> editTeam(@PathVariable Integer teamId, @RequestBody TeamDTO teamDTO) {
 
-        Team team = teamService.update(modelMapper.map(teamDTO, Team.class));
+        Team team = teamService.update(teamId, modelMapper.map(teamDTO, Team.class));
 
         return ResponseEntity.ok().body(modelMapper.map(team, TeamDTO.class));
     }

@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.studhub.constants.ValidationConstants;
 import lombok.*;
 
@@ -54,9 +55,11 @@ public class User {
 
     @NonNull
     @NotBlank(message = ValidationConstants.EMPTY_PASSWORD)
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
+    @JsonIgnore
     @Column(name = "google_password")
     private String googlePassword;
 

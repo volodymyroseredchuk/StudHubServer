@@ -4,7 +4,6 @@ import com.softserve.academy.studhub.dto.QuestionDTO;
 import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.QuestionPaginatedDTO;
 import com.softserve.academy.studhub.entity.Question;
-import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.service.IQuestionService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -38,8 +37,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.findAllSortedByAge(pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -47,9 +46,10 @@ public class QuestionController {
 
     @GetMapping("/{questionId}")
     @PreAuthorize("permitAll()")
-    public Question getQuestionById(@PathVariable Integer questionId) {
+    public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Integer questionId) {
 
-        return questionService.findById(questionId);
+        Question result = questionService.findById(questionId);
+        return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
     }
 
     @GetMapping("/search/{keywords}")
@@ -59,8 +59,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchByKeywords(keywords, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -73,18 +73,18 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchByTags(tags, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
+    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
 
         Question result = questionService.save(modelMapper.map(questionDto, Question.class), principal);
-        return ResponseEntity.ok(new MessageResponse("created!"));
+        return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
     }
 
     @PutMapping("/{questionId}")
@@ -107,10 +107,8 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
 
-        String username = principal.getName();
-
         return new ResponseEntity<>(questionService.
-                findQuestionByUserUsernameOrderByCreationDateDesc(username).
+                findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
                 collect(Collectors.toList()), HttpStatus.OK);
     }
