@@ -3,11 +3,13 @@ package com.softserve.academy.studhub.dto;
 import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.entity.University;
 import com.softserve.academy.studhub.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class FeedbackDTO {
 
     private Integer id;
