@@ -336,6 +336,78 @@ INSERT INTO `subscriptions` VALUES (1,1,1);
 UNLOCK TABLES;
 
 
+
+--
+-- Table structure for table `tasks`
+--
+
+DROP TABLE IF EXISTS `tasks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `body` text,
+  `creation_date` datetime DEFAULT NULL,
+  `deadline_date` datetime DEFAULT NULL,
+  `expected_price` int(11) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK6s1ob9k4ihi75xbxe2w0ylsdh` (`user_id`),
+  CONSTRAINT `FK6s1ob9k4ihi75xbxe2w0ylsdh` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tasks`
+--
+
+LOCK TABLES `tasks` WRITE;
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-10 00:00:00',30,NULL,'First task',1),(2,'Second task body','2019-06-27 00:00:00','2019-07-15 00:00:00',50,NULL,'Second task',1);
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+--
+-- Table structure for table `proposals`
+--
+
+DROP TABLE IF EXISTS `proposals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `proposals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `body` text,
+  `days_count` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `task_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK3u94vfp3i629csukvqetmy997` (`task_id`),
+  KEY `FKo0nyqm5ghqcdte7g3xwn2gsmj` (`user_id`),
+  CONSTRAINT `FK3u94vfp3i629csukvqetmy997` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FKo0nyqm5ghqcdte7g3xwn2gsmj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `proposals`
+--
+
+LOCK TABLES `proposals` WRITE;
+/*!40000 ALTER TABLE `proposals` DISABLE KEYS */;
+INSERT INTO `proposals` VALUES (1,'first proposal for first task',5,25,'2019-06-27 00:00:00',1,2),(2,'second proposal for first task',3,50,'2019-06-27 00:00:00',1,3),(3,'first proposal for second task',7,36,'2019-06-27 00:00:00',2,3),(4,'second proposal for second task',6,50,'2019-06-27 00:00:00',2,2);
+/*!40000 ALTER TABLE `proposals` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+
+
 --
 -- Table structure for table `tags`
 --
