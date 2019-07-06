@@ -42,14 +42,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User oldUser) {
+    public User update(User updatedUser) {
 
-        User updatable = findByUsername(oldUser.getUsername());
+        User updatable = findByUsername(updatedUser.getUsername());
 
-        updatable.setFirstName(oldUser.getFirstName());
-        updatable.setLastName(oldUser.getLastName());
-        updatable.setEmailSubscription(oldUser.getEmailSubscription());
-        updatable.setImageUrl(oldUser.getImageUrl());
+        updatable.setFirstName(updatedUser.getFirstName());
+        updatable.setLastName(updatedUser.getLastName());
+        updatable.setEmailSubscription(updatedUser.getEmailSubscription());
+        updatable.setImageUrl(updatedUser.getImageUrl());
+        updatable.setUniversity(updatedUser.getUniversity());
 
         return userRepository.saveAndFlush(updatable);
     }
