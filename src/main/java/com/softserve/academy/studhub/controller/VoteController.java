@@ -37,7 +37,7 @@ public class VoteController {
     }
 
     @GetMapping("/votes/question/{questionId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('VOTE_READ_TEST_PRIVILEGE')")
     public ResponseEntity<Object> getVotesByUserAndQuestionId(@PathVariable Integer questionId,
                                                               Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(
