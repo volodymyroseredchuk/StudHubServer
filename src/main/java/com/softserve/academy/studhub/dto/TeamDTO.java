@@ -3,6 +3,7 @@ package com.softserve.academy.studhub.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,11 +12,13 @@ public class TeamDTO {
 
     private Integer id;
 
-    private String name;
+    private String title;
 
-    private UserGeneralInfoDTO user;
+    private UserForListDTO user;
 
     private LocalDateTime creationDate;
 
     private LocalDateTime modifiedDate;
+
+    private List<UserForListDTO> userList;
 }

@@ -24,7 +24,6 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team save(Team team, Principal principal) {
         team.setCreationDate(LocalDateTime.now());
-        team.setUser(userService.findByUsername(principal.getName()));
         return teamRepository.saveAndFlush(team);
     }
 
@@ -33,7 +32,7 @@ public class TeamServiceImpl implements TeamService {
 
         Team updatable = findById(teamId);
 
-        updatable.setName(team.getName());
+        updatable.setTitle(team.getTitle());
         updatable.setUser(team.getUser());
         updatable.setUserList(team.getUserList());
         updatable.setModifiedDate(LocalDateTime.now());

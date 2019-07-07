@@ -1,6 +1,5 @@
 package com.softserve.academy.studhub.dto;
 
-import com.softserve.academy.studhub.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +13,7 @@ public class TeamForListDTO {
 
     private Integer id;
 
-    private String name;
+    private String title;
 
     private UserGeneralInfoDTO user;
 
