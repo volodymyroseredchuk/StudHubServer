@@ -501,7 +501,7 @@ DROP TABLE IF EXISTS `teams`;
 SET character_set_client = utf8mb4 ;
 CREATE TABLE `teams` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
-                         `name` varchar(32) DEFAULT NULL,
+                         `title` varchar(32) DEFAULT NULL,
                          `creator_id` int(11) NOT NULL,
                          `creation_date` datetime DEFAULT NULL,
                          `modified_date` datetime DEFAULT NULL,

@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.service.TeamService;
+import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class TeamController {
 
     private final TeamService teamService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -52,6 +54,8 @@ public class TeamController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<TeamDTO> createTeam(@Valid @RequestBody TeamDTO teamDTO, Principal principal) {
 
+        teamDTO.setUser(modelMapper.map(userService.findByUsername(principal.getName()),
+                UserForListDTO.class));
         Team team = teamService.save(modelMapper.map(teamDTO, Team.class), principal);
 
         return ResponseEntity.ok().body(modelMapper.map(team, TeamDTO.class));

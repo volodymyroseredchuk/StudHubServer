@@ -3,6 +3,8 @@ package com.softserve.academy.studhub.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.studhub.constants.ValidationConstants;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -10,12 +12,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"email", "username", "password", "university", "imageUrl", "roles", "isActivated", "teamList"})
+@EqualsAndHashCode(exclude = {"email", "username", "password", "university",
+        "imageUrl", "roles", "isActivated", "teamList"})
 @Table(name = "users")
 public class User {
 
@@ -86,8 +90,8 @@ public class User {
     @Column(name = "is_activated", columnDefinition = "boolean default false")
     private Boolean isActivated = false;
 
-    @ManyToMany(targetEntity = Team.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "teams_users", joinColumns = {@JoinColumn(name = "team_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private Set<Team> teamList;
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ManyToMany(targetEntity = Team.class, mappedBy = "userList")
+    @JsonIgnore
+    private List<Team> teamList;
 }
