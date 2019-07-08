@@ -5,10 +5,8 @@ import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeacherRepository;
 import com.softserve.academy.studhub.service.TeacherService;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -54,14 +52,14 @@ public class TeacherServiceImpl implements TeacherService {
         return "Teacher was deleted";
     }
 
-    @Override
-    public Page<Teacher> sortByAge(Pageable pageable) {
-        return teacherRepository.findAllOrderByCreationDateDesc(pageable);
-    }
-
-    @Override
-    public Page<Teacher> sortByMark(Pageable pageable) {
-        return teacherRepository.findAllOrderByMarkDesc(pageable);
-    }
+//    @Override
+//    public Page<Teacher> sortByAge(Pageable pageable) {
+//        return teacherRepository.findAllOrderByCreationDateDesc(pageable);
+//    }
+//
+//    @Override
+//    public Page<Teacher> sortByMark(Pageable pageable) {
+//        return teacherRepository.findAllOrderByMarkDesc(pageable);
+//    }
 
 }

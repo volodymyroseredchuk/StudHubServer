@@ -17,8 +17,8 @@ public interface UniversityService {
 
     String deleteById(Integer universityId);
 
-    Page<University> sortByAge(Pageable pageable);
-
-    Page<University> sortByMark(Pageable pageable);
+//    Page<University> sortByAge(Pageable pageable);
+//
+//    Page<University> sortByMark(Pageable pageable);
 
 }

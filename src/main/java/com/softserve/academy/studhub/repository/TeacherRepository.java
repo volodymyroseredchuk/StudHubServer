@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TeacherRepository extends JpaRepository<Teacher, Integer> {
 
-    Page<Teacher> findAllOrderByCreationDateDesc(Pageable pageable);
-
-    Page<Teacher> findAllOrderByMarkDesc(Pageable pageable);
+//    Page<Teacher> findAllOrderByCreationDateDesc(Pageable pageable);
+//
+//    Page<Teacher> findAllOrderByMarkDesc(Pageable pageable);
 }

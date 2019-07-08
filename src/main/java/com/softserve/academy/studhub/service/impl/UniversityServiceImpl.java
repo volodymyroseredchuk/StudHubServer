@@ -52,13 +52,13 @@ public class UniversityServiceImpl implements UniversityService {
         return "University was deleted";
     }
 
-    @Override
-    public Page<University> sortByAge(Pageable pageable) {
-        return universityRepository.findAllOrderByCreationDateDesc(pageable);
-    }
-
-    @Override
-    public Page<University> sortByMark(Pageable pageable) {
-        return universityRepository.findAllOrderByMarkDesc(pageable);
-    }
+//    @Override
+//    public Page<University> sortByAge(Pageable pageable) {
+//        return universityRepository.findAllOrderByCreationDateDesc(pageable);
+//    }
+//
+//    @Override
+//    public Page<University> sortByMark(Pageable pageable) {
+//        return universityRepository.findAllOrderByMarkDesc(pageable);
+//    }
 }
