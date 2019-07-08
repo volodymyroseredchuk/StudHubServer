@@ -102,11 +102,9 @@ public class QuestionController {
         return ResponseEntity.ok(questionService.deleteById(questionId));
     }
 
-    @GetMapping("/current")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
-
-        String username = principal.getName();
+    @GetMapping("/user/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(@PathVariable String username) {
 
         return ResponseEntity.ok(questionService.findQuestionByUserUsernameOrderByCreationDateDesc(username).
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).

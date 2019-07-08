@@ -63,11 +63,9 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackDTOS);
     }
 
-    @GetMapping("/current")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
-
-        String username = principal.getName();
+    @GetMapping("/user/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(@PathVariable String username) {
 
         return ResponseEntity.ok(feedbackService.findFeedbackByUserUsername(username).
                 stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).

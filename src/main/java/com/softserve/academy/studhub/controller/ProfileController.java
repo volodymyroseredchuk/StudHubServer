@@ -24,20 +24,31 @@ public class ProfileController {
 
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
+    public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
 
         String username = principal.getName();
 
-        return ResponseEntity.ok(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class));
+        UserDTO result = modelMapper.
+                map(userService.findByUsername(username), UserDTO.class);
+
+        result.setCanBeEdited(true);
+
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/foreign/{id}")
+    @GetMapping("/foreign/{username}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
+    public ResponseEntity<UserDTO> getForeignUser(@PathVariable String username, Principal principal) {
 
-        return ResponseEntity.ok(modelMapper.
-                map(userService.findById(id), UserDTO.class));
+        UserDTO result = modelMapper.
+                map(userService.findByUsername(username), UserDTO.class);
+
+        if (principal != null) {
+            if (principal.getName().equals(username)) {
+                result.setCanBeEdited(true);
+            }
+        }
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/update")
@@ -49,5 +60,4 @@ public class ProfileController {
         return ResponseEntity.ok(modelMapper.
                 map(userService.update(updatedUser), UserDTO.class));
     }
-
 }
