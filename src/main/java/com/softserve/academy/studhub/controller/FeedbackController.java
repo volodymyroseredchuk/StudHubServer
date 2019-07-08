@@ -45,7 +45,7 @@ public class FeedbackController {
     }
 
     @PostMapping(path = "/feedback")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('FEEDBACK_WRITE_PRIVILEGE')")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
 
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));

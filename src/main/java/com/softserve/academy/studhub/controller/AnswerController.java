@@ -42,7 +42,7 @@ public class AnswerController {
     }
 
     @PostMapping("/questions/{questionId}/answers")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE')")
     public ResponseEntity<?> createAnswer(@Valid @RequestBody AnswerCreateDTO answerCreateDTO,
                                           @PathVariable Integer questionId,
                                           Principal principal) {
@@ -53,7 +53,7 @@ public class AnswerController {
 
 
     @DeleteMapping("/questions/{questionId}/answers/{answerId}/delete")
-    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_DELETE_ALL_PRIVILEGE') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
     public ResponseEntity<?> deleteAnswer(@PathVariable Integer answerId) {
         Boolean isDeleted = answerService.deleteById(answerId);
         DeleteResultDTO deleteResultDTO = new DeleteResultDTO();
@@ -63,7 +63,7 @@ public class AnswerController {
 
 
     @PutMapping("/questions/{questionId}/answers/{answerId}/approve")
-    @PreAuthorize("isAuthenticated() and @answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE') and @answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
     public ResponseEntity<?> setApprovedAnswer(@PathVariable Integer answerId,
                                                @RequestBody Boolean approved) {
         AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();

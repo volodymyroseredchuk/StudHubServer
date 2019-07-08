@@ -52,17 +52,14 @@ public class UserPrinciple implements UserDetails {
                 new SimpleGrantedAuthority(role.getName().name())
         ).collect(Collectors.toList());
 
-        // temporary config, change later
         Set<Privilege> privileges = new HashSet<>();
-        for (Role role:
-             user.getRoles()) {
+        for (Role role :
+                user.getRoles()) {
             privileges.addAll(role.getPrivileges());
         }
         authorities.addAll(privileges.stream().map(privilege ->
                 new SimpleGrantedAuthority(privilege.getName())
         ).collect(Collectors.toList()));
-
-        // end of temporary config
 
         return new UserPrinciple(
                 user.getId(),
