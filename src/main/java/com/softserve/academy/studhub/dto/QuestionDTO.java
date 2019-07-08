@@ -24,5 +24,5 @@ public class QuestionDTO {
     private UserGeneralInfoDTO user;
     private List<AnswerDTO> answerList;
     private Set<Tag> tagList;
-
+    private TeamForListDTO team;
 }

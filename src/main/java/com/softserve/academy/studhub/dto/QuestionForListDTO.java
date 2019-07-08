@@ -20,4 +20,6 @@ public class QuestionForListDTO {
     private LocalDateTime creationDate;
 
     private Set<Tag> tagList;
+
+    private TeamForListDTO team;
 }
