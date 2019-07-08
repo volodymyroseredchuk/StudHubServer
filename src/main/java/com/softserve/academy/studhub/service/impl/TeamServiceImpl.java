@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Team;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeamRepository;
 import com.softserve.academy.studhub.service.TeamService;
@@ -56,5 +57,24 @@ public class TeamServiceImpl implements TeamService {
     public Page<Team> findAll(Pageable pageable) {
 
         return teamRepository.findAllByOrderByCreationDateDesc(pageable);
+    }
+
+    @Override
+    public boolean hasAccessForUser(Integer teamId, String username) {
+
+        Team team = findById(teamId);
+
+        if(team.getUser().getUsername().equals(username)){
+            return true;
+        }
+
+        for (User user : team.getUserList()) {
+
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

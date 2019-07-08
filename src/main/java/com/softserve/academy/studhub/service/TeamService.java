@@ -17,4 +17,6 @@ public interface TeamService {
     void delete(Integer teamId);
 
     Page<Team> findAll(Pageable pageable);
+
+    boolean hasAccessForUser(Integer teamId, String username);
 }

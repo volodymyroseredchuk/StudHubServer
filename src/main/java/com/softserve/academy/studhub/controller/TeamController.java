@@ -47,7 +47,9 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+            "(isAuthenticated() and " +
+            "@teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<TeamDTO> getTeam(@PathVariable Integer teamId) {
 
         Team team = teamService.findById(teamId);
