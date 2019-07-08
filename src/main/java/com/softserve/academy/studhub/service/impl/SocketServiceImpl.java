@@ -1,6 +1,8 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.coders.SocketChatMessageEncoder;
 import com.softserve.academy.studhub.coders.SocketMessageEncoder;
+import com.softserve.academy.studhub.entity.SocketChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.service.SocketService;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ public class SocketServiceImpl implements SocketService {
 
     private static Map<Integer, WebSocketSession> sessionIdMap = new ConcurrentHashMap<>();
     private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
+    private SocketChatMessageEncoder chatMessageEncoder = new SocketChatMessageEncoder();
 
     private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.");
     private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.");
@@ -49,20 +52,38 @@ public class SocketServiceImpl implements SocketService {
     @Override
     public void sendGreetings(WebSocketSession session, Integer textId) {
 
-        if (session != null && textId != null) {
-            try {
-                if (textId.equals(1)) {
-                    session.sendMessage(new TextMessage(messageEncoder.encode(CONNECTED_MESSAGE)));
-                } else if (textId.equals(2)) {
-                    session.sendMessage(new TextMessage(messageEncoder.encode(NOT_CONNECTED_MESSAGE)));
-                } else {
-                    session.sendMessage(new TextMessage(messageEncoder.encode(ERROR_MESSAGE)));
-                }
-            } catch (EncodeException | IOException e) {
-                throw new IllegalArgumentException("Could not send greetings.");
-            }
-        } else {
+        if (session == null || textId == null) {
             throw new IllegalArgumentException("Cannot send greetings with empty parameters.");
+        }
+        try {
+            if (textId.equals(1)) {
+                session.sendMessage(new TextMessage(messageEncoder.encode(CONNECTED_MESSAGE)));
+            } else if (textId.equals(2)) {
+                session.sendMessage(new TextMessage(messageEncoder.encode(NOT_CONNECTED_MESSAGE)));
+            } else {
+                session.sendMessage(new TextMessage(messageEncoder.encode(ERROR_MESSAGE)));
+            }
+        } catch (EncodeException | IOException e) {
+            throw new IllegalArgumentException("Could not send greetings.");
+        }
+
+    }
+
+    @Override
+    public void sendChatMessage(SocketChatMessage message) {
+
+        if (message == null) {
+            throw new IllegalArgumentException("Cannot send empty chat message.");
+        }
+
+        WebSocketSession session = sessionIdMap.get(message.getReceiverId());
+
+        if (session != null) {
+            try {
+                session.sendMessage(new TextMessage(chatMessageEncoder.encode(message)));
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Could not send chat message.");
+            }
         }
 
     }

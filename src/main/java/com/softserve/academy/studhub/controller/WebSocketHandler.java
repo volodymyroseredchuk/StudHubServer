@@ -1,7 +1,10 @@
 package com.softserve.academy.studhub.controller;
 
+import com.softserve.academy.studhub.coders.SocketChatMessageDecoder;
 import com.softserve.academy.studhub.coders.SocketMessageDecoder;
+import com.softserve.academy.studhub.entity.SocketChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
+import com.softserve.academy.studhub.service.ChatService;
 import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.SocketTokenService;
 import com.softserve.academy.studhub.service.SubscriptionService;
@@ -22,7 +25,9 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
 
     private SubscriptionService subscriptionService;
 
-    private SocketMessageDecoder decoder = new SocketMessageDecoder();
+    private ChatService chatService;
+
+    private SocketChatMessageDecoder chatMessageDecoder = new SocketChatMessageDecoder();
 
     public WebSocketHandler(SocketService socketService, SocketTokenService tokenService,
                             SubscriptionService subscriptionService) {
@@ -34,14 +39,17 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
 
-        try {
+        /*try {
             SocketMessage msg = decoder.decode(message.getPayload());
             subscriptionService.handleMessage(msg);
         } catch (IllegalArgumentException e) {
             socketService.sendGreetings(session, 3);
         } catch (DecodeException e) {
             socketService.sendGreetings(session, 3);
-        }
+        }*/
+
+        SocketChatMessage chatMessage = chatMessageDecoder.decode(message.getPayload());
+        chatService.handleChatMessage(chatMessage);
 
     }
 
