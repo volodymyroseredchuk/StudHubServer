@@ -1,14 +1,18 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.*;
+import com.softserve.academy.studhub.entity.Proposal;
+import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
+import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.TeamService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +30,7 @@ public class TeamController {
 
     private final TeamService teamService;
     private final UserService userService;
+    private final IQuestionService questionService;
     private final ModelMapper modelMapper;
 
     @GetMapping
@@ -81,4 +86,16 @@ public class TeamController {
         return ResponseEntity.ok().body(new MessageResponse("deleted!"));
     }
 
+    @GetMapping("/{teamId}/questions")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<QuestionPaginatedDTO> getAllQuestionsByTeamId(@PathVariable Integer teamId, Pageable pageable) {
+
+        Page<Question> questionPage = questionService.findAllByTeamId(teamId, pageable);
+
+        List<QuestionForListDTO> questionDTOS = questionPage.getContent().stream()
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionDTOS, questionPage.getTotalElements()));
+    }
 }

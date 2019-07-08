@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -14,12 +14,9 @@ import java.util.Set;
 public class QuestionForListDTO {
 
     private Integer id;
-
     private String title;
-
-    private LocalDateTime creationDate;
-
+    private LocalDate creationDate;
+    private LocalDate modifiedDate;
+    private UserGeneralInfoDTO user;
     private Set<Tag> tagList;
-
-    private TeamForListDTO team;
 }

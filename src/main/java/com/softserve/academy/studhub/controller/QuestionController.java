@@ -112,5 +112,4 @@ public class QuestionController {
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
                 collect(Collectors.toList()), HttpStatus.OK);
     }
-
 }
