@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.constants.ValidationConstants;
+import com.softserve.academy.studhub.entity.Privilege;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.University;
 import lombok.Getter;
@@ -42,5 +43,7 @@ public class UserDTO {
     private String imageUrl;
 
     private Set<Role> roles = new HashSet<>();
+
+    private Set<PrivilegeDTO> privileges = new HashSet<>();
 
 }

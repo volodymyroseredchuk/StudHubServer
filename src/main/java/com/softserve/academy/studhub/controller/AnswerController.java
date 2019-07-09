@@ -53,7 +53,7 @@ public class AnswerController {
 
 
     @DeleteMapping("/questions/{questionId}/answers/{answerId}/delete")
-    @PreAuthorize("hasAuthority('QUESTION_DELETE_ALL_PRIVILEGE') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_DELETE_ANY_PRIVILEGE') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
     public ResponseEntity<?> deleteAnswer(@PathVariable Integer answerId) {
         Boolean isDeleted = answerService.deleteById(answerId);
         DeleteResultDTO deleteResultDTO = new DeleteResultDTO();
