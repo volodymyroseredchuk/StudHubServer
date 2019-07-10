@@ -14,4 +14,6 @@ public interface FeedbackService {
 
     List<Feedback> findAll();
 
+    List<Feedback> findFeedbackByUserUsername(String username);
+
 }

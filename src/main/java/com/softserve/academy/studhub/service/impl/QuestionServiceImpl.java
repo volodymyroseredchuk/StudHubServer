@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.*;
 import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
@@ -48,8 +49,8 @@ public class QuestionServiceImpl implements IQuestionService {
         subscriptionService.save(subscription);
     }
 
-    @Override
 
+    @Override
     public Question update(Integer questionId, Question question) {
         Question updatable = findById(questionId);
         updatable.setTitle(question.getTitle());
@@ -60,16 +61,12 @@ public class QuestionServiceImpl implements IQuestionService {
         return repository.saveAndFlush(updatable);
     }
 
-    @Override
-    public List<Question> findAll() {
-        return repository.findAll();
-    }
 
     @Override
     public Question findById(Integer questionId) throws NotFoundException {
 
         return repository.findById(questionId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.QUESTION_NOTFOUND + questionId));
+            () -> new NotFoundException(ErrorMessage.QUESTION_NOTFOUND + questionId));
 
     }
 
@@ -79,25 +76,35 @@ public class QuestionServiceImpl implements IQuestionService {
 
         if ((questionToDelete.getAnswerList().isEmpty()) || (questionToDelete.getAnswerList() == null)) {
             repository.deleteById(questionId);
-            return "Question deleted";
+            return SuccessMessage.QUESTION_DELETED_SUCCESSFULLY;
         }
-        return "This question already has answers and can not be deleted";
+        return ErrorMessage.QUESTION_NOT_DELETED;
     }
 
-    @Override
 
-    public Page<Question> sortByAge(Pageable pageable) {
+    @Override
+    public Page<Question> findAllSortedByAge(Pageable pageable) {
+
         return repository.findAllByOrderByCreationDateDesc(pageable);
 
     }
 
     @Override
-    public Page<Question> sortByTags(String[] tags, Pageable pageable) {
+    public Page<Question> searchByTags(String[] tags, Pageable pageable) {
+
         return repository.findAllDistinctByTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
     }
 
     @Override
-    public Page<Question> search(String[] keywords, Pageable pageable) {
+    public Page<Question> searchByKeywords(String[] keywords, Pageable pageable) {
+
         return repository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
+
+    @Override
+    public List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username){
+
+        return repository.findQuestionByUserUsernameOrderByCreationDateDesc(username);
+    }
+
 }

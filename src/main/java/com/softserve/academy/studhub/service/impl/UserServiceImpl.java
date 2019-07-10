@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -43,21 +42,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
+    public User update(User oldUser) {
 
-        String username = user.getUsername();
+        User updatable = findByUsername(oldUser.getUsername());
 
-        User updatable = findByUsername(username);
-
-        if (!user.getFirstName().equals("")) {
-            updatable.setFirstName(user.getFirstName());
-        }
-        if (!user.getLastName().equals("")) {
-            updatable.setLastName(user.getLastName());
-        }
-        if (!user.getEmail().equals("")) {
-            updatable.setEmail(user.getEmail());
-        }
+        updatable.setFirstName(oldUser.getFirstName());
+        updatable.setLastName(oldUser.getLastName());
+        updatable.setEmail(oldUser.getEmail());
 
         return userRepository.saveAndFlush(updatable);
     }
@@ -66,12 +57,6 @@ public class UserServiceImpl implements UserService {
     public void delete(Integer id) {
 
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public List<User> getAll() {
-
-        return userRepository.findAll();
     }
 
     @Override

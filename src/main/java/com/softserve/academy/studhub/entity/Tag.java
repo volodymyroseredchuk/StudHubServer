@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "tags")
 public class Tag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
