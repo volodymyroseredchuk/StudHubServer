@@ -1,46 +1,56 @@
 package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.dto.FacebookData;
+import com.softserve.academy.studhub.security.dto.FacebookUserData;
 import com.softserve.academy.studhub.security.dto.LoginForm;
 import com.softserve.academy.studhub.security.services.FacebookService;
-import org.springframework.beans.factory.annotation.Value;
+import com.softserve.academy.studhub.service.RoleService;
+import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
-import org.springframework.social.facebook.connect.FacebookConnectionFactory;
-import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class FacebookServiceImpl implements FacebookService {
 
-    @Value("${GOOGLE_CLIENT_ID}")
-    private String facebookId;
-    @Value("${FACEBOOK_CLIENT_ID}")
-    private String facebookSecret;
+    private UserService userService;
+    private final RoleService roleService;
+    private final PasswordEncoder encoder;
 
-    private FacebookConnectionFactory createFacebookConnection(){
-        return  new FacebookConnectionFactory(facebookId, facebookSecret);
-    }
 
     @Override
-    public String facebookLogin() {
-        OAuth2Parameters parameters = new OAuth2Parameters();
-        parameters.setRedirectUri("http://localhost:8080/facebook");
-        parameters.setScope("public_profile, email");
-        return createFacebookConnection().getOAuthOperations().buildAuthenticateUrl(parameters);
-    }
+    public FacebookData verifyFacebookToken(String accessToken) {
 
-    @Override
-    public String getFacebookAccessToken(String code) {
-        return createFacebookConnection().getOAuthOperations()
-                .exchangeForAccess(code, "http://localhost:8080/facebook", null)
-                .getAccessToken();
-    }
-
-    @Override
-    public LoginForm getFacebookUserProfile(String accessToken) {
+        System.out.println("in service verify" + accessToken);
         Facebook facebook = new FacebookTemplate(accessToken);
-        String [] fields = {"username", "password"};
-        return facebook.fetchObject("me", LoginForm.class, fields);
+        String[] fields = {"email", "first_name", "id", "last_name", "name"};
+        FacebookData facebookData = facebook.fetchObject("me", FacebookData.class, fields);
+        System.out.println("after fetch" + facebookData);
+        return facebookData;
+    }
+
+    @Override
+    public LoginForm authenticateUser(FacebookUserData facebookUserData) throws IllegalArgumentException {
+        System.out.println("in Service autenticateUser" + facebookUserData);
+        FacebookData facebookData = verifyFacebookToken(facebookUserData.getAuthToken());
+        LoginForm form = new LoginForm();
+
+        if (!userService.existsByEmail(facebookData.getEmail())) {
+            User addUser = facebookData.toUser(roleService);
+            addUser.setImageUrl(facebookUserData.getPhotoUrl());
+            addUser.setPassword(encoder.encode(facebookData.getId()));
+            userService.add(addUser);
+            form.setUsername(facebookData.getEmail());
+            form.setPassword(facebookData.getId());
+        } else {
+            User foundUser = userService.findByEmail(facebookData.getEmail());
+            form.setUsername(foundUser.getUsername());
+            form.setPassword(facebookData.getId());
+        }
+        return form;
     }
 }

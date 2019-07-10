@@ -83,29 +83,14 @@ public class AuthController {
         return authenticate(form);
     }
 
-    @GetMapping("/facebooklogin")
-    public RedirectView facebookLogin(){
-        RedirectView redirectView = new RedirectView();
-        String url = facebookService.facebookLogin();
-        redirectView.setUrl(url);
-        return redirectView;
-    }
+    @PostMapping("/signinFacebook")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> authenticateFacebookUser(@Valid @RequestBody FacebookUserData userData) {
+        System.out.println("in controller"+userData);
+        LoginForm form = facebookService.authenticateUser(userData);
 
-    @GetMapping("/facebook")
-    public String facebook(@RequestParam("code") String code){
-        String accessToken = facebookService.getFacebookAccessToken(code);
-        return "redirect:/facebookprofiledata/"+accessToken;
+        return authenticate(form);
     }
-    @GetMapping("/acebookprofiledata/{accessToken:.+}")
-    public String publicProfileData(@PathVariable String accessToken, Model model){
-        LoginForm form = facebookService.getFacebookUserProfile(accessToken);
-        User user = new User();
-        user.setUsername(form.getUsername());
-        user.setPassword(form.getPassword());
-        model.addAttribute(user);
-        return "view/profile";
-    }
-
 
     @PostMapping("/confirm-account")
     @PreAuthorize("permitAll()")

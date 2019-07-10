@@ -1,12 +1,12 @@
 package com.softserve.academy.studhub.security.services;
 
-import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.dto.FacebookData;
+import com.softserve.academy.studhub.security.dto.FacebookUserData;
 import com.softserve.academy.studhub.security.dto.LoginForm;
 
 public interface FacebookService {
-    String facebookLogin();
 
-    String getFacebookAccessToken(String code);
+    FacebookData verifyFacebookToken(String accessToken);
 
-    LoginForm getFacebookUserProfile(String accessToken);
+    LoginForm authenticateUser(FacebookUserData facebookUserData) throws IllegalArgumentException;
 }
