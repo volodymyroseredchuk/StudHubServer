@@ -40,7 +40,7 @@ public class CommentController {
     }
 
     @DeleteMapping("comments/{commentId}")
-    @PreAuthorize("hasAuthority('COMMENT_DELETE_Aтн_PRIVILEGE') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('COMMENT_DELETE_ANY_PRIVILEGE') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
     public ResponseEntity<String> deleteComment(@PathVariable Integer answerId, @PathVariable Integer commentId) {
         return ResponseEntity.ok(commentService.deleteById(commentId));
     }

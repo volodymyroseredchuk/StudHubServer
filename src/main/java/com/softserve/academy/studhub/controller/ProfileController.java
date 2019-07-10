@@ -37,35 +37,34 @@ public class ProfileController {
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
-        UserDTO userDTO = modelMapper.
-                map(user, UserDTO.class);
+
+        User user = userService.findByUsername(principal.getName());
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         Set<PrivilegeDTO> privileges = new HashSet<>();
         for (Role role :
-             user.getRoles()) {
+                user.getRoles()) {
             privileges.addAll(role.getPrivileges().stream().map(
                     privilege -> modelMapper.map(privilege, PrivilegeDTO.class)
             ).collect(Collectors.toList()));
         }
         userDTO.setPrivileges(privileges);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/foreign/{id}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findById(id), UserDTO.class), HttpStatus.OK);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findById(id), UserDTO.class));
     }
 
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUser) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class), HttpStatus.OK);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class));
     }
 
 }

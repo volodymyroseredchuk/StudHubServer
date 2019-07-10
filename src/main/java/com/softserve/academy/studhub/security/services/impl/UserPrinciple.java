@@ -48,15 +48,14 @@ public class UserPrinciple implements UserDetails {
 
 
     public static UserPrinciple build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
-
+        List<GrantedAuthority> authorities = new ArrayList<>();
         Set<Privilege> privileges = new HashSet<>();
+
         for (Role role :
                 user.getRoles()) {
             privileges.addAll(role.getPrivileges());
         }
+
         authorities.addAll(privileges.stream().map(privilege ->
                 new SimpleGrantedAuthority(privilege.getName())
         ).collect(Collectors.toList()));

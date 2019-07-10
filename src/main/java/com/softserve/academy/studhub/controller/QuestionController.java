@@ -96,7 +96,7 @@ public class QuestionController {
 
 
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("hasAuthority('QUESTION_DELETE_ANY_PRIVILEGE') or isQuestionCreator(#questionId, @questionServiceImpl)")
+    @PreAuthorize("hasAuthority('QUESTION_DELETE_ANY_PRIVILEGE') or @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));

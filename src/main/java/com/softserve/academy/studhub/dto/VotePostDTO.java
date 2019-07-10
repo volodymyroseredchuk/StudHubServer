@@ -12,7 +12,8 @@ import lombok.ToString;
 public class VotePostDTO {
 
     private Integer value;
-    private Integer answerId;
-    private Integer feedbackId;
 
+    private Integer answerId;
+
+    private Integer feedbackId;
 }
