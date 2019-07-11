@@ -357,6 +357,7 @@ CREATE TABLE `tasks` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK6s1ob9k4ihi75xbxe2w0ylsdh` (`user_id`),
+  FULLTEXT KEY `tasks_search` (`title`,`body`),
   CONSTRAINT `FK6s1ob9k4ihi75xbxe2w0ylsdh` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

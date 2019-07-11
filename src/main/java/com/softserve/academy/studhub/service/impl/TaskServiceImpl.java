@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.entity.Proposal;
 import com.softserve.academy.studhub.entity.Task;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TaskRepository;
+import com.softserve.academy.studhub.service.TagService;
 import com.softserve.academy.studhub.service.TaskService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -20,13 +21,15 @@ import java.util.List;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    private TaskRepository taskRepository;
-    private UserService userService;
+    private final TaskRepository taskRepository;
+    private final UserService userService;
+    private final TagService tagService;
 
     @Override
     public Task save(Task task, Principal principal) {
         task.setCreationDate(LocalDateTime.now());
         task.setUser(userService.findByUsername(principal.getName()));
+        task.setTagList(tagService.reviewTagList(task.getTagList()));
         return taskRepository.saveAndFlush(task);
     }
 
@@ -37,6 +40,7 @@ public class TaskServiceImpl implements TaskService {
         updatable.setBody(task.getBody());
         updatable.setExpectedPrice(task.getExpectedPrice());
         updatable.setDeadlineDate(task.getDeadlineDate());
+        updatable.setTagList(task.getTagList());
         updatable.setModifiedDate(LocalDateTime.now());
         return taskRepository.saveAndFlush(updatable);
     }
@@ -61,5 +65,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Page<Task> findAll(Pageable pageable) {
         return taskRepository.findAllByOrderByCreationDateDesc(pageable);
+    }
+
+    @Override
+    public Page<Task> searchByTags(String[] tags, Pageable pageable) {
+
+        return taskRepository.findAllDistinctByTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
+    }
+
+    @Override
+    public Page<Task> searchByKeywords(String[] keywords, Pageable pageable) {
+
+        return taskRepository.findByFullTextSearch(String.join(" ", keywords), pageable);
     }
 }

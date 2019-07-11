@@ -71,6 +71,32 @@ public class TaskController {
     public ResponseEntity<DeleteDTO> deleteTask(@PathVariable Integer taskId) {
 
         return ResponseEntity.ok().body(new DeleteDTO(taskService.deleteById(taskId)));
+    }
 
+    @GetMapping("/search/{keywords}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<TaskPaginatedDTO> getSearchedByKeywordsTasks(@PathVariable String[] keywords, Pageable pageable) {
+
+        Page<Task> taskPage = taskService.searchByKeywords(keywords, pageable);
+
+        List<TaskForListDTO> taskForListDTOS = taskPage.getContent().stream()
+                .map(task -> modelMapper.map(task, TaskForListDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
+    }
+
+
+    @GetMapping("/tagged/{tags}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<TaskPaginatedDTO> getSearchedByTagsTasks(@PathVariable String[] tags, Pageable pageable) {
+
+        Page<Task> taskPage = taskService.searchByTags(tags, pageable);
+
+        List<TaskForListDTO> taskForListDTOS = taskPage.getContent().stream()
+                .map(task -> modelMapper.map(task, TaskForListDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
     }
 }

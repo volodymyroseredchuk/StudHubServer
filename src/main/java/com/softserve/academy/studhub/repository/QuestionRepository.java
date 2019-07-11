@@ -20,7 +20,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
 
     @Query(
-        value = "select * from Questions q where match(q.title, q.body) against(:pattern) order by :#{#pageable}",
+        value = "select * from Questions q where q.team_id is null and match(q.title, q.body) against(:pattern) order by :#{#pageable}",
         countQuery = "select count(*) from Questions q where match(q.title, q.body) against(:pattern)",
         nativeQuery = true
     )
