@@ -92,7 +92,7 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public Page<Question> searchByTags(String[] tags, Pageable pageable) {
 
-        return repository.findAllDistinctByTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
+        return repository.findAllDistinctByTeamIsNullAndTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     Page<Question> findAllByTeamIsNullOrderByCreationDateDesc(Pageable pageable);
 
-    Page<Question> findAllDistinctByTagListInOrderByCreationDateDesc(Set<Tag> chosenTags, Pageable pageable);
+    Page<Question> findAllDistinctByTeamIsNullAndTagListInOrderByCreationDateDesc(Set<Tag> chosenTags, Pageable pageable);
 
 
     @Query(
