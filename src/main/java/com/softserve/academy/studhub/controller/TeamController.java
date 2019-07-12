@@ -35,8 +35,8 @@ public class TeamController {
         Page<Team> teamPage = teamService.findAll(pageable);
 
         List<TeamForListDTO> teamForListDTOS = teamPage.getContent().stream()
-            .map(team -> modelMapper.map(team, TeamForListDTO.class))
-            .collect(Collectors.toList());
+                .map(team -> modelMapper.map(team, TeamForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new TeamPaginatedDTO(teamForListDTOS, teamPage.getTotalElements()));
     }
@@ -65,7 +65,7 @@ public class TeamController {
 
     @PutMapping("/{teamId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "(isAuthenticated() and @teamServiceImpl.findById(#teamId).getUser().username == principal.username)")
+            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<TeamDTO> editTeam(@PathVariable Integer teamId, @RequestBody TeamDTO teamDTO) {
 
         Team team = teamService.update(teamId, modelMapper.map(teamDTO, Team.class));
@@ -75,7 +75,7 @@ public class TeamController {
 
     @DeleteMapping("/{teamId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-        "@teamServiceImpl.findById(#teamId).getUser().getUsername()== principal.username")
+            "@teamServiceImpl.findById(#teamId).getUser().getUsername()== principal.username")
     public ResponseEntity<?> deleteTeam(@PathVariable Integer teamId) {
 
         teamService.delete(teamId);

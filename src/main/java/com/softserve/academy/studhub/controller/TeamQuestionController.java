@@ -98,11 +98,13 @@ public class TeamQuestionController {
         return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
     }
 
-
     @DeleteMapping("/{questionId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "@questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
-    public ResponseEntity<MessageResponse> deleteTeamQuestion(@PathVariable Integer questionId) {
+            "isAuthenticated() and @teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username or " +
+            "isAuthenticated() and @questionServiceImpl.findById(#questionId)" +
+            ".getUser().getUsername() == principal.username")
+    public ResponseEntity<MessageResponse> deleteTeamQuestion(@PathVariable Integer teamId,
+                                                              @PathVariable Integer questionId) {
 
         questionService.deleteById(questionId);
         return ResponseEntity.ok().body(new MessageResponse(SuccessMessage.QUESTION_DELETED_SUCCESSFULLY));

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -15,8 +15,8 @@ public class QuestionForListDTO {
 
     private Integer id;
     private String title;
-    private LocalDate creationDate;
-    private LocalDate modifiedDate;
+    private LocalDateTime creationDate;
+    private LocalDateTime modifiedDate;
     private UserGeneralInfoDTO user;
     private Set<Tag> tagList;
 }
