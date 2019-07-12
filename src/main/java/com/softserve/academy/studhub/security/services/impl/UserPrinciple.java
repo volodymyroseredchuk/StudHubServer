@@ -27,22 +27,12 @@ public class UserPrinciple implements UserDetails {
 
     private Integer id;
 
-    private String firstName;
-
-    private String lastName;
-
     private String username;
 
     private String email;
 
     @JsonIgnore
     private String password;
-
-    private LocalDate creationDate;
-
-    private University university;
-
-    private String imageUrl;
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -54,14 +44,9 @@ public class UserPrinciple implements UserDetails {
 
         return new UserPrinciple(
                 user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getCreationDate(),
-                user.getUniversity(),
-                user.getImageUrl(),
                 authorities
         );
     }
