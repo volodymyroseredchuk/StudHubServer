@@ -1,16 +1,18 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.entity.SocketChatMessage;
+import com.google.common.collect.Lists;
+import com.softserve.academy.studhub.dto.ChatListItem;
+import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
+import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.service.ChatService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 import java.util.List;
 
 @CrossOrigin
@@ -20,12 +22,24 @@ public class ChatController {
 
     private ChatService chatService;
 
-    @GetMapping("chat/{receiverId}&&{senderId}")
+    @GetMapping("/chat/{chatId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getChatMessages(@PathVariable Integer receiverId, @PathVariable Integer senderId, Pageable pageable) {
-         Page<SocketChatMessage> pageableMessages = chatService.getMessagesByReceiverAndSender(receiverId, senderId, pageable);
-         List<SocketChatMessage> messages = pageableMessages.getContent();
+    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, Pageable pageable) {
+        List<ChatMessage> messages = chatService.getMessagesByChatId(chatId, pageable);
         return ResponseEntity.ok().body(messages);
+    }
+
+    @GetMapping("/chat/list/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getChatMessages(@PathVariable Integer userId) {
+        List<ChatListItem> itemList = chatService.getChatList(userId);
+        return ResponseEntity.ok().body(itemList);
+    }
+
+    @PostMapping("/chat")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
+        return ResponseEntity.ok().body(chatService.save(message));
     }
 
 }

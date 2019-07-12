@@ -2,7 +2,7 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.coders.SocketChatMessageEncoder;
 import com.softserve.academy.studhub.coders.SocketMessageEncoder;
-import com.softserve.academy.studhub.entity.SocketChatMessage;
+import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.service.SocketService;
 import org.springframework.stereotype.Service;
@@ -70,13 +70,13 @@ public class SocketServiceImpl implements SocketService {
     }
 
     @Override
-    public void sendChatMessage(SocketChatMessage message) {
+    public void sendChatMessage(ChatMessage message) {
 
         if (message == null) {
             throw new IllegalArgumentException("Cannot send empty chat message.");
         }
 
-        WebSocketSession session = sessionIdMap.get(message.getReceiverId());
+        WebSocketSession session = sessionIdMap.get(message.getSender().getId());
 
         if (session != null) {
             try {

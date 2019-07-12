@@ -1,9 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.coders.SocketChatMessageDecoder;
-import com.softserve.academy.studhub.coders.SocketMessageDecoder;
-import com.softserve.academy.studhub.entity.SocketChatMessage;
-import com.softserve.academy.studhub.entity.SocketMessage;
+import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.service.ChatService;
 import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.SocketTokenService;
@@ -13,8 +11,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
-import javax.websocket.DecodeException;
-import javax.websocket.OnError;
 import java.io.IOException;
 
 public class WebSocketHandler extends AbstractWebSocketHandler {
@@ -48,7 +44,7 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
             socketService.sendGreetings(session, 3);
         }*/
 
-        SocketChatMessage chatMessage = chatMessageDecoder.decode(message.getPayload());
+        ChatMessage chatMessage = chatMessageDecoder.decode(message.getPayload());
         chatService.handleChatMessage(chatMessage);
 
     }

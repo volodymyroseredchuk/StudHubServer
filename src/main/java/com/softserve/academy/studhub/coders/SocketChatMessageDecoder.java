@@ -1,18 +1,18 @@
 package com.softserve.academy.studhub.coders;
 
 import com.google.gson.Gson;
-import com.softserve.academy.studhub.entity.SocketChatMessage;
+import com.softserve.academy.studhub.entity.ChatMessage;
 
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
 
-public class SocketChatMessageDecoder implements Decoder.Text<SocketChatMessage> {
+public class SocketChatMessageDecoder implements Decoder.Text<ChatMessage> {
 
     private static Gson GSON = new Gson();
 
     @Override
-    public SocketChatMessage decode(String s) {
-        return GSON.fromJson(s, SocketChatMessage.class);
+    public ChatMessage decode(String s) {
+        return GSON.fromJson(s, ChatMessage.class);
     }
 
     @Override

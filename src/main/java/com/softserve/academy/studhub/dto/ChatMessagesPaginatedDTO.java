@@ -1,6 +1,6 @@
 package com.softserve.academy.studhub.dto;
 
-import com.softserve.academy.studhub.entity.SocketChatMessage;
+import com.softserve.academy.studhub.entity.ChatMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ChatMessagesPaginatedDTO {
 
-    private List<SocketChatMessage> messages;
+    private List<ChatMessage> messages;
 
     private Long messagesTotalCount;
 
