@@ -47,4 +47,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         return feedbackRepository.saveAndFlush(feedback);
     }
 
+    @Override
+    public List<Feedback> findFeedbackByUserUsername(String username) {
+
+        return feedbackRepository.findFeedbackByUserUsername(username);
+    }
+
+
 }

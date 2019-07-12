@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.jwt;
 
+import com.softserve.academy.studhub.security.constants.JwtConstants;
 import com.softserve.academy.studhub.security.services.impl.UserPrinciple;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
@@ -51,15 +52,15 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            log.error("Invalid JWT signature -> Message: {} ", e.getMessage());
+            log.error(JwtConstants.INVALID_JWT_SIGNATURE, e.getMessage());
         } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token -> Message: {}", e.getMessage());
+            log.error(JwtConstants.INVALID_JWT_TOKEN, e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token -> Message: {}", e.getMessage());
+            log.error(JwtConstants.JWT_EXPIRED, e.getMessage());
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token -> Message: {}", e.getMessage());
+            log.error(JwtConstants.UNSUPPORTED_JWT, e.getMessage());
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims string is empty -> Message: {}", e.getMessage());
+            log.error(JwtConstants.JWT_CLAIM_IS_EMPTY, e.getMessage());
         }
 
         return false;

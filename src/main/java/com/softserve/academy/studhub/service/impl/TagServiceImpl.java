@@ -1,9 +1,11 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.dto.TagsDTO;
 import com.softserve.academy.studhub.entity.Tag;
 import com.softserve.academy.studhub.repository.TagRepository;
 import com.softserve.academy.studhub.service.TagService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
@@ -14,60 +16,43 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
 
-    public TagServiceImpl(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
 
     @Override
     public Tag save(Tag tag) {
+
         return tagRepository.saveAndFlush(tag);
     }
 
     @Override
     public Tag findById(Integer id) {
+
         return tagRepository.findById(id).orElseThrow(
-            () -> new IllegalArgumentException("Tag is not found"));
+            () -> new IllegalArgumentException(ErrorMessage.TAG_NOT_FOUND_BY_ID + id));
     }
 
     @Override
     public Tag findByName(String name) {
+
         return tagRepository.findByNameIgnoreCase(name).orElseThrow(
-            () -> new IllegalArgumentException("Tag is not found"));
-    }
-
-    @Override
-    public Tag update(Tag tag) {
-        return tagRepository.saveAndFlush(tag);
-    }
-
-    @Override
-    public void deleteById(Integer id) {
-        tagRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Tag> findAll() {
-        return tagRepository.findAll();
-    }
-
-    @Override
-    public List<Tag> findAll(Pageable pageable) {
-        return tagRepository.findAll(pageable).getContent();
+            () -> new IllegalArgumentException(ErrorMessage.TAG_NOT_FOUND_BY_NAME + name));
     }
 
     @Override
     public Page<Tag> findAllSorted(Pageable pageable) {
+
         return tagRepository.findAllSorted(pageable);
     }
 
     @Override
     public Set<Tag> reviewTagList(Set<Tag> tagList) {
+
         if (tagList == null) {
-            return null;
+            return new HashSet<>();
         }
         Set<Tag> dbTagsList = new HashSet<>();
         Tag tempTag;
@@ -84,6 +69,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Set<Tag> reviewTagList(String[] tags) {
+
         if (tags == null) {
             return new HashSet<>();
         }

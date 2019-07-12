@@ -13,7 +13,7 @@ public interface AnswerService {
 
     Answer findById(Integer answerId);
 
-    void deleteById(Integer answerId);
+    Boolean deleteById(Integer answerId);
 
     AnswerApproveDTO approve (AnswerApproveDTO answerApproveDTO);
 

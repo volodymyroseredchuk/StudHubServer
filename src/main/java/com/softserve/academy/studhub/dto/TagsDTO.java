@@ -8,7 +8,9 @@ import java.util.List;
 
 @Getter
 public class TagsDTO {
+
     private List<Tag> tags;
+
     private Long tagsTotalCount;
 
     public TagsDTO(Page<Tag> tagPage) {

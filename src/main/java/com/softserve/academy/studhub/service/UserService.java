@@ -13,8 +13,6 @@ public interface UserService {
 
     void delete(Integer id);
 
-    List<User> getAll();
-
     User findById(Integer id);
 
     User findByUsername(String username);
@@ -30,4 +28,6 @@ public interface UserService {
     boolean isUserPrivilegedByRole(Integer userId, RoleName roleName);
 
     User getCurrentUser();
+
+    boolean isUserActivated(String username);
 }

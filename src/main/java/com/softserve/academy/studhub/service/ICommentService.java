@@ -12,6 +12,6 @@ public interface ICommentService {
     List<Comment> findAll();
     Comment findById(Integer commentId);
     List<Comment> findByAnswer(Integer answerId);
-    void deleteById(Integer commentId);
+    String deleteById(Integer commentId);
 
 }

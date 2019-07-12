@@ -20,38 +20,96 @@ public class SocketServiceImpl implements SocketService {
 
     private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.");
     private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.");
+    private static final SocketMessage ERROR_MESSAGE = new SocketMessage("Error occurred.");
 
     @Override
     public void addSession(Integer id, WebSocketSession session) {
-        sessionIdMap.put(id, session);
-    }
-
-    @Override
-    public void sendNotification(Integer userId, TextMessage message) throws IOException {
-        if (sessionIdMap.containsKey(userId)) {
-            sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
+        if (id != null && session != null) {
+            sessionIdMap.put(id, session);
+        } else {
+            throw new IllegalArgumentException("Cannot add session with empty parameters.");
         }
     }
 
     @Override
-    public void sendGreetings(WebSocketSession session, Integer textId) throws EncodeException, IOException {
-
-        if (textId.equals(1)) {
-            session.sendMessage(new TextMessage(messageEncoder.encode(CONNECTED_MESSAGE)));
+    public void sendNotification(Integer userId, TextMessage message) {
+        if (userId != null && message != null) {
+            if (sessionIdMap.containsKey(userId)) {
+                try {
+                    sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("Could not send message.");
+                }
+            }
         } else {
-            session.sendMessage(new TextMessage(messageEncoder.encode(NOT_CONNECTED_MESSAGE)));
+            throw new IllegalArgumentException("Cannot send notification with empty parameters.");
+        }
+    }
+
+    @Override
+    public void sendGreetings(WebSocketSession session, Integer textId) {
+
+        if (session != null && textId != null) {
+            try {
+                if (textId.equals(1)) {
+                    session.sendMessage(new TextMessage(messageEncoder.encode(CONNECTED_MESSAGE)));
+                } else if (textId.equals(2)) {
+                    session.sendMessage(new TextMessage(messageEncoder.encode(NOT_CONNECTED_MESSAGE)));
+                } else {
+                    session.sendMessage(new TextMessage(messageEncoder.encode(ERROR_MESSAGE)));
+                }
+            } catch (EncodeException | IOException e) {
+                throw new IllegalArgumentException("Could not send greetings.");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot send greetings with empty parameters.");
         }
 
     }
 
     @Override
     public void removeSession(WebSocketSession session) {
-        sessionIdMap.values().remove(session);
+        if (session != null) {
+            sessionIdMap.values().remove(session);
+            try {
+                session.close();
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Could not close session.");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot remove an empty session.");
+        }
     }
 
     @Override
-    public void sendCustomMessage(WebSocketSession session, String msg) throws EncodeException, IOException {
-        SocketMessage message = new SocketMessage(msg);
-        session.sendMessage(new TextMessage(messageEncoder.encode(message)));
+    public void removeSession(Integer id) {
+        if (id != null) {
+            try {
+                WebSocketSession session = sessionIdMap.get(id);
+                if (session != null) {
+                    session.close();
+                    sessionIdMap.remove(id);
+                }
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Could not close session.");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot remove an empty ID.");
+        }
     }
+
+    @Override
+    public void sendCustomMessage(WebSocketSession session, String msg){
+        if (session != null && msg != null) {
+            SocketMessage message = new SocketMessage(msg);
+            try {
+                session.sendMessage(new TextMessage(messageEncoder.encode(message)));
+            } catch (IOException | EncodeException e) {
+                throw new IllegalArgumentException("Could not send custom message.");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot send custom message with empty parameters.");
+        }
+    }
+
 }
