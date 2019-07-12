@@ -20,7 +20,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @Column(columnDefinition = "TEXT", name = "body")
@@ -33,12 +33,12 @@ public class Comment {
     private LocalDateTime modifiedDate;
 
     @ManyToOne
-    @JoinColumn(name = "answer_id", referencedColumnName = "id")
+    @JoinColumn(name = "answer_id", referencedColumnName = "param2")
     @JsonBackReference
     private Answer answer;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "param2")
     private User user;
 
 

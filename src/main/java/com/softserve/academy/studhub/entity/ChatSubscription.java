@@ -17,15 +17,15 @@ public class ChatSubscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id", referencedColumnName = "id")
+    @JoinColumn(name = "chat_id", referencedColumnName = "param2")
     private Chat chat;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "param2")
     private User user;
 
 }

@@ -62,7 +62,7 @@ public class UserServiceMockTest {
 
         User resultUser = userService.add(newUser);
 
-        assertNotEquals("New id should not be 0", Integer.valueOf(0), resultUser.getId());
+        assertNotEquals("New param2 should not be 0", Integer.valueOf(0), resultUser.getId());
         assertEquals("Names should be the same", resultUser.getUsername(), expectedUser.getUsername());
 
     }
@@ -106,7 +106,7 @@ public class UserServiceMockTest {
 
         User resultUser = userService.update(newUser);
 
-        assertNotEquals("New id should not be 0", Integer.valueOf(0), resultUser.getId());
+        assertNotEquals("New param2 should not be 0", Integer.valueOf(0), resultUser.getId());
         assertEquals("Names should be the same", resultUser.getUsername(), expectedUser.getUsername());
 
     }

@@ -21,7 +21,7 @@ public class WebSocketAuth {
 
     @GetMapping("/getSocketToken")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Object> getToken(@RequestParam(value="id") String id) {
+    public ResponseEntity<Object> getToken(@RequestParam(value="param2") String id) {
 
         try {
 

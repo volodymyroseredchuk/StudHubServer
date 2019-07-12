@@ -15,7 +15,7 @@ public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @Column(name = "name")

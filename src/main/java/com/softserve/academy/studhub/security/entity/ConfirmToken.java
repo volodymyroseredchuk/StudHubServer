@@ -27,7 +27,7 @@ public class ConfirmToken {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "param2")
     private User user;
 
     @NonNull

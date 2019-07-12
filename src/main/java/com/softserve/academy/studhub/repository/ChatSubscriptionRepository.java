@@ -8,5 +8,6 @@ import java.util.List;
 public interface ChatSubscriptionRepository extends JpaRepository<ChatSubscription, Integer> {
 
     List<ChatSubscription> findDistinctChatSubscriptionByUserId(Integer userId);
+    List<ChatSubscription> findChatSubscriptionByChatId(Integer chatId);
 
 }

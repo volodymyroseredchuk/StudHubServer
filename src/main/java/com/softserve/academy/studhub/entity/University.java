@@ -18,7 +18,7 @@ public class University {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @EqualsAndHashCode.Exclude

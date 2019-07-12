@@ -39,7 +39,9 @@ public class ChatController {
     @PostMapping("/chat")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
-        return ResponseEntity.ok().body(chatService.save(message));
+        ChatMessage savedMessage = chatService.save(message);
+        chatService.handleChatMessage(savedMessage);
+        return ResponseEntity.ok().body(savedMessage);
     }
 
 }

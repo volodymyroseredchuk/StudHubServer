@@ -17,11 +17,11 @@ public class Channel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "subject_id", referencedColumnName = "id")
+    @JoinColumn(name = "subject_id", referencedColumnName = "param2")
     private Question question;
 
 }

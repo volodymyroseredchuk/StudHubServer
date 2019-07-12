@@ -16,7 +16,7 @@ public class Feedback {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @EqualsAndHashCode.Exclude
@@ -28,15 +28,15 @@ public class Feedback {
     private Integer mark;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    @JoinColumn(name = "teacher_id", referencedColumnName = "param2")
     private Teacher teacher;
 
     @ManyToOne
-    @JoinColumn(name = "university_id", referencedColumnName = "id")
+    @JoinColumn(name = "university_id", referencedColumnName = "param2")
     private University university;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "param2")
     private User user;
 
     @EqualsAndHashCode.Exclude

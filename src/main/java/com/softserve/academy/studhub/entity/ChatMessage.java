@@ -16,21 +16,21 @@ public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @Column(name = "content")
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "sender_user_id", referencedColumnName = "id")
+    @JoinColumn(name = "sender_user_id", referencedColumnName = "param2")
     private User sender;
 
     @Column(name = "creation_datetime")
     private LocalDateTime creationDateTime;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "chat_id", referencedColumnName = "id")
+    @JoinColumn(name = "chat_id", referencedColumnName = "param2")
     private Chat chat;
 
 }

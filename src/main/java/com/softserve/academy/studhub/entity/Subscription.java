@@ -17,15 +17,15 @@ public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "param2")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "channel_id", referencedColumnName = "id")
+    @JoinColumn(name = "channel_id", referencedColumnName = "param2")
     private Channel channel;
 
 }

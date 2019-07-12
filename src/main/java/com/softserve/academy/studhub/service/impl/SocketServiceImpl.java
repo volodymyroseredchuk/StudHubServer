@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.coders.SocketChatMessageEncoder;
 import com.softserve.academy.studhub.coders.SocketMessageEncoder;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
+import com.softserve.academy.studhub.entity.enums.SocketMessageType;
 import com.softserve.academy.studhub.service.SocketService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -19,11 +20,10 @@ public class SocketServiceImpl implements SocketService {
 
     private static Map<Integer, WebSocketSession> sessionIdMap = new ConcurrentHashMap<>();
     private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
-    private SocketChatMessageEncoder chatMessageEncoder = new SocketChatMessageEncoder();
 
-    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.");
-    private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.");
-    private static final SocketMessage ERROR_MESSAGE = new SocketMessage("Error occurred.");
+    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.", SocketMessageType.NOTIFICATION);
+    private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.", SocketMessageType.NOTIFICATION);
+    private static final SocketMessage ERROR_MESSAGE = new SocketMessage("Error occurred.", SocketMessageType.NOTIFICATION);
 
     @Override
     public void addSession(Integer id, WebSocketSession session) {
@@ -80,8 +80,9 @@ public class SocketServiceImpl implements SocketService {
 
         if (session != null) {
             try {
-                session.sendMessage(new TextMessage(chatMessageEncoder.encode(message)));
-            } catch (IOException e) {
+                SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(), message.getContent(), SocketMessageType.CHAT_MESSAGE);
+                session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
+            } catch (EncodeException | IOException e) {
                 throw new IllegalArgumentException("Could not send chat message.");
             }
         }
@@ -122,7 +123,7 @@ public class SocketServiceImpl implements SocketService {
     @Override
     public void sendCustomMessage(WebSocketSession session, String msg){
         if (session != null && msg != null) {
-            SocketMessage message = new SocketMessage(msg);
+            SocketMessage message = new SocketMessage(msg, SocketMessageType.NOTIFICATION);
             try {
                 session.sendMessage(new TextMessage(messageEncoder.encode(message)));
             } catch (IOException | EncodeException e) {

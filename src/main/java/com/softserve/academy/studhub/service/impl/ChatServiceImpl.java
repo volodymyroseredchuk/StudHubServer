@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.dto.ChatListItem;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.ChatSubscription;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.repository.ChatMessageRepository;
 import com.softserve.academy.studhub.repository.ChatRepository;
 import com.softserve.academy.studhub.repository.ChatSubscriptionRepository;
@@ -37,8 +38,6 @@ public class ChatServiceImpl implements ChatService {
             throw new IllegalArgumentException("Cannot send an empty chat message.");
         }
 
-        chatMessageRepository.saveAndFlush(message);
-
         socketService.sendChatMessage(message);
     }
 
@@ -67,13 +66,25 @@ public class ChatServiceImpl implements ChatService {
         for(ChatSubscription sub : subscriptions) {
             Integer chatId = sub.getChat().getId();
             Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
+            List<ChatSubscription> subscribtionsList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+            String chatName;
+            if (subscribtionsList.size() == 2) {
+                chatName = "Default name";
+                for (ChatSubscription subscription : subscribtionsList) {
+                    if (!subscription.getUser().getId().equals(userId)) {
+                        chatName = subscription.getUser().getUsername();
+                        break;
+                    }
+                }
+            } else {
+                chatName = sub.getChat().getName();
+            }
             if (message.isPresent()) {
                 ChatMessage msg = message.get();
-                ChatListItem item = new ChatListItem(chatId, msg.getSender().getImageUrl(), msg.getSender().getUsername(), msg.getContent());
+                ChatListItem item = new ChatListItem(chatId, msg.getSender().getImageUrl(), chatName, msg.getContent());
                 msgList.add(item);
             }
         }
-        System.out.println(msgList);
         return msgList;
     }
 

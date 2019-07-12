@@ -65,7 +65,7 @@ public class GoogleVerifierServiceImplTest {
         GoogleUserData userData = new GoogleUserData();
         userData.setIdToken(idToken);
         userData.setEmail(email);
-        userData.setId("101324563597314034428");
+        userData.setParam2("101324563597314034428");
 
         User user = new User();
         user.setGooglePassword("123");

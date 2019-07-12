@@ -21,7 +21,7 @@ public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "param2")
     private Integer id;
 
     @EqualsAndHashCode.Exclude
@@ -33,7 +33,7 @@ public class Answer {
     private Boolean approved;
 
     @ManyToOne
-    @JoinColumn(name="question_id", referencedColumnName = "id")
+    @JoinColumn(name="question_id", referencedColumnName = "param2")
     @JsonBackReference
     private Question question;
 
@@ -43,7 +43,7 @@ public class Answer {
     private List<Comment> comment;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "param2")
     private User user;
 
     @Column(name = "creation_date")

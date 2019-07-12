@@ -28,7 +28,7 @@ public class UniversityController {
         return universityService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{param2}")
     @PreAuthorize("permitAll()")
     University updateOneUniversities(@PathVariable Integer id) {
 
@@ -41,13 +41,13 @@ public class UniversityController {
         return universityService.save(newUniversity);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{param2}")
     @PreAuthorize("hasRole('ADMIN')")
     University replaceUniversity(@RequestBody University newUniversity, @PathVariable Integer id) {
         return universityService.update(newUniversity);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{param2}")
     @PreAuthorize("hasRole('ADMIN')")
     void deleteUniversity(@PathVariable Integer id) {
         universityService.deleteById(id);
