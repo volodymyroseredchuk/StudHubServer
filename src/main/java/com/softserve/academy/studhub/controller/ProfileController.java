@@ -22,33 +22,22 @@ public class ProfileController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping("/my")
+    @GetMapping("/current")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
 
         String username = principal.getName();
 
-        UserDTO result = modelMapper.
-                map(userService.findByUsername(username), UserDTO.class);
-
-        result.setCanBeEdited(true);
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findByUsername(username), UserDTO.class));
     }
 
-    @GetMapping("/foreign/{username}")
+    @GetMapping("/{username}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<UserDTO> getForeignUser(@PathVariable String username, Principal principal) {
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
 
-        UserDTO result = modelMapper.
-                map(userService.findByUsername(username), UserDTO.class);
-
-        if (principal != null) {
-            if (principal.getName().equals(username)) {
-                result.setCanBeEdited(true);
-            }
-        }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findByUsername(username), UserDTO.class));
     }
 
     @PostMapping("/update")

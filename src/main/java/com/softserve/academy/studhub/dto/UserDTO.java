@@ -48,6 +48,4 @@ public class UserDTO {
     private Set<Role> roles = new HashSet<>();
 
     private Boolean emailSubscription;
-
-    private Boolean canBeEdited;
 }

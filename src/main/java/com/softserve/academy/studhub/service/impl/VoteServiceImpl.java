@@ -103,6 +103,10 @@ public class VoteServiceImpl implements VoteService {
             throw new NullPointerException(ErrorMessage.VOTE_POST_DTO_NULL_FIELDS);
         }
     }
-    
 
+    @Override
+    public Integer getVoteSumByUsername(String username) {
+
+        return voteRepository.getVoteSumByUsername(username);
+    }
 }
