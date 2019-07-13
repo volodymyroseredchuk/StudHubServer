@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `news`
+--
+
+DROP TABLE IF EXISTS `news`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) DEFAULT NULL,
+  `body` text,
+  `creation_date` datetime DEFAULT NULL,
+  `source_url` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `news`
+--
+
+LOCK TABLES `news` WRITE;
+/*!40000 ALTER TABLE `news` DISABLE KEYS */;
+INSERT INTO `news` VALUES (1,'Ukraine is new China?','Ukrainian programmers will work according to 996 schedule, as their Chinese colleagues! 9am to 9pm 6 days a week.','2019-06-01 00:00:00', 'https://ain.ua/2019/07/12/zelenyj-tarif-vernuli-chto-eto-znachit/'),(2,'Do not leave Your sandwiches unattended!','Today was committed terrifying crime - somebody has ate my sandwich! Police it doing its best, but no evidences or witnesses are available.','2019-06-01 00:00:00', 'https://dou.ua/lenta/articles/juniors-2018/?from=doufp');
+/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
 -- Table structure for table `answers`
 --
 
