@@ -17,7 +17,6 @@ public class SocialConfig implements SocialConfigurer {
         cfConfig.addConnectionFactory(new FacebookConnectionFactory(
                 env.getProperty("${FACEBOOK_CLIENT_ID}"),
                 env.getProperty("${FACEBOOK_SECRET}")));
-        System.out.println("factory config "+ cfConfig);
     }
 
     @Override

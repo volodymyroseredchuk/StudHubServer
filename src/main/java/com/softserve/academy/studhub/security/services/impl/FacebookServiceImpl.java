@@ -25,17 +25,16 @@ public class FacebookServiceImpl implements FacebookService {
     @Override
     public FacebookData verifyFacebookToken(String accessToken) {
 
-        System.out.println("in service verify" + accessToken);
         Facebook facebook = new FacebookTemplate(accessToken);
         String[] fields = {"email", "first_name", "id", "last_name", "name"};
         FacebookData facebookData = facebook.fetchObject("me", FacebookData.class, fields);
-        System.out.println("after fetch" + facebookData);
+
         return facebookData;
     }
 
     @Override
     public LoginForm authenticateUser(FacebookUserData facebookUserData) throws IllegalArgumentException {
-        System.out.println("in Service autenticateUser" + facebookUserData);
+
         FacebookData facebookData = verifyFacebookToken(facebookUserData.getAuthToken());
         LoginForm form = new LoginForm();
 

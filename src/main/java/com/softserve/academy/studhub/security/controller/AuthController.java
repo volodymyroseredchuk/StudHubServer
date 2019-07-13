@@ -86,9 +86,8 @@ public class AuthController {
     @PostMapping("/signinFacebook")
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateFacebookUser(@Valid @RequestBody FacebookUserData userData) {
-        System.out.println("in controller"+userData);
-        LoginForm form = facebookService.authenticateUser(userData);
 
+        LoginForm form = facebookService.authenticateUser(userData);
         return authenticate(form);
     }
 

@@ -32,7 +32,7 @@ public class FacebookData {
         user.setPassword(id);
         user.setFirstName(first_name);
         user.setLastName(last_name);
-        user.setUsername(email);
+        user.setUsername(name);
         user.setCreationDate(LocalDate.now());
         user.setRoles(new HashSet<Role>(){{
             add(roleService.findByName(RoleName.ROLE_USER));
