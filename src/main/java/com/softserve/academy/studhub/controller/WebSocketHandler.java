@@ -10,6 +10,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
+import javax.websocket.DecodeException;
+import javax.websocket.OnError;
+import java.io.IOException;
+
 public class WebSocketHandler extends AbstractWebSocketHandler {
 
     private SocketService socketService;
@@ -28,19 +32,21 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
 
-        SocketMessage msg = decoder.decode(message.getPayload());
         try {
+            SocketMessage msg = decoder.decode(message.getPayload());
             subscriptionService.handleMessage(msg);
         } catch (IllegalArgumentException e) {
-            socketService.sendCustomMessage(session, e.getMessage());
+            socketService.sendGreetings(session, 3);
+        } catch (DecodeException e) {
+            socketService.sendGreetings(session, 3);
         }
 
     }
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+    public void afterConnectionEstablished(WebSocketSession session) {
 
         try {
 
@@ -55,15 +61,16 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
                 session.close();
             }
 
-        } catch (NullPointerException e) {
+        } catch (NullPointerException | IOException e) {
             socketService.sendGreetings(session, 2);
         }
 
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         socketService.removeSession(session);
     }
+
 
 }
