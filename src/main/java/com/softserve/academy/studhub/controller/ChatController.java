@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.dto.ChatListItem;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.service.ChatService;
+import com.softserve.academy.studhub.service.impl.OffsetBasedPageable;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,8 @@ public class ChatController {
 
     @GetMapping("/chat/{chatId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, Pageable pageable) {
-        List<ChatMessage> messages = chatService.getMessagesByChatId(chatId, pageable);
+    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, @RequestParam Integer offset, @RequestParam Integer size) {
+        List<ChatMessage> messages = chatService.getMessagesByChatId(chatId, new OffsetBasedPageable(offset, size));
         return ResponseEntity.ok().body(messages);
     }
 
@@ -36,12 +37,24 @@ public class ChatController {
         return ResponseEntity.ok().body(itemList);
     }
 
+    @GetMapping("/chat/header/{chatId}/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getChatHeader(@PathVariable Integer chatId, @PathVariable Integer userId) {
+        return ResponseEntity.ok().body(chatService.getChatHeader(chatId, userId));
+    }
+
     @PostMapping("/chat")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
         ChatMessage savedMessage = chatService.save(message);
         chatService.handleChatMessage(savedMessage);
         return ResponseEntity.ok().body(savedMessage);
+    }
+
+    @GetMapping("/chat/new/{creatorUserId}/{userId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> postChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId) {
+        return ResponseEntity.ok().body(chatService.createChat(creatorUserId, userId));
     }
 
 }

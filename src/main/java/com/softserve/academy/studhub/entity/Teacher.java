@@ -18,7 +18,7 @@ public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "param2")
+    @Column(name = "id")
     private Integer id;
 
     //TODO: remove
@@ -44,7 +44,7 @@ public class Teacher {
 
     //TODO: add exclude
     @ManyToOne
-    @JoinColumn(name = "university_id", referencedColumnName = "param2")
+    @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;
 
     @EqualsAndHashCode.Exclude

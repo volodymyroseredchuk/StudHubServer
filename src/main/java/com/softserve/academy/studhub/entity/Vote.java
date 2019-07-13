@@ -15,22 +15,22 @@ public class Vote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "param2")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "value", nullable = false)
     private Integer value;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "param2")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "answer_id", referencedColumnName = "param2")
+    @JoinColumn(name = "answer_id", referencedColumnName = "id")
     private Answer answer;
 
     @ManyToOne
-    @JoinColumn(name = "feedback_id", referencedColumnName = "param2")
+    @JoinColumn(name = "feedback_id", referencedColumnName = "id")
     private Feedback feedback;
 
 }

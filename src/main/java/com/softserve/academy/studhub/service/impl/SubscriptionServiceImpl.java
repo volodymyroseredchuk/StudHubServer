@@ -42,7 +42,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (channelId != null && userId != null) {
             return subscriptionRepository.findSubscriptionByChannelIdAndUserId(channelId, userId).isPresent();
         } else {
-            throw new IllegalArgumentException("Invalid user param2 and/or channel param2 of a subscription argument.");
+            throw new IllegalArgumentException("Invalid user id and/or channel id of a subscription argument.");
         }
     }
 

@@ -20,7 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "param2")
+    @Column(name = "id")
     private Integer id;
 
     @NonNull
@@ -65,7 +65,7 @@ public class User {
     private LocalDate creationDate;
 
     @ManyToOne
-    @JoinColumn(name = "university_id", referencedColumnName = "param2")
+    @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;
 
     @Column(name = "image_url")

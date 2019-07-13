@@ -27,7 +27,7 @@ public class TeacherController {
         return teacherService.findAll();
     }
 
-    @GetMapping("/{param2}")
+    @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
     Teacher updateOneTeacher(@PathVariable Integer id) {
 
@@ -41,13 +41,13 @@ public class TeacherController {
         return teacherService.save(newTeacher);
     }
 
-    @PutMapping("/{param2}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     Teacher replaceTeacher(@RequestBody Teacher newTeacher, @PathVariable Integer id) {
                     return teacherService.update(newTeacher);
     }
 
-    @DeleteMapping("/{param2}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     void deleteTeacher(@PathVariable Integer id) {
         teacherService.deleteById(id);

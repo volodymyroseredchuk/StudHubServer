@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.coders.SocketChatMessageEncoder;
 import com.softserve.academy.studhub.coders.SocketMessageEncoder;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.SocketMessageType;
 import com.softserve.academy.studhub.service.SocketService;
 import org.springframework.stereotype.Service;
@@ -70,20 +71,21 @@ public class SocketServiceImpl implements SocketService {
     }
 
     @Override
-    public void sendChatMessage(ChatMessage message) {
+    public void sendChatMessage(List<Integer> receiverIds, ChatMessage message) {
 
         if (message == null) {
             throw new IllegalArgumentException("Cannot send empty chat message.");
         }
+        for (Integer id : receiverIds) {
+            WebSocketSession session = sessionIdMap.get(id);
 
-        WebSocketSession session = sessionIdMap.get(message.getSender().getId());
-
-        if (session != null) {
-            try {
-                SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(), message.getContent(), SocketMessageType.CHAT_MESSAGE);
-                session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
-            } catch (EncodeException | IOException e) {
-                throw new IllegalArgumentException("Could not send chat message.");
+            if (session != null) {
+                try {
+                    SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(), message.getContent(), SocketMessageType.CHAT_MESSAGE);
+                    session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
+                } catch (EncodeException | IOException e) {
+                    throw new IllegalArgumentException("Could not send chat message.");
+                }
             }
         }
 

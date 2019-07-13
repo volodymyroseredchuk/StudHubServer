@@ -1,8 +1,10 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.google.common.collect.Lists;
+import com.softserve.academy.studhub.dto.ChatHeaderDTO;
 import com.softserve.academy.studhub.dto.ChatListItem;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
+import com.softserve.academy.studhub.entity.Chat;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.ChatSubscription;
 import com.softserve.academy.studhub.entity.User;
@@ -37,8 +39,14 @@ public class ChatServiceImpl implements ChatService {
         if (message == null) {
             throw new IllegalArgumentException("Cannot send an empty chat message.");
         }
-
-        socketService.sendChatMessage(message);
+        List<ChatSubscription> chatSubscriptions = subscriptionRepository.findChatSubscriptionByChatId(message.getChat().getId());
+        List<Integer> receiverIds = new ArrayList<>();
+        for (ChatSubscription sub : chatSubscriptions) {
+            if (!sub.getUser().getId().equals(message.getSender().getId())) {
+                receiverIds.add(sub.getUser().getId());
+            }
+        }
+        socketService.sendChatMessage(receiverIds, message);
     }
 
     @Override
@@ -100,6 +108,75 @@ public class ChatServiceImpl implements ChatService {
         message.setChat(chatRepository.findById(messagePostDTO.getChat())
                 .orElseThrow(() -> new IllegalArgumentException("Cannot save message for not existing chat.")));
         return chatMessageRepository.saveAndFlush(message);
+    }
+
+    @Override
+    public ChatHeaderDTO getChatHeader(Integer chatId, Integer userId) {
+        if (chatId == null) {
+            throw new IllegalArgumentException("Cannot get header for an empty chat ID");
+        }
+        Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
+        List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+        String chatName;
+        String photoUrl = null;
+        if (subscriptionList.size() == 2) {
+            chatName = "Default name";
+            for (ChatSubscription subscription : subscriptionList) {
+                if (!subscription.getUser().getId().equals(userId)) {
+                    chatName = subscription.getUser().getUsername();
+                    photoUrl = subscription.getUser().getImageUrl();
+                    break;
+                }
+            }
+        } else {
+            Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new IllegalArgumentException("Chat not fofund."));
+            chatName = chat.getName();
+        }
+        ChatMessage msg = message.orElseThrow(() -> new IllegalArgumentException("Message not found."));
+        return new ChatHeaderDTO(chatName, photoUrl);
+    }
+
+    @Override
+    public Integer createChat(Integer creatorUserId, Integer userId) {
+        List<ChatSubscription> creatorSubs = subscriptionRepository.findChatSubscriptionByUserId(creatorUserId);
+        List<ChatSubscription> receiverSubs = subscriptionRepository.findChatSubscriptionByUserId(userId);
+
+        List<Chat> commonChats = new ArrayList<>();
+
+        for (ChatSubscription cSub : creatorSubs) {
+            for (ChatSubscription rSub : receiverSubs) {
+                if (cSub.getChat().getId().equals(rSub.getChat().getId())) {
+                    commonChats.add(cSub.getChat());
+                }
+            }
+        }
+
+        if (commonChats.size() == 1) {
+            return commonChats.get(0).getId();
+        } else if (commonChats.size() > 1) {
+            Integer chatId = 0;
+            for (Chat chat : commonChats) {
+                List<ChatSubscription> chatSubs = subscriptionRepository.findChatSubscriptionByChatId(chat.getId());
+                if (chatSubs.size() == 2) {
+                    chatId = chat.getId();
+                    break;
+                }
+            }
+            if (chatId != 0) {
+                return chatId;
+            }
+        }
+        Chat chat = chatRepository.saveAndFlush(new Chat());
+        ChatSubscription creatorSubscription = new ChatSubscription();
+        creatorSubscription.setChat(chat);
+        creatorSubscription.setUser(userService.findById(creatorUserId));
+        subscriptionRepository.saveAndFlush(creatorSubscription);
+        ChatSubscription subscription = new ChatSubscription();
+        subscription.setUser(userService.findById(userId));
+        subscription.setChat(chat);
+        subscriptionRepository.saveAndFlush(subscription);
+        return chat.getId();
+
     }
 
 }

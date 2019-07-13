@@ -21,7 +21,7 @@ public class Tag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "param2")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "name", nullable = false, unique = true)

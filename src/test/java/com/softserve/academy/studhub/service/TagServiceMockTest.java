@@ -48,7 +48,7 @@ public class TagServiceMockTest {
 
         verify(tagRepository, times(1)).saveAndFlush(any());
 
-        assertNotEquals("New param2 should not be 0", Integer.valueOf(0), resultTag.getId());
+        assertNotEquals("New id should not be 0", Integer.valueOf(0), resultTag.getId());
         assertEquals("Names should be the same", resultTag.getName(), inputTag.getName());
     }
 

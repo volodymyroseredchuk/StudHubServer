@@ -23,7 +23,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "param2")
+    @Column(name = "id")
     private Integer id;
     @Column(name = "title")
     private String title;
@@ -39,7 +39,7 @@ public class Question {
 
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "param2")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
