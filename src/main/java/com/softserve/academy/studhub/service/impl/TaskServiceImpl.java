@@ -3,6 +3,7 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Proposal;
 import com.softserve.academy.studhub.entity.Task;
+import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TaskRepository;
 import com.softserve.academy.studhub.service.TagService;
@@ -29,6 +30,7 @@ public class TaskServiceImpl implements TaskService {
     public Task save(Task task, Principal principal) {
         task.setCreationDate(LocalDateTime.now());
         task.setUser(userService.findByUsername(principal.getName()));
+        task.setStatus(TaskStatus.IN_PROGRESS);
         task.setTagList(tagService.reviewTagList(task.getTagList()));
         return taskRepository.saveAndFlush(task);
     }
@@ -64,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<Task> findAll(Pageable pageable) {
-        return taskRepository.findAllByOrderByCreationDateDesc(pageable);
+        return taskRepository.findAllByStatusOrderByCreationDateDesc(TaskStatus.IN_PROGRESS, pageable);
     }
 
     @Override

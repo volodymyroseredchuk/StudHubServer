@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.entity.Tag;
+import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,8 @@ public class TaskForListDTO {
     private Integer expectedPrice;
 
     private UserGeneralInfoDTO user;
+
+    private TaskStatus status;
 
     private Set<Tag> tagList;
 }

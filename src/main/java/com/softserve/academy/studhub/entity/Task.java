@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,10 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "task_status")
+    private TaskStatus status;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
     @JsonManagedReference

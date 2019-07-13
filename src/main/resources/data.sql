@@ -355,6 +355,7 @@ CREATE TABLE `tasks` (
   `modified_date` datetime DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `task_status` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK6s1ob9k4ihi75xbxe2w0ylsdh` (`user_id`),
   FULLTEXT KEY `tasks_search` (`title`,`body`),
@@ -368,7 +369,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-10 00:00:00',30,NULL,'First task',1),(2,'Second task body','2019-06-27 00:00:00','2019-07-15 00:00:00',50,NULL,'Second task',1);
+INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-10 00:00:00',30,NULL,'First task',1,'IN_PROGRESS'),(2,'Second task body','2019-06-27 00:00:00','2019-07-15 00:00:00',50,NULL,'Second task',1,'IN_PROGRESS');
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
