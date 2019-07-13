@@ -10,10 +10,10 @@ import java.util.List;
 public interface OrderService {
 
     Order create(Task task, Proposal proposal);
-    List<Order> findByUserCreatorId(Integer userCreatorId);
-    List<Order> findByUserExecutorId(Integer userExecutorId);
+    List<Order> findByUserCreatorUsername(String userCreatorUsername);
+    List<Order> findByUserExecutorUsername(String userExecutorUsername);
     Order findById(Integer orderId);
-    ResultSubmission submitResult(Integer orderId, ResultSubmission resultSubmission)
+    ResultSubmission submitResult(Integer orderId, ResultSubmission resultSubmission);
 
 
 }

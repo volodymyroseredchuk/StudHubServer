@@ -36,13 +36,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findByUserCreatorId(Integer userCreatorId) {
-        return orderRepository.findByUserCreatorId(userCreatorId);
+    public List<Order> findByUserCreatorUsername(String userCreatorUsername) {
+        return orderRepository.findByUserCreatorUsername(userCreatorUsername);
     }
 
     @Override
-    public List<Order> findByUserExecutorId(Integer userExecutorId) {
-        return orderRepository.findByUserExecutorId(userExecutorId);
+    public List<Order> findByUserExecutorUsername(String userExecutorUsername) {
+        return orderRepository.findByUserExecutorUsername(userExecutorUsername);
     }
 
     @Override

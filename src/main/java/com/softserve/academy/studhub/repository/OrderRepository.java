@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
-    List<Order> findByUserCreatorId(Integer userCreatorId);
+    List<Order> findByUserCreatorUsername(String userCreatorId);
 
-    List<Order> findByUserExecutorId(Integer userExecutorId);
+    List<Order> findByUserExecutorUsername(String  userExecutorId);
 
 
 }
