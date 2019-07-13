@@ -32,4 +32,10 @@ public class Tag {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Question> questionList;
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ManyToMany(targetEntity = Task.class, mappedBy = "tagList")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    private List<Task> taskList;
 }

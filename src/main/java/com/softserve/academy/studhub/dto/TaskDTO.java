@@ -11,12 +11,23 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class QuestionForListDTO {
+public class TaskDTO {
 
     private Integer id;
+
     private String title;
+
+    private String body;
+
     private LocalDateTime creationDate;
+
     private LocalDateTime modifiedDate;
+
+    private LocalDateTime deadlineDate;
+
+    private Integer expectedPrice;
+
     private UserGeneralInfoDTO user;
+
     private Set<Tag> tagList;
 }

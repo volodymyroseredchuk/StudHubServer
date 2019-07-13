@@ -34,7 +34,7 @@ CREATE TABLE `answers` (
   KEY `FK3erw1a3t0r78st8ty27x6v3g1` (`question_id`),
   KEY `FK5bp3d5loftq2vjn683ephn75a` (`user_id`),
   CONSTRAINT `FK3erw1a3t0r78st8ty27x6v3g1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK5bp3d5loftq2vjn683ephn75a` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `FK5bp3d5loftq2vjn683ephn75a` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -91,7 +91,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `FKoiwlwqmu9qm0tjnafxqr20rd8` (`answer_id`),
   KEY `FK8omq0tc18jd43bu5tjh6jvraq` (`user_id`),
-  CONSTRAINT `FK8omq0tc18jd43bu5tjh6jvraq` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `FK8omq0tc18jd43bu5tjh6jvraq` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FKoiwlwqmu9qm0tjnafxqr20rd8` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -125,7 +125,7 @@ CREATE TABLE `feedbacks` (
   KEY `FKkmb4xm2mu42sp99hn4o0v3knf` (`teacher_id`),
   KEY `FKf4nldstwbyijft4d6g1tyvqfx` (`university_id`),
   KEY `FK312drfl5lquu37mu4trk8jkwx` (`user_id`),
-  CONSTRAINT `FK312drfl5lquu37mu4trk8jkwx` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `FK312drfl5lquu37mu4trk8jkwx` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FKf4nldstwbyijft4d6g1tyvqfx` FOREIGN KEY (`university_id`) REFERENCES `universities` (`id`),
   CONSTRAINT `FKkmb4xm2mu42sp99hn4o0v3knf` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -237,10 +237,12 @@ CREATE TABLE `questions` (
   `modified_date` datetime DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
+  `team_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKjoo8hp6d3gfwctr68dl2iaemj` (`user_id`),
   FULLTEXT KEY `questions_search` (`title`,`body`),
-  CONSTRAINT `FKjoo8hp6d3gfwctr68dl2iaemj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `FKjoo8hp6d3gfwctr68dl2iaemj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -250,7 +252,7 @@ CREATE TABLE `questions` (
 
 LOCK TABLES `questions` WRITE;
 /*!40000 ALTER TABLE `questions` DISABLE KEYS */;
-INSERT INTO `questions` VALUES (1,'Hi! I am applied math student, but i don\'t know math. Completely. I even don\'t know how to multiply numbes. Please help! ','2019-06-01 00:00:00',NULL,'How to math?',1),(2,'Hello! Please help me writing diploma. My theme is the philosophy of middle ages. What philosophers ere popular that days?','2019-06-01 00:00:00',NULL,'Philosophy diploma',4);
+INSERT INTO `questions` VALUES (1,'Hi! I am applied math student, but i don\'t know math. Completely. I even don\'t know how to multiply numbes. Please help! ','2019-06-01 00:00:00',NULL,'How to math?',1,null),(2,'Hello! Please help me writing diploma. My theme is the philosophy of middle ages. What philosophers ere popular that days?','2019-06-01 00:00:00',NULL,'Philosophy diploma',4,null);
 /*!40000 ALTER TABLE `questions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -382,6 +384,104 @@ INSERT INTO `subscriptions` VALUES (1,1,1);
 UNLOCK TABLES;
 
 
+
+--
+-- Table structure for table `tasks`
+--
+
+DROP TABLE IF EXISTS `tasks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `body` text,
+  `creation_date` datetime DEFAULT NULL,
+  `deadline_date` datetime DEFAULT NULL,
+  `expected_price` int(11) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK6s1ob9k4ihi75xbxe2w0ylsdh` (`user_id`),
+  FULLTEXT KEY `tasks_search` (`title`,`body`),
+  CONSTRAINT `FK6s1ob9k4ihi75xbxe2w0ylsdh` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tasks`
+--
+
+LOCK TABLES `tasks` WRITE;
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-10 00:00:00',30,NULL,'First task',1),(2,'Second task body','2019-06-27 00:00:00','2019-07-15 00:00:00',50,NULL,'Second task',1);
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tasks_tags`
+--
+
+DROP TABLE IF EXISTS `tasks_tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `tasks_tags` (
+                              `tasks_id` int(11) NOT NULL,
+                              `tags_id` int(11) NOT NULL,
+                              KEY `tasks_id` (`tasks_id`),
+                              KEY `tags_id` (`tags_id`),
+                              CONSTRAINT `tasks_tags_ibfk_1` FOREIGN KEY (`tasks_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+                              CONSTRAINT `tasks_tags_ibfk_2` FOREIGN KEY (`tags_id`) REFERENCES `tags` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tasks_tags`
+--
+
+LOCK TABLES `tasks_tags` WRITE;
+/*!40000 ALTER TABLE `tasks_tags` DISABLE KEYS */;
+INSERT INTO `tasks_tags` VALUES (1,1),(2,4),(2,5);
+/*!40000 ALTER TABLE `tasks_tags` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `proposals`
+--
+
+DROP TABLE IF EXISTS `proposals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `proposals` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `body` text,
+  `days_count` int(11) DEFAULT NULL,
+  `price` int(11) DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `task_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK3u94vfp3i629csukvqetmy997` (`task_id`),
+  KEY `FKo0nyqm5ghqcdte7g3xwn2gsmj` (`user_id`),
+  CONSTRAINT `FK3u94vfp3i629csukvqetmy997` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FKo0nyqm5ghqcdte7g3xwn2gsmj` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `proposals`
+--
+
+LOCK TABLES `proposals` WRITE;
+/*!40000 ALTER TABLE `proposals` DISABLE KEYS */;
+INSERT INTO `proposals` VALUES (1,'first proposal for first task',5,25,'2019-06-27 00:00:00',1,2),(2,'second proposal for first task',3,50,'2019-06-27 00:00:00',1,3),(3,'first proposal for second task',7,36,'2019-06-27 00:00:00',2,3),(4,'second proposal for second task',6,50,'2019-06-27 00:00:00',2,2);
+/*!40000 ALTER TABLE `proposals` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+
+
 --
 -- Table structure for table `tags`
 --
@@ -437,6 +537,62 @@ LOCK TABLES `teachers` WRITE;
 /*!40000 ALTER TABLE `teachers` DISABLE KEYS */;
 INSERT INTO `teachers` VALUES (1,'2019-06-02 00:00:00','Bogdan',NULL,'Gnativ',NULL,1,3.5),(2,'2019-06-02 00:00:00','Petro',NULL,'Kostrobiy',NULL,1,0),(3,'2019-06-02 00:00:00','Petro',NULL,'Topulko',NULL,1,0),(4,'2019-06-02 00:00:00','Roman',NULL,'Kalyna',NULL,2,0),(5,'2019-06-02 00:00:00','Olexiy',NULL,'Pidlisnyi',NULL,2,0),(6,'2019-06-02 00:00:00','Oleg',NULL,'Petuchello',NULL,3,0),(7,'2019-06-02 00:00:00','Igor',NULL,'Kolega',NULL,4,0);
 /*!40000 ALTER TABLE `teachers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teams`
+--
+
+DROP TABLE IF EXISTS `teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `teams` (
+                         `id` int(11) NOT NULL AUTO_INCREMENT,
+                         `title` varchar(32) DEFAULT NULL,
+                         `creator_id` int(11) NOT NULL,
+                         `creation_date` datetime DEFAULT NULL,
+                         `modified_date` datetime DEFAULT NULL,
+                         PRIMARY KEY (`id`),
+                         KEY `creator_id` (`creator_id`),
+                         CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teams`
+--
+
+LOCK TABLES `teams` WRITE;
+/*!40000 ALTER TABLE `teams` DISABLE KEYS */;
+INSERT INTO `teams` VALUES (1,'dreamteam',3, '2019-06-02 00:00:00', '2019-06-02 00:01:01'),(2,'adminteam',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03'),(3,'tarasteam',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01');
+/*!40000 ALTER TABLE `teams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `teams_users`
+--
+
+DROP TABLE IF EXISTS `teams_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `teams_users` (
+                               `team_id` int(11) NOT NULL,
+                               `user_id` int(11) NOT NULL,
+                               KEY `team_id` (`team_id`),
+                               KEY `user_id` (`user_id`),
+                               CONSTRAINT `teams_users_ibfk_1` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`) ON DELETE CASCADE,
+                               CONSTRAINT `teams_users_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `teams_users`
+--
+
+LOCK TABLES `teams_users` WRITE;
+/*!40000 ALTER TABLE `teams_users` DISABLE KEYS */;
+INSERT INTO `teams_users` VALUES (1,1),(1,2),(3,3);
+/*!40000 ALTER TABLE `teams_users` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -514,7 +670,7 @@ CREATE TABLE `users` (
   `university_id` int(11) DEFAULT NULL,
    `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
    `google_password` varchar(255) DEFAULT NULL,
-  `is_activated` bit(2) NOT NULL DEFAULT _binary '\0',
+  `is_activated` bit(1) NOT NULL DEFAULT _binary '\0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UK_k8d0f2n7n88w1a16yhua64onx` (`user_name`),
@@ -551,7 +707,7 @@ CREATE TABLE `votes` (
   KEY `FKruiggkp5t2k72ks0ojsyaj867` (`feedback_id`),
   KEY `FKli4uj3ic2vypf5pialchj925e` (`user_id`),
   CONSTRAINT `FK153p8dvxvoas3c6kiwxjjxkrd` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FKli4uj3ic2vypf5pialchj925e` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `FKli4uj3ic2vypf5pialchj925e` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FKruiggkp5t2k72ks0ojsyaj867` FOREIGN KEY (`feedback_id`) REFERENCES `feedbacks` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

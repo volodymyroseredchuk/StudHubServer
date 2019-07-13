@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.security.controller;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.enums.RoleName;
@@ -13,7 +14,6 @@ import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.RoleService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,7 +30,6 @@ import java.util.HashSet;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @AllArgsConstructor
-@Slf4j
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -48,7 +47,6 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginForm loginRequest) {
 
-        userService.isUserActivated(loginRequest.getUsername());
         return authenticate(loginRequest);
     }
 
@@ -101,6 +99,8 @@ public class AuthController {
                         loginRequest.getPassword()
                 )
         );
+
+        userService.isUserActivated(loginRequest.getUsername());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessTokenString = jwtProvider.generateAccessToken(authentication);
