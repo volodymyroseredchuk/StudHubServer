@@ -30,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
     public Task save(Task task, Principal principal) {
         task.setCreationDate(LocalDateTime.now());
         task.setUser(userService.findByUsername(principal.getName()));
-        task.setStatus(TaskStatus.IN_PROGRESS);
+        task.setStatus(TaskStatus.NEW);
         task.setTagList(tagService.reviewTagList(task.getTagList()));
         return taskRepository.saveAndFlush(task);
     }
