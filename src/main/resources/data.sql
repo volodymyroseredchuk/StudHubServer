@@ -737,6 +737,7 @@ CREATE TABLE `users` (
    `email_subscription` bit(1) NOT NULL DEFAULT _binary '',
    `google_password` varchar(255) DEFAULT NULL,
   `is_activated` bit(1) NOT NULL DEFAULT _binary '\0',
+   `cookies_count` INT NOT NULL DEFAULT 1000,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_6dotkott2kjsp8vw4d0m25fb7` (`email`),
   UNIQUE KEY `UK_k8d0f2n7n88w1a16yhua64onx` (`user_name`),

@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.DeleteDTO;
+import com.softserve.academy.studhub.dto.OrderDTO;
 import com.softserve.academy.studhub.dto.ProposalDTO;
 import com.softserve.academy.studhub.dto.ProposalPaginatedDTO;
 import com.softserve.academy.studhub.entity.Proposal;
@@ -67,5 +68,14 @@ public class ProposalController {
 
         return ResponseEntity.ok().body(new DeleteDTO(proposalService.deleteById(proposalId)));
 
+    }
+
+    @PostMapping("/{proposalId}/approve")
+    @PreAuthorize("@proposalServiceImpl.findById(#proposalId).getTask().getUser() == principal.username")
+    public ResponseEntity<OrderDTO> approveProposal(@PathVariable Integer proposalId) {
+        return ResponseEntity.ok().body(modelMapper.map(
+                proposalService.approveProposal(proposalId),
+                OrderDTO.class
+        ));
     }
 }

@@ -1,11 +1,11 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.entity.Order;
-import com.softserve.academy.studhub.entity.Proposal;
-import com.softserve.academy.studhub.entity.ResultSubmission;
-import com.softserve.academy.studhub.entity.Task;
+import com.softserve.academy.studhub.entity.*;
+import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import com.softserve.academy.studhub.repository.OrderRepository;
 import com.softserve.academy.studhub.repository.ResultSubmissionRepository;
+import com.softserve.academy.studhub.repository.TaskRepository;
+import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,24 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
     private ResultSubmissionRepository resultSubmissionRepository;
+    private TaskRepository taskRepository;
+    private UserRepository userRepository;
 
     @Override
     @Transactional
     public Order create(Task task, Proposal proposal) {
         Order order = new Order();
+
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        task = taskRepository.saveAndFlush(task);
         order.setTask(task);
+
+        User userCreator = task.getUser();
+        userCreator.setCookiesCount(userCreator.getCookiesCount() - proposal.getPrice());
+        userCreator = userRepository.saveAndFlush(userCreator);
+        proposal.setUser(userCreator);
         order.setProposal(proposal);
+
         order.setUserCreator(task.getUser());
         order.setUserExecutor(proposal.getUser());
         order.setStartDate(LocalDateTime.now());
@@ -58,7 +69,17 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order with this Id does not exist!"));
         order.setResultSubmission(resultSubmission);
-        orderRepository.saveAndFlush(order);
+        order = orderRepository.saveAndFlush(order);
+
+        User userExecutor = order.getUserExecutor();
+        userExecutor.setCookiesCount(userExecutor.getCookiesCount() + order.getProposal().getPrice());
+        userRepository.saveAndFlush(userExecutor);
+
+        Task task = order.getTask();
+        task.setStatus(TaskStatus.DONE);
+        task = taskRepository.saveAndFlush(task);
+        order.setTask(task);
+
         return resultSubmission;
     }
 
