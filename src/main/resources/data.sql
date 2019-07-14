@@ -480,7 +480,7 @@ CREATE TABLE `tasks` (
 
 LOCK TABLES `tasks` WRITE;
 /*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
-INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-10 00:00:00',30,NULL,'First task',1,'IN_PROGRESS'),(2,'Second task body','2019-06-27 00:00:00','2019-07-15 00:00:00',50,NULL,'Second task',1,'IN_PROGRESS');
+INSERT INTO `tasks` VALUES (1,'First task body','2019-06-27 00:00:00','2019-07-10 00:00:00',30,NULL,'First task',1,'NEW'),(2,'Second task body','2019-06-27 00:00:00','2019-07-15 00:00:00',50,NULL,'Second task',1,'NEW');
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
