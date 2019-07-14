@@ -25,11 +25,13 @@ public class OrderController {
     private ModelMapper modelMapper;
 
     @GetMapping("/orders/{orderId}")
+    @PreAuthorize("@orderServiceImpl.findById(#orderId).getUserExecutor().getUsername() == principal.username or " +
+            "@orderServiceImpl.findById(#orderId).getUserCreator().getUsername() == principal.username")
     public ResponseEntity<OrderDTO> getOrder(@PathVariable Integer orderId){
         return ResponseEntity.ok(modelMapper.map(orderService.findById(orderId), OrderDTO.class));
     }
 
-    @GetMapping("/orders/created/my}")
+    @GetMapping("/orders/created/my")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<OrderDTO>> getOrderAsTaskCreator(Principal principal){
         return ResponseEntity.ok(orderService.findByUserCreatorUsername(principal.getName())
@@ -39,7 +41,7 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/orders/assigned/my}")
+    @GetMapping("/orders/assigned/my")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<OrderDTO>> getOrderAsTaskExecutor(Principal principal){
         return ResponseEntity.ok(orderService.findByUserExecutorUsername(principal.getName())
