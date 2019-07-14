@@ -41,7 +41,7 @@ public class ProfileController {
     }
 
     @PostMapping("/update")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and #updatedUserDTO.getUsername() == principal.username")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUserDTO) {
 
         User updatedUser = modelMapper.map(updatedUserDTO, User.class);
