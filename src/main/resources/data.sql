@@ -283,6 +283,71 @@ INSERT INTO `questions_tags` VALUES (1,1),(2,4),(2,5);
 /*!40000 ALTER TABLE `questions_tags` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `result_submission_id` int(11) DEFAULT NULL,
+  `task_id` int(11) DEFAULT NULL,
+  `proposal_id` int(11) DEFAULT NULL,
+  `user_creator_id` int(11) DEFAULT NULL,
+  `user_executor_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `result_submission_idx` (`result_submission_id`),
+  KEY `user_creator_idx` (`user_executor_id`),
+  KEY `task_idx` (`task_id`),
+  KEY `proposal_idx` (`proposal_id`),
+  KEY `user_creator_idx1` (`user_creator_id`),
+  CONSTRAINT `proposal` FOREIGN KEY (`proposal_id`) REFERENCES `proposals` (`id`),
+  CONSTRAINT `result_submission` FOREIGN KEY (`result_submission_id`) REFERENCES `result_submission` (`id`),
+  CONSTRAINT `task` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
+  CONSTRAINT `user_creator` FOREIGN KEY (`user_creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `user_executor` FOREIGN KEY (`user_executor_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
+-- Table structure for table `result_submission`
+--
+
+DROP TABLE IF EXISTS `result_submission`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `result_submission` (
+  `id` int(11) NOT NULL,
+  `file_url` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `result_submission`
+--
+
+LOCK TABLES `result_submission` WRITE;
+/*!40000 ALTER TABLE `result_submission` DISABLE KEYS */;
+/*!40000 ALTER TABLE `result_submission` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `privileges`
 --
