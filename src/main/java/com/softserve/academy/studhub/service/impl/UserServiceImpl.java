@@ -29,17 +29,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public User add(User user) {
 
-        if (!(userRepository.existsByEmail(user.getEmail()))) {
-
-            if (!(userRepository.existsByUsername(user.getUsername()))) {
-                user.setCreationDate(LocalDate.now());
-                return userRepository.save(user);
-            } else {
-                throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
-            }
-        } else {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_EMAIL);
         }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
+        }
+
+        user.setCreationDate(LocalDate.now());
+        return userRepository.save(user);
     }
 
     @Override
