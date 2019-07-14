@@ -21,6 +21,8 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"firstName", "lastName", "university", "imageUrl", "roles", "emailSubscription"})
 public class UserDTO {
 
+    private Integer id;
+
     @NotBlank(message = ValidationConstants.EMPTY_FIRSTNAME)
     @Size(min = ValidationConstants.FIRSTNAME_MIN_LENGTH, max = ValidationConstants.FIRSTNAME_MAX_LENGTH,
             message = ValidationConstants.INVALID_FIRSTNAME_LENGTH)
