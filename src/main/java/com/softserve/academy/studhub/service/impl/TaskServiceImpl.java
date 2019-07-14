@@ -66,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<Task> findAll(Pageable pageable) {
-        return taskRepository.findAllByStatusOrderByCreationDateDesc(TaskStatus.IN_PROGRESS, pageable);
+        return taskRepository.findAllByStatusOrderByCreationDateDesc(TaskStatus.NEW, pageable);
     }
 
     @Override
