@@ -7,7 +7,6 @@ import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.Chat;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.ChatSubscription;
-import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.repository.ChatMessageRepository;
 import com.softserve.academy.studhub.repository.ChatRepository;
 import com.softserve.academy.studhub.repository.ChatSubscriptionRepository;
@@ -91,6 +90,9 @@ public class ChatServiceImpl implements ChatService {
                 ChatMessage msg = message.get();
                 ChatListItem item = new ChatListItem(chatId, msg.getSender().getImageUrl(), chatName, msg.getContent());
                 msgList.add(item);
+            } else {
+                ChatListItem item = new ChatListItem(chatId, null, chatName, null);
+                msgList.add(item);
             }
         }
         return msgList;
@@ -115,7 +117,6 @@ public class ChatServiceImpl implements ChatService {
         if (chatId == null) {
             throw new IllegalArgumentException("Cannot get header for an empty chat ID");
         }
-        Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
         List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         String chatName;
         String photoUrl = null;
@@ -129,10 +130,9 @@ public class ChatServiceImpl implements ChatService {
                 }
             }
         } else {
-            Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new IllegalArgumentException("Chat not fofund."));
+            Chat chat = chatRepository.findById(chatId).orElseThrow(() -> new IllegalArgumentException("Chat not found."));
             chatName = chat.getName();
         }
-        ChatMessage msg = message.orElseThrow(() -> new IllegalArgumentException("Message not found."));
         return new ChatHeaderDTO(chatName, photoUrl);
     }
 
@@ -177,6 +177,15 @@ public class ChatServiceImpl implements ChatService {
         subscriptionRepository.saveAndFlush(subscription);
         return chat.getId();
 
+    }
+
+    public List<String> getUsernameParticipantsByChat(Integer chatId) {
+        List<ChatSubscription> subscriptions = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+        List<String> usernames = new ArrayList<>();
+        for (ChatSubscription sub : subscriptions) {
+            usernames.add(sub.getUser().getUsername());
+        }
+        return usernames;
     }
 
 }
