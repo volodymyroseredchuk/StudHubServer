@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.entity.enums.SocketMessageType;
 import com.softserve.academy.studhub.repository.AnswerRepository;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.repository.UserRepository;
@@ -80,7 +81,7 @@ public class AnswerServiceTests {
         Mockito.when(answerRepository.saveAndFlush(Mockito.any())).thenReturn(answerResponse);
 
 
-        SocketMessage socketMessage = new SocketMessage(question.getId().toString());
+        SocketMessage socketMessage = new SocketMessage(question.getId().toString(), SocketMessageType.NOTIFICATION);
 
 
 
