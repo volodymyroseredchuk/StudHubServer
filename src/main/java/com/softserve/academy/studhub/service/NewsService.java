@@ -15,4 +15,9 @@ public interface NewsService {
     String deleteById(Integer newsId);
 
     Page<News> findAllSortedByAge(Pageable pageable);
+
+    Boolean existByUrl(String url);
+
+    void parseAndSave ();
+
 }

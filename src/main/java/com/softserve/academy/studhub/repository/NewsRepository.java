@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface NewsRepository extends JpaRepository<News, Integer> {
 
     Page<News> findAllByOrderByCreationDateDesc(Pageable pageable);
+
+    Boolean existsBySourceUrl(String url);
 }
