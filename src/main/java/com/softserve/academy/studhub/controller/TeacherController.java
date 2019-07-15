@@ -1,17 +1,21 @@
 package com.softserve.academy.studhub.controller;
 
 
+import com.softserve.academy.studhub.dto.TeacherForListDTO;
+import com.softserve.academy.studhub.dto.TeacherPaginatedDTO;
 import com.softserve.academy.studhub.entity.Teacher;
-import com.softserve.academy.studhub.service.FileService;
 import com.softserve.academy.studhub.service.TeacherService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin
 @AllArgsConstructor
@@ -20,6 +24,7 @@ import java.util.List;
 public class TeacherController {
 
     private TeacherService teacherService;
+    private ModelMapper modelMapper;
 
     @GetMapping
     @PreAuthorize("permitAll()")
@@ -27,30 +32,30 @@ public class TeacherController {
         return teacherService.findAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/teachersByLastName/{keyword}")
     @PreAuthorize("permitAll()")
-    Teacher updateOneTeacher(@PathVariable Integer id) {
-
-        return teacherService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException());
+    ResponseEntity<TeacherPaginatedDTO> findTeachersByLastName(@PathVariable String keyword,
+                                                               Pageable pageable) {
+        Page<Teacher> result = teacherService.findByLastName(keyword, pageable);
+        List<TeacherForListDTO> teacherForListDTOS = result.getContent().stream()
+            .map(teacher -> modelMapper.map(teacher, TeacherForListDTO.class))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok().body(new TeacherPaginatedDTO(teacherForListDTOS,
+            result.getTotalElements()));
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    Teacher newTeacher(@RequestBody Teacher newTeacher) {
-        return teacherService.save(newTeacher);
+    @PreAuthorize("permitAll()")
+    Teacher newTeacher(@RequestBody Teacher teacher) {
+        return teacherService.save(teacher);
     }
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    Teacher replaceTeacher(@RequestBody Teacher newTeacher, @PathVariable Integer id) {
-                    return teacherService.update(newTeacher);
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    void deleteTeacher(@PathVariable Integer id) {
-        teacherService.deleteById(id);
+    @PostMapping("/addPhotoToTeacher")
+    @PreAuthorize("permitAll()")
+    ResponseEntity<Integer> addPhotoToTeacher(@RequestParam Integer teacherId,
+                                              @RequestParam MultipartFile multipartFile) {
+        Integer result = teacherService.addPhotoToTeacher(teacherId, multipartFile);
+        return ResponseEntity.ok(result);
     }
 
 }
