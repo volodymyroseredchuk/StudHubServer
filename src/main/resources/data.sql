@@ -170,6 +170,35 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Table structure for table `freelancers`
+--
+
+DROP TABLE IF EXISTS `freelancers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `freelancers` (
+                              `id` int(11) NOT NULL AUTO_INCREMENT,
+                              `quality` int(11) DEFAULT NULL,
+                              `price` int(11) DEFAULT NULL,
+                              `velocity` int(11) DEFAULT NULL,
+                              `contact` int(11) DEFAULT NULL,
+                              `user_id` int(11) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `user_id` (`user_id`),
+                              CONSTRAINT `freelancers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `freelancers`
+--
+
+LOCK TABLES `freelancers` WRITE;
+/*!40000 ALTER TABLE `freelancers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `freelancers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `password_reset_token`
 --
 
@@ -221,6 +250,35 @@ CREATE TABLE `confirm_token` (
 LOCK TABLES `confirm_token` WRITE;
 /*!40000 ALTER TABLE `confirm_token` DISABLE KEYS */;
 /*!40000 ALTER TABLE `confirm_token` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `customers` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `payment` int(11) DEFAULT NULL,
+                            `formulation` int(11) DEFAULT NULL,
+                            `clarity` int(11) DEFAULT NULL,
+                            `contact` int(11) DEFAULT NULL,
+                            `user_id` int(11) DEFAULT NULL,
+                            PRIMARY KEY (`id`),
+                            KEY `user_id` (`user_id`),
+                            CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customers`
+--
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
