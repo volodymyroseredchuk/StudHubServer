@@ -1,5 +1,8 @@
 package com.softserve.academy.studhub.controller;
 
+
+import com.softserve.academy.studhub.entity.Privilege;
+import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.FeedbackService;
@@ -71,6 +74,7 @@ public class ProfileController {
 
         return ResponseEntity.ok(modelMapper.
                 map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class));
+
     }
 
 }
