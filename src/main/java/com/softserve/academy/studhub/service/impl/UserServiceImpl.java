@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -28,27 +29,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public User add(User user) {
 
-        if (!(userRepository.existsByEmail(user.getEmail()))) {
-
-            if (!(userRepository.existsByUsername(user.getUsername()))) {
-                user.setCreationDate(LocalDate.now());
-                return userRepository.save(user);
-            } else {
-                throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
-            }
-        } else {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_EMAIL);
         }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
+        }
+
+        user.setCreationDate(LocalDate.now());
+        return userRepository.save(user);
     }
 
     @Override
-    public User update(User oldUser) {
+    public User update(User user) {
 
-        User updatable = findByUsername(oldUser.getUsername());
+        User updatable = findByUsername(user.getUsername());
 
-        updatable.setFirstName(oldUser.getFirstName());
-        updatable.setLastName(oldUser.getLastName());
-        updatable.setEmail(oldUser.getEmail());
+        updatable.setFirstName(user.getFirstName());
+        updatable.setLastName(user.getLastName());
+        updatable.setEmail(user.getEmail());
 
         return userRepository.saveAndFlush(updatable);
     }
@@ -60,24 +60,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public User findById(Integer id) throws NotFoundException {
 
-        return userRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
+        return userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
     }
 
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
 
-        return userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
     }
 
     @Override
     public User findByEmail(String email) throws NotFoundException {
 
-        return userRepository.findByEmail(email).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
     }
 
     @Override
@@ -119,19 +124,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserActivated(String username) {
+    public void isUserActivated(String username) {
 
-        User user = null;
-
-        try {
-            user = findByUsername(username);
-        } catch (UsernameNotFoundException ex) {
-            return false;
-        }
-
-        if (user.getIsActivated()) {
-            return true;
-        } else {
+        if (!findByUsername(username).getIsActivated()) {
             throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
         }
     }

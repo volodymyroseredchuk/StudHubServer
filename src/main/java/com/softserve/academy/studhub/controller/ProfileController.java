@@ -1,11 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.dto.FeedbackDTO;
-import com.softserve.academy.studhub.dto.PrivilegeDTO;
-import com.softserve.academy.studhub.dto.QuestionForListDTO;
-import com.softserve.academy.studhub.dto.UserDTO;
-import com.softserve.academy.studhub.entity.Privilege;
-import com.softserve.academy.studhub.entity.Role;
+import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.FeedbackService;
 import com.softserve.academy.studhub.service.IQuestionService;
@@ -33,6 +28,17 @@ public class ProfileController {
     private final UserService userService;
 
     private final ModelMapper modelMapper;
+
+    @GetMapping
+    @PreAuthorize("permitAll()")
+    public List<UserForListDTO> getAllUsers() {
+
+        List<UserForListDTO> userForListDTOS = userService.findAll().stream()
+                .map(user -> modelMapper.map(user, UserForListDTO.class))
+                .collect(Collectors.toList());
+
+        return userForListDTOS;
+    }
 
     @GetMapping("/my")
     @PreAuthorize("isAuthenticated()")

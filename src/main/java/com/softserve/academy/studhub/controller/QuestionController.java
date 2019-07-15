@@ -37,8 +37,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.findAllSortedByAge(pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -46,9 +46,10 @@ public class QuestionController {
 
     @GetMapping("/{questionId}")
     @PreAuthorize("permitAll()")
-    public Question getQuestionById(@PathVariable Integer questionId) {
+    public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Integer questionId) {
 
-        return questionService.findById(questionId);
+        Question result = questionService.findById(questionId);
+        return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
     }
 
     @GetMapping("/search/{keywords}")
@@ -58,8 +59,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchByKeywords(keywords, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -72,8 +73,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchByTags(tags, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -111,5 +112,4 @@ public class QuestionController {
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
                 collect(Collectors.toList()), HttpStatus.OK);
     }
-
 }

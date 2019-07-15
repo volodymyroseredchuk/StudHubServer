@@ -1,8 +1,8 @@
 package com.softserve.academy.studhub.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,47 +13,52 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"title", "body", "modifiedDate", "answerList", "tagList"})
+@EqualsAndHashCode(exclude = {"title", "body", "modifiedDate", "expectedPrice", "deadlineDate", "proposalList"})
 @Entity
-@Table(name = "questions")
-public class Question {
+@Table(name = "tasks")
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+
     @Column(name = "title")
     private String title;
+
     @Column(columnDefinition = "TEXT", name = "body")
     private String body;
-    //TODO: Use beautiful date format for serialisation and DEserialisation
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
+    @Column(name = "deadline_date")
+    private LocalDateTime deadlineDate;
+
+    @Column(name = "expected_price")
+    private Integer expectedPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "task_status")
+    private TaskStatus status;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
     @JsonManagedReference
-    @OrderBy(value = "creationDate DESC ")
-    private List<Answer> answerList;
+    private List<Proposal> proposalList;
 
     @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "questions_tags", joinColumns = {@JoinColumn(name = "question_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+    @JsonIgnore
+    @JoinTable(name = "tasks_tags", joinColumns = {@JoinColumn(name = "tasks_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tags_id")})
     private Set<Tag> tagList;
-
-    @ManyToOne
-    @JoinColumn(name = "team_id", referencedColumnName = "id")
-    private Team team;
 }
