@@ -75,6 +75,94 @@ INSERT INTO `channels` VALUES (1,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `chat_messages`
+--
+
+DROP TABLE IF EXISTS `chat_messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `chat_messages` (
+                                 `id` int(11) NOT NULL AUTO_INCREMENT,
+                                 `content` varchar(5000) NOT NULL,
+                                 `sender_user_id` int(11) NOT NULL,
+                                 `creation_datetime` datetime NOT NULL,
+                                 `chat_id` int(11) NOT NULL,
+                                 PRIMARY KEY (`id`),
+                                 UNIQUE KEY `id_UNIQUE` (`id`),
+                                 KEY `msg_sender_idx` (`sender_user_id`),
+                                 KEY `msg_chat_idx` (`chat_id`),
+                                 CONSTRAINT `msg_chat` FOREIGN KEY (`chat_id`) REFERENCES `chats` (`id`),
+                                 CONSTRAINT `msg_sender` FOREIGN KEY (`sender_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=248 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chat_messages`
+--
+
+LOCK TABLES `chat_messages` WRITE;
+/*!40000 ALTER TABLE `chat_messages` DISABLE KEYS */;
+INSERT INTO `chat_messages` VALUES (3,'Test2',3,'2019-07-10 23:47:33',2),(4,'1',3,'2019-07-11 12:12:34',1),(149,'qw',3,'2019-07-12 16:58:45',1),(150,'3',3,'2019-07-12 16:58:54',1),(151,'4',3,'2019-07-12 16:58:55',1),(152,'5',3,'2019-07-12 16:58:57',1),(153,'6',3,'2019-07-12 16:58:59',1),(154,'7',3,'2019-07-12 16:59:01',1),(155,'8',3,'2019-07-12 16:59:04',1),(156,'9',3,'2019-07-12 16:59:06',1),(157,'10',3,'2019-07-12 16:59:09',1),(158,'11',1,'2019-07-12 16:59:13',1),(159,'12',1,'2019-07-12 16:59:15',1),(160,'13',1,'2019-07-12 16:59:21',1),(161,'14',1,'2019-07-12 16:59:28',1),(162,'15',1,'2019-07-12 16:59:31',1),(163,'16',1,'2019-07-12 16:59:33',1),(164,'17',1,'2019-07-12 16:59:38',1),(165,'18',1,'2019-07-12 16:59:41',1),(166,'19',1,'2019-07-12 16:59:44',1),(167,'20',1,'2019-07-12 16:59:47',1),(168,'21',3,'2019-07-12 16:59:52',1),(169,'22',3,'2019-07-12 16:59:54',1),(170,'23',1,'2019-07-12 17:00:00',1),(171,'24',1,'2019-07-12 17:00:02',1),(172,'25',3,'2019-07-12 17:00:47',1),(173,'26',3,'2019-07-12 17:01:24',1),(174,'27',3,'2019-07-12 17:01:40',1),(175,'28',3,'2019-07-12 17:02:46',1),(176,'29',3,'2019-07-12 17:03:27',1),(177,'30',3,'2019-07-12 17:04:12',1),(178,'31',3,'2019-07-12 17:04:57',1),(179,'32',3,'2019-07-12 17:05:26',1),(180,'33',3,'2019-07-12 17:05:38',1),(181,'34',3,'2019-07-12 17:06:12',1),(182,'35',3,'2019-07-12 17:06:14',1),(183,'36',3,'2019-07-12 17:06:14',1),(184,'37',3,'2019-07-12 17:06:15',1),(185,'333333333338',3,'2019-07-12 17:06:19',1),(186,'39',3,'2019-07-12 17:06:20',1),(187,'40',3,'2019-07-12 17:06:21',1),(188,'41',3,'2019-07-12 17:06:23',1),(189,'42',3,'2019-07-12 17:06:25',1),(190,'43',3,'2019-07-12 17:06:26',1),(191,'44',3,'2019-07-12 17:06:27',1),(192,'45',3,'2019-07-12 17:06:29',1),(193,'46',3,'2019-07-12 17:06:30',1),(194,'47',3,'2019-07-12 17:06:31',1),(195,'48',3,'2019-07-12 17:06:33',1),(196,'49',3,'2019-07-12 17:06:34',1),(197,'50',3,'2019-07-12 17:06:36',1),(198,'51',3,'2019-07-12 17:11:12',1),(199,'Hey lol I wanted to meet u ',3,'2019-07-12 17:11:25',1),(200,'Me 2',1,'2019-07-12 17:11:32',1),(201,'go?',1,'2019-07-12 17:16:40',1),(202,'go',3,'2019-07-12 17:16:47',1),(203,'hey',3,'2019-07-12 17:16:52',1),(204,'lol',1,'2019-07-12 17:57:01',1),(205,'hey',1,'2019-07-12 18:00:18',1),(206,'rock',1,'2019-07-12 18:01:09',1),(207,'hey',1,'2019-07-12 18:01:22',1),(208,'come here',1,'2019-07-12 18:11:29',1),(209,'hey ya',3,'2019-07-12 18:11:36',1),(210,'hey',3,'2019-07-12 18:12:03',1),(211,'hey',1,'2019-07-12 18:12:31',1),(212,'qwe',1,'2019-07-12 18:13:30',1),(213,'qwe',1,'2019-07-12 18:15:32',1),(214,'qwe',1,'2019-07-12 18:17:42',1),(215,'qwe',1,'2019-07-12 18:17:51',1),(216,'qwe',1,'2019-07-12 18:17:58',1),(217,'qwe',1,'2019-07-12 18:18:09',1),(218,'khey',1,'2019-07-12 18:20:27',1),(219,'qwe',1,'2019-07-12 18:22:58',1),(220,'qwe',1,'2019-07-12 18:34:01',1),(221,'qwe',1,'2019-07-12 18:42:28',1),(222,'qwe',1,'2019-07-12 18:42:56',1),(223,'qwe',1,'2019-07-12 18:44:01',1),(224,'I\'m here',1,'2019-07-12 19:44:41',1),(225,'u 2?',1,'2019-07-12 19:44:59',1),(226,'yeah',1,'2019-07-12 19:45:29',1),(227,'qwe',1,'2019-07-12 19:48:29',1),(228,'qwe',1,'2019-07-12 19:48:45',1),(229,'qwe',1,'2019-07-12 19:49:25',1),(230,'qwe',1,'2019-07-12 19:49:29',1),(231,'qwewqe',1,'2019-07-12 19:49:55',1),(232,'jhgfjhfghmgfhgfhgfhgfhgfh\ngfhgfhgfhgfhgfhgfhfghgf\ngfhhhhhhhggggggggggggggg',3,'2019-07-12 20:03:08',1),(233,'dsfdsfds',3,'2019-07-12 20:37:40',2),(234,'dsfdsfsd',3,'2019-07-12 20:37:43',2),(235,'dsfds',3,'2019-07-12 20:37:45',2),(236,'sdfsd',3,'2019-07-12 20:37:45',2),(237,'sd',3,'2019-07-12 20:37:46',2),(238,'sdf',3,'2019-07-12 20:37:46',2),(239,'sdsdf',3,'2019-07-12 20:37:46',2),(240,'sfsd',3,'2019-07-12 20:37:47',2),(241,'sd',3,'2019-07-12 20:37:47',2),(242,'f',3,'2019-07-12 20:37:47',2),(243,'sdf',3,'2019-07-12 20:37:47',2),(244,'sd',3,'2019-07-12 20:37:48',2),(245,'fsd',3,'2019-07-12 20:37:48',2),(246,'fsd',3,'2019-07-12 20:37:48',2),(247,'qwe',3,'2019-07-12 20:58:22',1);
+/*!40000 ALTER TABLE `chat_messages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `chat_subscriptions`
+--
+
+DROP TABLE IF EXISTS `chat_subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `chat_subscriptions` (
+                                      `id` int(11) NOT NULL AUTO_INCREMENT,
+                                      `chat_id` int(11) NOT NULL,
+                                      `user_id` int(11) NOT NULL,
+                                      PRIMARY KEY (`id`),
+                                      UNIQUE KEY `id_UNIQUE` (`id`),
+                                      KEY `subscr_chat_idx` (`chat_id`),
+                                      KEY `subscr_user_idx` (`user_id`),
+                                      CONSTRAINT `subscr_chat` FOREIGN KEY (`chat_id`) REFERENCES `chats` (`id`),
+                                      CONSTRAINT `subscr_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chat_subscriptions`
+--
+
+LOCK TABLES `chat_subscriptions` WRITE;
+/*!40000 ALTER TABLE `chat_subscriptions` DISABLE KEYS */;
+INSERT INTO `chat_subscriptions` VALUES (1,1,3),(2,2,3),(3,1,1),(4,3,1),(5,3,2),(6,4,1),(7,4,4),(8,5,2),(9,5,4),(16,9,3),(17,9,4);
+/*!40000 ALTER TABLE `chat_subscriptions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `chats`
+--
+
+DROP TABLE IF EXISTS `chats`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `chats` (
+                         `id` int(11) NOT NULL AUTO_INCREMENT,
+                         `name` varchar(45) DEFAULT NULL,
+                         PRIMARY KEY (`id`),
+                         UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chats`
+--
+
+LOCK TABLES `chats` WRITE;
+/*!40000 ALTER TABLE `chats` DISABLE KEYS */;
+INSERT INTO `chats` VALUES (1,'Test'),(2,'Test2'),(3,NULL),(4,NULL),(5,NULL),(6,NULL),(7,NULL),(8,NULL),(9,NULL);
+/*!40000 ALTER TABLE `chats` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+--
 -- Table structure for table `comments`
 --
 
@@ -284,6 +372,30 @@ INSERT INTO `questions_tags` VALUES (1,1),(2,4),(2,5);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `privileges`
+--
+
+DROP TABLE IF EXISTS `privileges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `privileges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `privileges`
+--
+
+LOCK TABLES `privileges` WRITE;
+/*!40000 ALTER TABLE `privileges` DISABLE KEYS */;
+INSERT INTO `privileges` VALUES (1,'ANSWER_READ_PRIVILEGE'),(2,'ANSWER_WRITE_PRIVILEGE'),(3,'COMMENT_READ_PRIVILEGE'),(4,'COMMENT_WRITE_PRIVILEGE'),(5,'FEEDBACK_READ_PRIVILEGE'),(6,'FEEDBACK_WRITE_PRIVILEGE'),(7,'QUESTION_READ_PRIVILEGE'),(8,'QUESTION_WRITE_PRIVILEGE'),(9,'TEACHER_READ_PRIVILEGE'),(10,'TEACHER_WRITE_PRIVILEGE'),(11,'UNIVERSITY_READ_PRIVILEGE'),(12,'UNIVERSITY_WRITE_PRIVILEGE'),(13,'GROUP_READ_PRIVILEGE'),(14,'GROUP_WRITE_PRIVILEGE'),(15,'GRAND_ROLE_PRIVILEGE'),(16,'VOTE_READ_PRIVILEGE'),(17,'VOTE_WRITE_PRIVILEGE'),(18,'QUESTION_DELETE_ANY_PRIVILEGE'),(19,'ANSWER_DELETE_ANY_PRIVILEGE'),(20,'TEACHER_DELETE_ANY_PRIVILEGE'),(21,'FEEDBACK_DELETE_ANY_PRIVILEGE'),(22,'COMMENT_DELETE_ANY_PRIVILEGE'),(23,'GROUP_DELETE_ANY_PRIVILEGE'),(24,'UNIVERSITY_DELETE_ANY_PRIVILEGE');
+/*!40000 ALTER TABLE `privileges` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `roles`
 --
 
@@ -308,6 +420,28 @@ INSERT INTO `roles` VALUES (2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(1,'ROLE_USER')
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+
+DROP TABLE IF EXISTS `roles_privileges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `roles_privileges` (
+  `role_id` bigint(20) NOT NULL,
+  `privilege_id` varchar(45) NOT NULL,
+  PRIMARY KEY (`role_id`,`privilege_id`),
+  CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles_privileges`
+--
+
+LOCK TABLES `roles_privileges` WRITE;
+/*!40000 ALTER TABLE `roles_privileges` DISABLE KEYS */;
+INSERT INTO `roles_privileges` VALUES (1,'1'),(1,'10'),(1,'13'),(1,'14'),(1,'16'),(1,'17'),(1,'2'),(1,'3'),(1,'4'),(1,'5'),(1,'6'),(1,'7'),(1,'8'),(1,'9'),(2,'1'),(2,'10'),(2,'11'),(2,'12'),(2,'13'),(2,'14'),(2,'15'),(2,'16'),(2,'17'),(2,'18'),(2,'19'),(2,'2'),(2,'20'),(2,'21'),(2,'22'),(2,'23'),(2,'24'),(2,'3'),(2,'4'),(2,'5'),(2,'6'),(2,'7'),(2,'8'),(2,'9'),(3,'1'),(3,'10'),(3,'11'),(3,'12'),(3,'13'),(3,'14'),(3,'16'),(3,'17'),(3,'18'),(3,'19'),(3,'2'),(3,'20'),(3,'21'),(3,'22'),(3,'23'),(3,'24'),(3,'3'),(3,'4'),(3,'5'),(3,'6'),(3,'7'),(3,'8'),(3,'9');
+/*!40000 ALTER TABLE `roles_privileges` ENABLE KEYS */;
+UNLOCK TABLES;
 --
 -- Table structure for table `subscriptions`
 --

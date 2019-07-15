@@ -8,8 +8,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class VoteResponseDTO {
+
     private Integer id;
+
     private Integer value;
+
     private Integer answerId;
+
     private Integer feedbackId;
 }

@@ -80,7 +80,7 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE')")
     public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
 
         Question result = questionService.save(modelMapper.map(questionDto, Question.class), principal);
@@ -88,7 +88,7 @@ public class QuestionController {
     }
 
     @PutMapping("/{questionId}")
-    @PreAuthorize("isAuthenticated() and @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE') and @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<QuestionDTO> editQuestion(@PathVariable Integer questionId, @RequestBody QuestionDTO questionDto) {
 
         Question result = questionService.update(questionId, modelMapper.map(questionDto, Question.class));
@@ -97,7 +97,7 @@ public class QuestionController {
 
 
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_DELETE_ANY_PRIVILEGE') or @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));
