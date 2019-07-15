@@ -5,6 +5,7 @@ import com.softserve.academy.studhub.dto.FreelancerDTO;
 import com.softserve.academy.studhub.dto.TaskDTO;
 import com.softserve.academy.studhub.entity.Customer;
 import com.softserve.academy.studhub.entity.Freelancer;
+import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.service.CustomerService;
 import com.softserve.academy.studhub.service.FreelancerService;
 import lombok.AllArgsConstructor;
@@ -35,11 +36,11 @@ public class RatingController {
         return ResponseEntity.ok().body(modelMapper.map(customer, CustomerDTO.class));
     }
 
-    @PostMapping("/freelancer")
+    @PostMapping("/{taskId}/freelancer")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<FreelancerDTO> rateFreelancer(@Valid @RequestBody FreelancerDTO freelancerDTO, Principal principal) {
+    public ResponseEntity<?> rateFreelancer(@PathVariable Integer taskId, @RequestBody FreelancerDTO freelancerDTO) {
 
-        Freelancer freelancer = freelancerService.add(modelMapper.map(freelancerDTO, Freelancer.class), principal);
+        Freelancer freelancer = freelancerService.add(modelMapper.map(freelancerDTO, Freelancer.class), taskId);
 
         return ResponseEntity.ok().body(modelMapper.map(freelancer, FreelancerDTO.class));
     }
