@@ -43,7 +43,7 @@ public class ProfileController {
         return userForListDTOS;
     }
 
-    @GetMapping("/my")
+    @GetMapping("/current")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 

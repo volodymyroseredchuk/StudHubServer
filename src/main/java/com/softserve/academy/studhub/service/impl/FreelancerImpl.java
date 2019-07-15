@@ -4,7 +4,7 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Freelancer;
 import com.softserve.academy.studhub.repository.FreelancerRepository;
 import com.softserve.academy.studhub.service.FreelancerService;
-import com.softserve.academy.studhub.service.TaskService;
+import com.softserve.academy.studhub.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 public class FreelancerImpl implements FreelancerService {
 
     private final FreelancerRepository freelancerRepository;
-    private final TaskService taskService;
+    private final OrderService orderService;
 
     @Override
-    public Freelancer add(Freelancer freelancer, Integer taskId) {
+    public Freelancer add(Freelancer freelancer, Integer orderId) {
 
-        freelancer.setUser(taskService.findById(taskId).getUser());
+        freelancer.setUser(orderService.findById(orderId).getUserExecutor());
         return freelancerRepository.saveAndFlush(freelancer);
     }
 }

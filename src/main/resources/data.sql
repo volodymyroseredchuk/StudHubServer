@@ -446,16 +446,22 @@ CREATE TABLE `orders` (
   `proposal_id` int(11) DEFAULT NULL,
   `user_creator_id` int(11) DEFAULT NULL,
   `user_executor_id` int(11) DEFAULT NULL,
+  `freelancer_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `result_submission_idx` (`result_submission_id`),
   KEY `user_creator_idx` (`user_executor_id`),
   KEY `task_idx` (`task_id`),
   KEY `proposal_idx` (`proposal_id`),
   KEY `user_creator_idx1` (`user_creator_id`),
+  KEY `freelancer_idx` (`freelancer_id`),
+  KEY `customer_idx` (`customer_id`),
   CONSTRAINT `proposal` FOREIGN KEY (`proposal_id`) REFERENCES `proposals` (`id`),
   CONSTRAINT `result_submission` FOREIGN KEY (`result_submission_id`) REFERENCES `result_submission` (`id`),
   CONSTRAINT `task` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
   CONSTRAINT `user_creator` FOREIGN KEY (`user_creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `freelancer` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancers` (`id`),
+  CONSTRAINT `customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
   CONSTRAINT `user_executor` FOREIGN KEY (`user_executor_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

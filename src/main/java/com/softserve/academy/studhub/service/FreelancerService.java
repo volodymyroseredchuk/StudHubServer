@@ -4,5 +4,5 @@ import com.softserve.academy.studhub.entity.Freelancer;
 
 public interface FreelancerService {
 
-    Freelancer add(Freelancer freelancer, Integer taskId);
+    Freelancer add(Freelancer freelancer, Integer orderId);
 }
