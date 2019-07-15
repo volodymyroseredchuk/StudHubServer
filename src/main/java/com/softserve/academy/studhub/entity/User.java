@@ -19,7 +19,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"email", "username", "password", "university",
-        "imageUrl", "roles", "isActivated", "teamList"})
+        "imageUrl", "roles", "isActivated", "teamList", "cookiesCount"})
 @Table(name = "users")
 public class User {
 
@@ -77,6 +77,9 @@ public class User {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "cookies_count")
+    private Integer cookiesCount;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",

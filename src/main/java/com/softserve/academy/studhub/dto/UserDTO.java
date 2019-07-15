@@ -1,9 +1,9 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.constants.ValidationConstants;
-import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.University;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -15,6 +15,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UserDTO {
 
     @NotBlank(message = ValidationConstants.EMPTY_FIRSTNAME)
@@ -41,6 +42,6 @@ public class UserDTO {
 
     private String imageUrl;
 
-    private Set<Role> roles = new HashSet<>();
+    private Set<PrivilegeDTO> privileges = new HashSet<>();
 
 }

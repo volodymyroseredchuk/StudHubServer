@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.DeleteDTO;
+import com.softserve.academy.studhub.dto.OrderDTO;
 import com.softserve.academy.studhub.dto.ProposalDTO;
 import com.softserve.academy.studhub.dto.ProposalPaginatedDTO;
 import com.softserve.academy.studhub.entity.Proposal;
@@ -50,7 +51,7 @@ public class ProposalController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('PROPOSAL_WRITE_PRIVILEGE')")
     public ResponseEntity<ProposalDTO> createProposal(@Valid @RequestBody ProposalDTO proposalDTO,
                                                   @PathVariable Integer taskId,
                                                   Principal principal) {
@@ -61,11 +62,20 @@ public class ProposalController {
     }
 
     @DeleteMapping("/{proposalId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+    @PreAuthorize("hasAuthority('PROPOSAL_DELETE_ANY_PRIVILEGE') or " +
         "@proposalServiceImpl.findById(#proposalId).getUser().getUsername()== principal.username")
     public ResponseEntity<DeleteDTO> deleteProposal(@PathVariable Integer proposalId) {
 
         return ResponseEntity.ok().body(new DeleteDTO(proposalService.deleteById(proposalId)));
 
+    }
+
+    @PostMapping("/{proposalId}/approve")
+    @PreAuthorize("@proposalServiceImpl.findById(#proposalId).getTask().getUser().getUsername() == principal.username")
+    public ResponseEntity<OrderDTO> approveProposal(@PathVariable Integer proposalId) {
+        return ResponseEntity.ok().body(modelMapper.map(
+                proposalService.approveProposal(proposalId),
+                OrderDTO.class
+        ));
     }
 }
