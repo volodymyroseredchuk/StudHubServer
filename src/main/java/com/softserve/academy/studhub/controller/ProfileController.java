@@ -1,8 +1,11 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.FeedbackDTO;
+import com.softserve.academy.studhub.dto.PrivilegeDTO;
 import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.UserDTO;
+import com.softserve.academy.studhub.entity.Privilege;
+import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.FeedbackService;
 import com.softserve.academy.studhub.service.IQuestionService;
@@ -16,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -33,26 +38,33 @@ public class ProfileController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 
-        String username = principal.getName();
-
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
+        User user = userService.findByUsername(principal.getName());
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        Set<PrivilegeDTO> privileges = new HashSet<>();
+        for (Role role :
+                user.getRoles()) {
+            privileges.addAll(role.getPrivileges().stream().map(
+                    privilege -> modelMapper.map(privilege, PrivilegeDTO.class)
+            ).collect(Collectors.toList()));
+        }
+        userDTO.setPrivileges(privileges);
+        return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/foreign/{id}")
     @PreAuthorize("permitAll()")
     public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findById(id), UserDTO.class), HttpStatus.OK);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findById(id), UserDTO.class));
     }
 
     @PostMapping("/update")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUser) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class), HttpStatus.OK);
+        return ResponseEntity.ok(modelMapper.
+                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class));
     }
 
 }

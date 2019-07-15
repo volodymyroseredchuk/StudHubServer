@@ -370,6 +370,30 @@ INSERT INTO `questions_tags` VALUES (1,1),(2,4),(2,5);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `privileges`
+--
+
+DROP TABLE IF EXISTS `privileges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `privileges` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `privileges`
+--
+
+LOCK TABLES `privileges` WRITE;
+/*!40000 ALTER TABLE `privileges` DISABLE KEYS */;
+INSERT INTO `privileges` VALUES (1,'ANSWER_READ_PRIVILEGE'),(2,'ANSWER_WRITE_PRIVILEGE'),(3,'COMMENT_READ_PRIVILEGE'),(4,'COMMENT_WRITE_PRIVILEGE'),(5,'FEEDBACK_READ_PRIVILEGE'),(6,'FEEDBACK_WRITE_PRIVILEGE'),(7,'QUESTION_READ_PRIVILEGE'),(8,'QUESTION_WRITE_PRIVILEGE'),(9,'TEACHER_READ_PRIVILEGE'),(10,'TEACHER_WRITE_PRIVILEGE'),(11,'UNIVERSITY_READ_PRIVILEGE'),(12,'UNIVERSITY_WRITE_PRIVILEGE'),(13,'GROUP_READ_PRIVILEGE'),(14,'GROUP_WRITE_PRIVILEGE'),(15,'GRAND_ROLE_PRIVILEGE'),(16,'VOTE_READ_PRIVILEGE'),(17,'VOTE_WRITE_PRIVILEGE'),(18,'QUESTION_DELETE_ANY_PRIVILEGE'),(19,'ANSWER_DELETE_ANY_PRIVILEGE'),(20,'TEACHER_DELETE_ANY_PRIVILEGE'),(21,'FEEDBACK_DELETE_ANY_PRIVILEGE'),(22,'COMMENT_DELETE_ANY_PRIVILEGE'),(23,'GROUP_DELETE_ANY_PRIVILEGE'),(24,'UNIVERSITY_DELETE_ANY_PRIVILEGE');
+/*!40000 ALTER TABLE `privileges` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `roles`
 --
 
@@ -394,6 +418,28 @@ INSERT INTO `roles` VALUES (2,'ROLE_ADMIN'),(3,'ROLE_MODERATOR'),(1,'ROLE_USER')
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+
+DROP TABLE IF EXISTS `roles_privileges`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `roles_privileges` (
+  `role_id` bigint(20) NOT NULL,
+  `privilege_id` varchar(45) NOT NULL,
+  PRIMARY KEY (`role_id`,`privilege_id`),
+  CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles_privileges`
+--
+
+LOCK TABLES `roles_privileges` WRITE;
+/*!40000 ALTER TABLE `roles_privileges` DISABLE KEYS */;
+INSERT INTO `roles_privileges` VALUES (1,'1'),(1,'10'),(1,'13'),(1,'14'),(1,'16'),(1,'17'),(1,'2'),(1,'3'),(1,'4'),(1,'5'),(1,'6'),(1,'7'),(1,'8'),(1,'9'),(2,'1'),(2,'10'),(2,'11'),(2,'12'),(2,'13'),(2,'14'),(2,'15'),(2,'16'),(2,'17'),(2,'18'),(2,'19'),(2,'2'),(2,'20'),(2,'21'),(2,'22'),(2,'23'),(2,'24'),(2,'3'),(2,'4'),(2,'5'),(2,'6'),(2,'7'),(2,'8'),(2,'9'),(3,'1'),(3,'10'),(3,'11'),(3,'12'),(3,'13'),(3,'14'),(3,'16'),(3,'17'),(3,'18'),(3,'19'),(3,'2'),(3,'20'),(3,'21'),(3,'22'),(3,'23'),(3,'24'),(3,'3'),(3,'4'),(3,'5'),(3,'6'),(3,'7'),(3,'8'),(3,'9');
+/*!40000 ALTER TABLE `roles_privileges` ENABLE KEYS */;
+UNLOCK TABLES;
 --
 -- Table structure for table `subscriptions`
 --

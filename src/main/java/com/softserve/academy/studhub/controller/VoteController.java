@@ -28,7 +28,7 @@ public class VoteController {
     private ModelMapper modelMapper;
 
     @PostMapping("/votes")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('VOTE_WRITE_PRIVILEGE')")
     public ResponseEntity<Object> addVote(@Valid @RequestBody VotePostDTO vote,
                                           Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(
@@ -37,7 +37,7 @@ public class VoteController {
     }
 
     @GetMapping("/votes/question/{questionId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('VOTE_READ_PRIVILEGE')")
     public ResponseEntity<Object> getVotesByUserAndQuestionId(@PathVariable Integer questionId,
                                                               Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(

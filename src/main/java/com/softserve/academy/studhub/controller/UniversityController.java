@@ -36,19 +36,19 @@ public class UniversityController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('UNIVERSITY_WRITE_PRIVILEGE')")
     University newTeacher(@RequestBody University newUniversity) {
         return universityService.save(newUniversity);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('UNIVERSITY_WRITE_PRIVILEGE')")
     University replaceUniversity(@RequestBody University newUniversity, @PathVariable Integer id) {
         return universityService.update(newUniversity);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('UNIVERSITY_DELETE_ANY_PRIVILEGE')")
     void deleteUniversity(@PathVariable Integer id) {
         universityService.deleteById(id);
     }
