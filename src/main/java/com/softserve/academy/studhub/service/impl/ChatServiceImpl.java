@@ -14,16 +14,17 @@ import com.softserve.academy.studhub.service.ChatService;
 import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ChatServiceImpl implements ChatService {
 
     private ChatMessageRepository chatMessageRepository;
@@ -69,15 +70,18 @@ public class ChatServiceImpl implements ChatService {
             throw new IllegalArgumentException("Cannot get chat list by empty ID.");
         }
         List<ChatSubscription> subscriptions =  subscriptionRepository.findDistinctChatSubscriptionByUserId(userId);
-        List<ChatListItem> msgList = new ArrayList<>();
+        Map<ChatMessage, ChatListItem> listItemsMap = new HashMap<>();
         for(ChatSubscription sub : subscriptions) {
+
             Integer chatId = sub.getChat().getId();
             Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
-            List<ChatSubscription> subscribtionsList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+            List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+
             String chatName = null;
             String photoUrl = null;
-            if (subscribtionsList.size() == 2) {
-                for (ChatSubscription subscription : subscribtionsList) {
+
+            if (subscriptionList.size() == 2) {
+                for (ChatSubscription subscription : subscriptionList) {
                     if (!subscription.getUser().getId().equals(userId)) {
                         chatName = subscription.getUser().getUsername();
                         photoUrl = subscription.getUser().getImageUrl();
@@ -86,23 +90,35 @@ public class ChatServiceImpl implements ChatService {
                 }
             } else {
                 chatName = sub.getChat().getName();
-                for (ChatSubscription subscription : subscribtionsList) {
+                for (ChatSubscription subscription : subscriptionList) {
                     if (!subscription.getUser().getId().equals(userId)) {
                         photoUrl = subscription.getUser().getImageUrl();
                         break;
                     }
                 }
             }
+
             if (message.isPresent()) {
                 ChatMessage msg = message.get();
                 ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
-                msgList.add(item);
+                listItemsMap.put(msg, item);
             } else {
                 ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, null);
-                msgList.add(item);
+                ChatMessage mock = new ChatMessage();
+                mock.setCreationDateTime(LocalDateTime.MIN);
+                listItemsMap.put(mock, item);
             }
+
         }
-        return msgList;
+
+        List<ChatListItem> itemList = new ArrayList<>();
+        List<ChatMessage> messagesForSorting = new ArrayList<>(listItemsMap.keySet());
+        messagesForSorting.sort(Comparator.comparing(ChatMessage::getCreationDateTime).reversed());
+        for (ChatMessage message : messagesForSorting) {
+            itemList.add(listItemsMap.get(message));
+        }
+
+        return itemList;
     }
 
     @Override
