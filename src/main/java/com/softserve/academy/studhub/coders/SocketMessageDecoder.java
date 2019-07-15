@@ -12,13 +12,13 @@ public class SocketMessageDecoder implements Decoder.Text<SocketMessage> {
     private static Gson GSON = new Gson();
 
     @Override
-    public SocketMessage decode(String s) throws DecodeException {
+    public SocketMessage decode(String s) {
         return GSON.fromJson(s, SocketMessage.class);
     }
 
     @Override
     public boolean willDecode(String s) {
-        return s!=null;
+        return s != null;
     }
 
     @Override

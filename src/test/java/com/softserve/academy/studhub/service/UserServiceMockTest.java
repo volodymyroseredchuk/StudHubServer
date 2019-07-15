@@ -226,31 +226,4 @@ public class UserServiceMockTest {
         assertFalse("Result should be the same", result);
     }
 
-    @Test
-    public void isUserActivatedTest() {
-        String username = "Test";
-
-        User expectedUser = new User();
-        expectedUser.setUsername("Test");
-        expectedUser.setIsActivated(true);
-
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(expectedUser));
-
-        boolean result = userService.isUserActivated(username);
-
-        assertTrue("Result should be the same", result);
-    }
-
-    @Test(expected = NotConfirmedException.class)
-    public void isUserActivatedNotConfirmedTest() {
-        String username = "Test";
-
-        User expectedUser = new User();
-        expectedUser.setUsername("Test");
-        expectedUser.setIsActivated(false);
-
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(expectedUser));
-
-        userService.isUserActivated(username);
-    }
 }

@@ -1,6 +1,8 @@
 package com.softserve.academy.studhub.security.services.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.softserve.academy.studhub.entity.Privilege;
+import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.University;
 import com.softserve.academy.studhub.entity.User;
 import lombok.AllArgsConstructor;
@@ -13,9 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.social.security.SocialUser;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -28,10 +28,6 @@ public class UserPrinciple implements UserDetails {
 
     private Integer id;
 
-    private String firstName;
-
-    private String lastName;
-
     private String username;
 
     private String email;
@@ -39,30 +35,27 @@ public class UserPrinciple implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private LocalDate creationDate;
-
-    private University university;
-
-    private String imageUrl;
-
     private Collection<? extends GrantedAuthority> authorities;
 
 
     public static UserPrinciple build(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName().name())
-        ).collect(Collectors.toList());
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        Set<Privilege> privileges = new HashSet<>();
+
+        for (Role role :
+                user.getRoles()) {
+            privileges.addAll(role.getPrivileges());
+        }
+
+        authorities.addAll(privileges.stream().map(privilege ->
+                new SimpleGrantedAuthority(privilege.getName())
+        ).collect(Collectors.toList()));
 
         return new UserPrinciple(
                 user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getPassword(),
-                user.getCreationDate(),
-                user.getUniversity(),
-                user.getImageUrl(),
                 authorities
         );
     }
