@@ -132,7 +132,7 @@ CREATE TABLE `chat_subscriptions` (
 
 LOCK TABLES `chat_subscriptions` WRITE;
 /*!40000 ALTER TABLE `chat_subscriptions` DISABLE KEYS */;
-INSERT INTO `chat_subscriptions` VALUES (1,1,3),(2,2,3),(3,1,1),(4,3,1),(5,3,2),(6,4,1),(7,4,4),(8,5,2),(9,5,4),(10,6,2),(11,6,4),(12,7,2),(13,7,4),(14,8,2),(15,8,4),(16,9,3),(17,9,4);
+INSERT INTO `chat_subscriptions` VALUES (1,1,3),(2,2,3),(3,1,1),(4,3,1),(5,3,2),(6,4,1),(7,4,4),(8,5,2),(9,5,4),(16,9,3),(17,9,4);
 /*!40000 ALTER TABLE `chat_subscriptions` ENABLE KEYS */;
 UNLOCK TABLES;
 
