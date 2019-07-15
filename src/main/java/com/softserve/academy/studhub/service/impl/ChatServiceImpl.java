@@ -74,24 +74,31 @@ public class ChatServiceImpl implements ChatService {
             Integer chatId = sub.getChat().getId();
             Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
             List<ChatSubscription> subscribtionsList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
-            String chatName;
+            String chatName = null;
+            String photoUrl = null;
             if (subscribtionsList.size() == 2) {
-                chatName = "Default name";
                 for (ChatSubscription subscription : subscribtionsList) {
                     if (!subscription.getUser().getId().equals(userId)) {
                         chatName = subscription.getUser().getUsername();
+                        photoUrl = subscription.getUser().getImageUrl();
                         break;
                     }
                 }
             } else {
                 chatName = sub.getChat().getName();
+                for (ChatSubscription subscription : subscribtionsList) {
+                    if (!subscription.getUser().getId().equals(userId)) {
+                        photoUrl = subscription.getUser().getImageUrl();
+                        break;
+                    }
+                }
             }
             if (message.isPresent()) {
                 ChatMessage msg = message.get();
-                ChatListItem item = new ChatListItem(chatId, msg.getSender().getImageUrl(), chatName, msg.getContent());
+                ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
                 msgList.add(item);
             } else {
-                ChatListItem item = new ChatListItem(chatId, null, chatName, null);
+                ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, null);
                 msgList.add(item);
             }
         }
