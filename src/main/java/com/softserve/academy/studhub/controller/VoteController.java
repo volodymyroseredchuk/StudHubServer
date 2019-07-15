@@ -47,4 +47,11 @@ public class VoteController {
         );
 
     }
+
+    @GetMapping("/votes/sum/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Integer> getSumOfVotesByUsername(@PathVariable String username){
+
+        return ResponseEntity.ok(voteService.getVoteSumByUsername(username));
+    }
 }
