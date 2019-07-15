@@ -19,7 +19,8 @@ import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @ControllerAdvice
 @Slf4j
@@ -31,7 +32,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
             AccessDeniedException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.UNAUTHORIZED,
                 ErrorMessage.NOT_AUTHORISED);
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
 
@@ -39,7 +41,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.NOT_FOUND, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
         log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.NOT_FOUND);
     }
@@ -47,7 +49,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Object> handleBadCredentialsException(BadCredentialsException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
         log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
@@ -56,7 +58,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
@@ -64,7 +67,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, ErrorMessage.SERVER_ERROR);
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.INTERNAL_SERVER_ERROR);
     }*/
 
@@ -72,14 +76,15 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleIllegalArgument(MethodArgumentTypeMismatchException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserAlreadyExistsAuthenticationException.class)
     public ResponseEntity<Object> handleUserAlreadyExistsAuthenticationException(UserAlreadyExistsAuthenticationException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
         log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
@@ -87,7 +92,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ExpiredTokenException.class)
     public ResponseEntity<Object> handleExpiredTokenException(ExpiredTokenException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.GONE, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
         log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.GONE);
     }
@@ -95,7 +100,7 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotConfirmedException.class)
     public ResponseEntity<Object> handleNotConfirmedException(NotConfirmedException ex) {
         ErrorDetails details = new ErrorDetails(HttpStatus.FORBIDDEN, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
         log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.FORBIDDEN);
     }
@@ -106,14 +111,16 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ErrorMessage.BAD_ARGUMENT);
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodNotAllowedException.class)
     public ResponseEntity<Object> handleMethodNotAllowed (MethodNotAllowedException ex, HttpServletRequest request) {
         ErrorDetails details = new ErrorDetails(HttpStatus.METHOD_NOT_ALLOWED,  request.getMethod() + ErrorMessage.WRONG_METHOD);
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -123,7 +130,8 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                                                                          WebRequest request) {
 
         ErrorDetails details = new ErrorDetails(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage());
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
@@ -132,7 +140,16 @@ public class MainExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
         ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, ErrorMessage.BAD_ARGUMENT);
-        ex.printStackTrace();
+        logInfo(ex);
+        log.error(ex.getMessage());
         return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
     }
+
+    private void logInfo(Exception ex) {
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        String stackTrace = sw.toString();
+        log.debug(stackTrace);
+    }
+
 }

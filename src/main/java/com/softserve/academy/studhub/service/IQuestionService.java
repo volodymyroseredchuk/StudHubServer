@@ -1,7 +1,6 @@
 package com.softserve.academy.studhub.service;
 
 import com.softserve.academy.studhub.entity.Question;
-import com.softserve.academy.studhub.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,6 +22,8 @@ public interface IQuestionService {
     Page<Question> searchByTags(String[] tags, Pageable pageable);
 
     List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username);
+
+    Page<Question> findAllByTeamId(Integer teamId, Pageable pageable);
 
     Page<Question> searchByKeywords(String[] keywords, Pageable pageable);
 }

@@ -1,6 +1,10 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.UserDTO;
+
+import com.softserve.academy.studhub.entity.Privilege;
+import com.softserve.academy.studhub.entity.Role;
+import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -11,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @CrossOrigin
@@ -22,14 +30,33 @@ public class ProfileController {
 
     private final ModelMapper modelMapper;
 
+
+    @GetMapping
+    @PreAuthorize("permitAll()")
+    public List<UserForListDTO> getAllUsers() {
+
+        List<UserForListDTO> userForListDTOS = userService.findAll().stream()
+                .map(user -> modelMapper.map(user, UserForListDTO.class))
+                .collect(Collectors.toList());
+
+        return userForListDTOS;
+    }
+
     @GetMapping("/current")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
 
-        String username = principal.getName();
-
-        return ResponseEntity.ok(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class));
+        User user = userService.findByUsername(principal.getName());
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        Set<PrivilegeDTO> privileges = new HashSet<>();
+        for (Role role :
+                user.getRoles()) {
+            privileges.addAll(role.getPrivileges().stream().map(
+                    privilege -> modelMapper.map(privilege, PrivilegeDTO.class)
+            ).collect(Collectors.toList()));
+        }
+        userDTO.setPrivileges(privileges);
+        return ResponseEntity.ok(userDTO);
     }
 
     @GetMapping("/{username}")

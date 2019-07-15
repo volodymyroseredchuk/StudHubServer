@@ -14,10 +14,9 @@ import java.util.Set;
 public class QuestionForListDTO {
 
     private Integer id;
-
     private String title;
-
     private LocalDateTime creationDate;
-
+    private LocalDateTime modifiedDate;
+    private UserGeneralInfoDTO user;
     private Set<Tag> tagList;
 }

@@ -1,7 +1,10 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.studhub.constants.ValidationConstants;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -9,13 +12,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"firstName", "lastName", "password", "googlePassword", "university", "imageUrl", "roles",
-        "isActivated", "emailSubscription"})
+@EqualsAndHashCode(exclude = {"firstName", "lastName", "password", "university", "emailSubscription",
+        "imageUrl", "roles", "isActivated", "teamList", "cookiesCount"})
 @Table(name = "users")
 public class User {
 
@@ -55,9 +59,11 @@ public class User {
 
     @NonNull
     @NotBlank(message = ValidationConstants.EMPTY_PASSWORD)
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
+    @JsonIgnore
     @Column(name = "google_password")
     private String googlePassword;
 
@@ -72,6 +78,9 @@ public class User {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "cookies_count")
+    private Integer cookiesCount;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -83,4 +92,9 @@ public class User {
 
     @Column(name = "is_activated", columnDefinition = "boolean default false")
     private Boolean isActivated = false;
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ManyToMany(targetEntity = Team.class, mappedBy = "userList")
+    @JsonIgnore
+    private List<Team> teamList;
 }
