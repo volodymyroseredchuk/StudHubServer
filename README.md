@@ -34,6 +34,13 @@ mvn clean install
 When launching project for the first time, you have to load client and server both and allow
  your browser to work with insecure connection. To do so, when getting warning screen 
  you have to click 'show advanced' and let browser continue work with unregistered certificate.
+ 
+ ## Facebook login
+ Please add next lines to local application properties:
+ 
+ #Facebook Properties
+ spring.social.facebook.appId=
+ spring.social.facebook.appSecret=
 
 ## Authors
 
