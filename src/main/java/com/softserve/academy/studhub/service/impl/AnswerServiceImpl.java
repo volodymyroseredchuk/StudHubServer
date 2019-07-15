@@ -97,5 +97,17 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    @Override
+    public Integer countByUserUsername(String username) {
+
+        return answerRepository.countByUserUsername(username);
+    }
+
+    @Override
+    public Integer countByApprovedTrueAndUserUsername(String username) {
+
+        return answerRepository.countByApprovedTrueAndUserUsername(username);
+    }
+
 
 }
