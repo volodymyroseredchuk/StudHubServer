@@ -1,10 +1,10 @@
 package com.softserve.academy.studhub.service;
 
+import com.softserve.academy.studhub.entity.ChatMessage;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.websocket.EncodeException;
-import java.io.IOException;
+import java.util.List;
 
 public interface SocketService {
 
@@ -12,6 +12,7 @@ public interface SocketService {
     void sendNotification(Integer userId, TextMessage message);
     void sendGreetings(WebSocketSession session, Integer textId);
     void sendCustomMessage(WebSocketSession session, String msg);
+    void sendChatMessage(List<Integer> receiverIds, ChatMessage message);
     void removeSession(WebSocketSession session);
     void removeSession(Integer id);
 
