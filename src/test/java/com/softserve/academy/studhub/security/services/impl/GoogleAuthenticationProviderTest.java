@@ -4,44 +4,51 @@ import com.softserve.academy.studhub.entity.SocketToken;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.service.UserService;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class GoogleAuthenticationProviderTest {
 
     @Mock
     UserService userService;
 
-    @InjectMocks
-    GoogleAuthenticationProvider provider = new GoogleAuthenticationProvider(userService);
+    GoogleAuthenticationProvider provider;
 
-    // TODO: FIX
+    @Before
+    public void initialize() {
+        provider = new GoogleAuthenticationProvider(userService);
+    }
+
     @Test
     public void authenticate() {
-        /*String username = "Zap";
+        String username = "Zap";
         String password = "123";
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
+        user.setGooglePassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 
         Authentication authentication = new UsernamePasswordAuthenticationToken
                 (UserPrinciple.build(user), password, Collections.emptyList());
 
         when(userService.findByUsername(username)).thenReturn(user);
 
-        Assert.assertEquals(provider.authenticate(authentication), authentication);*/
+        Assert.assertEquals(provider.authenticate(authentication), authentication);
     }
 
     @Test(expected = BadCredentialsException.class)
