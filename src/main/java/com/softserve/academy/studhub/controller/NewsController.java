@@ -50,6 +50,7 @@ public class NewsController {
 
     // create, update, delete methods - in case admin page will be done.
 
+    
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')or hasRole('MODERATOR')")
     public ResponseEntity<NewsDTO> createNews(@Valid @RequestBody NewsDTO newsDTO) {
