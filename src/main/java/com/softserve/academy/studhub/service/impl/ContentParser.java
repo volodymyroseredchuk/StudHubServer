@@ -43,7 +43,7 @@ public class ContentParser {
     public HashSet<String> parseLinks(String url) {
 
         Document document = connect(url);
-        Elements otherLinks = document.select("a[href^=\"https://ain.ua/2019/07/14/\"]");
+        Elements otherLinks = document.select("a[href^=\"https://ain.ua/2019/07/\"]");
 
         for (Element page : otherLinks) {
             String absLink = page.attr("abs:href");

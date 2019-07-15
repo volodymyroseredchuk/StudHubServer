@@ -43,10 +43,13 @@ public class FacebookServiceImpl implements FacebookService {
             addUser.setImageUrl(facebookUserData.getPhotoUrl());
             addUser.setPassword(encoder.encode(facebookData.getId()));
             userService.add(addUser);
+            System.out.println("in service "+addUser);
             form.setUsername(facebookData.getEmail());
             form.setPassword(facebookData.getId());
         } else {
             User foundUser = userService.findByEmail(facebookData.getEmail());
+            foundUser.setIsActivated(true);
+            userService.update(foundUser);
             form.setUsername(foundUser.getUsername());
             form.setPassword(facebookData.getId());
         }

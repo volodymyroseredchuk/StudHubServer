@@ -88,6 +88,7 @@ public class AuthController {
     public ResponseEntity<?> authenticateFacebookUser(@Valid @RequestBody FacebookUserData userData) {
 
         LoginForm form = facebookService.authenticateUser(userData);
+        System.out.println(form);
         return authenticate(form);
     }
 
