@@ -9,4 +9,6 @@ public interface VoteService {
 
     List<Vote> findByUsernameAndQuestionId(String username, Integer questionId);
     Vote update(VotePostDTO votePostDTO, String username);
+
+    Integer getVoteSumByUsername(String username);
 }
