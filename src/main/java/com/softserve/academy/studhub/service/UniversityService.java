@@ -17,6 +17,8 @@ public interface UniversityService {
 
     void deleteById(int id);
 
+    University findById(Integer universityId);
+
    // List<University> sortByAge();
 
     //List<University> sortByMark();

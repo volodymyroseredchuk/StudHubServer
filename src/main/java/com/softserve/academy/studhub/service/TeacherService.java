@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface TeacherService {
     List<Teacher> findAll();
 
-    Optional<Teacher> findById(int id);
+    Teacher findById(Integer teacherId);
 
     Teacher save(Teacher teacher);
 

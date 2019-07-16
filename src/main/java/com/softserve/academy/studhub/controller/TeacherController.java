@@ -32,6 +32,12 @@ public class TeacherController {
         return teacherService.findAll();
     }
 
+    @GetMapping("/{teacherId}")
+    @PreAuthorize("permitAll()")
+    public Teacher getTeacherById(@PathVariable Integer teacherId) {
+        return teacherService.findById(teacherId);
+    }
+
     @GetMapping("/teachersByLastName/{keyword}")
     @PreAuthorize("permitAll()")
     ResponseEntity<TeacherPaginatedDTO> findTeachersByLastName(@PathVariable String keyword,

@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
@@ -43,8 +42,9 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Optional<Teacher> findById(int id) {
-        return teacherRepository.findById(id);
+    public Teacher findById(Integer teacherId) throws NotFoundException {
+        return teacherRepository.findById(teacherId).orElseThrow(
+            () -> new NotFoundException(ErrorMessage.TEACHER_NOTFOUND + teacherId));
     }
 
     @Override
