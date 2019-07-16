@@ -76,8 +76,8 @@ public class TeamController {
 
     @DeleteMapping("/{teamId}")
     @PreAuthorize("hasAuthority('DELETE_ANY_TEAM_PRIVILEGE') or " +
-            "@teamServiceImpl.findById(#teamId).getUser().getUsername()== principal.username")
-    public ResponseEntity<?> deleteTeam(@PathVariable Integer teamId) {
+            "@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username")
+    public ResponseEntity<MessageResponse> deleteTeam(@PathVariable Integer teamId) {
 
         teamService.delete(teamId);
 

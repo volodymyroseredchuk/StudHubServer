@@ -25,7 +25,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         return feedbackRepository.findAll();
     }
 
-
     @Override
     public List<Feedback> findByTeacherId(Integer teacherId) {
         return feedbackRepository.findByTeacherId(teacherId);

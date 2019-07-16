@@ -31,8 +31,7 @@ public class TeamQuestionController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<QuestionPaginatedDTO> getAllQuestionsByTeamId(@PathVariable Integer teamId,
                                                                         Pageable pageable) {
 
@@ -46,8 +45,7 @@ public class TeamQuestionController {
     }
 
     @GetMapping("/{questionId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<QuestionDTO> getTeamQuestionById(@PathVariable Integer teamId,
                                                            @PathVariable Integer questionId) {
 
@@ -56,8 +54,7 @@ public class TeamQuestionController {
     }
 
     @GetMapping("/search/{keywords}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<QuestionPaginatedDTO> getTeamSearchedByKeywordsQuestions(@PathVariable Integer teamId,
                                                                                    @PathVariable String[] keywords,
                                                                                    Pageable pageable) {
@@ -73,8 +70,7 @@ public class TeamQuestionController {
 
 
     @GetMapping("/tagged/{tags}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<QuestionPaginatedDTO> getTeamSearchedByTagsQuestions(@PathVariable Integer teamId,
                                                                                @PathVariable String[] tags,
                                                                                Pageable pageable) {
@@ -109,8 +105,7 @@ public class TeamQuestionController {
     }
 
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
-            "isAuthenticated() and @teamServiceImpl.findById(#teamId)" +
+    @PreAuthorize("isAuthenticated() and @teamServiceImpl.findById(#teamId)" +
                     ".getUser().getUsername() == principal.username or " +
             "isAuthenticated() and @questionServiceImpl.findById(#questionId)" +
                     ".getUser().getUsername() == principal.username")
