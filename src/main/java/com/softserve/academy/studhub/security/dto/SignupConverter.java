@@ -23,6 +23,7 @@ public class SignupConverter {
 
         User user = modelMapper.map(signUpForm, User.class);
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setCookiesCount(1000);
         user.setRoles(new HashSet<Role>() {{
             add(roleService.findByName(RoleName.ROLE_USER));
         }});
