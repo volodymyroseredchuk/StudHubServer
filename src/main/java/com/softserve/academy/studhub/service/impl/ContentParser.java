@@ -36,14 +36,13 @@ public class ContentParser {
         Document document = connect(url);
         Elements content = document.getElementsByClass("post-content");
         String body = content.html();
-        //System.out.println(body);
         return body;
     }
 
     public HashSet<String> parseLinks(String url) {
 
         Document document = connect(url);
-        Elements otherLinks = document.select("a[href^=\"https://ain.ua/2019/07/\"]");
+        Elements otherLinks = document.select("a[href^=\"https://ain.ua/en/2019/07/\"]");
 
         for (Element page : otherLinks) {
             String absLink = page.attr("abs:href");
