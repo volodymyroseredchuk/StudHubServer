@@ -42,10 +42,10 @@ public class Order {
     @JoinColumn(name = "result_submission_id", referencedColumnName = "id")
     private ResultSubmission resultSubmission;
 
-    @Column(name="start_date")
+    @Column(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name="end_date")
+    @Column(name = "end_date")
     @EqualsAndHashCode.Exclude
     private LocalDateTime endDate;
 

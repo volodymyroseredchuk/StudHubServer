@@ -16,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @AllArgsConstructor
 @Entity
-@Table(name="answers")
+@Table(name = "answers")
 public class Answer {
 
     @Id
@@ -25,7 +25,7 @@ public class Answer {
     private Integer id;
 
     @EqualsAndHashCode.Exclude
-    @Column(name="body", columnDefinition = "text")
+    @Column(name = "body", columnDefinition = "text")
     private String body;
 
     @EqualsAndHashCode.Exclude
@@ -33,7 +33,7 @@ public class Answer {
     private Boolean approved;
 
     @ManyToOne
-    @JoinColumn(name="question_id", referencedColumnName = "id")
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
     @JsonBackReference
     private Question question;
 
