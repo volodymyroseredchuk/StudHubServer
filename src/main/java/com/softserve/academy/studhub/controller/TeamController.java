@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
@@ -42,7 +43,7 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+    @PreAuthorize("hasAuthority('READ_ANY_TEAM_PRIVILEGE') or " +
             "(isAuthenticated() and " +
             "@teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<TeamDTO> getTeam(@PathVariable Integer teamId) {
@@ -64,7 +65,7 @@ public class TeamController {
     }
 
     @PutMapping("/{teamId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+    @PreAuthorize("hasAuthority('WRITE_ANY_TEAM_PRIVILEGE') or " +
             "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<TeamDTO> editTeam(@PathVariable Integer teamId, @RequestBody TeamDTO teamDTO) {
 
@@ -74,13 +75,13 @@ public class TeamController {
     }
 
     @DeleteMapping("/{teamId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+    @PreAuthorize("hasAuthority('DELETE_ANY_TEAM_PRIVILEGE') or " +
             "@teamServiceImpl.findById(#teamId).getUser().getUsername()== principal.username")
     public ResponseEntity<?> deleteTeam(@PathVariable Integer teamId) {
 
         teamService.delete(teamId);
 
-        return ResponseEntity.ok().body(new MessageResponse("deleted!"));
+        return ResponseEntity.ok().body(new MessageResponse(SuccessMessage.TEAM_DELETED_SUCCESSFULLY));
     }
 
 }

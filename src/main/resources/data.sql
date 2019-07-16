@@ -286,6 +286,35 @@ UNLOCK TABLES;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Table structure for table `freelancers`
+--
+
+DROP TABLE IF EXISTS `freelancers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `freelancers` (
+                              `id` int(11) NOT NULL AUTO_INCREMENT,
+                              `quality` int(11) DEFAULT NULL,
+                              `price` int(11) DEFAULT NULL,
+                              `velocity` int(11) DEFAULT NULL,
+                              `contact` int(11) DEFAULT NULL,
+                              `user_id` int(11) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `user_id` (`user_id`),
+                              CONSTRAINT `freelancers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `freelancers`
+--
+
+LOCK TABLES `freelancers` WRITE;
+/*!40000 ALTER TABLE `freelancers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `freelancers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `password_reset_token`
 --
 
@@ -337,6 +366,35 @@ CREATE TABLE `confirm_token` (
 LOCK TABLES `confirm_token` WRITE;
 /*!40000 ALTER TABLE `confirm_token` DISABLE KEYS */;
 /*!40000 ALTER TABLE `confirm_token` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customers`
+--
+
+DROP TABLE IF EXISTS `customers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `customers` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `payment` int(11) DEFAULT NULL,
+                            `formulation` int(11) DEFAULT NULL,
+                            `clarity` int(11) DEFAULT NULL,
+                            `contact` int(11) DEFAULT NULL,
+                            `user_id` int(11) DEFAULT NULL,
+                            PRIMARY KEY (`id`),
+                            KEY `user_id` (`user_id`),
+                            CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customers`
+--
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -416,16 +474,22 @@ CREATE TABLE `orders` (
   `proposal_id` int(11) DEFAULT NULL,
   `user_creator_id` int(11) DEFAULT NULL,
   `user_executor_id` int(11) DEFAULT NULL,
+  `freelancer_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `result_submission_idx` (`result_submission_id`),
   KEY `user_creator_idx` (`user_executor_id`),
   KEY `task_idx` (`task_id`),
   KEY `proposal_idx` (`proposal_id`),
   KEY `user_creator_idx1` (`user_creator_id`),
+  KEY `freelancer_idx` (`freelancer_id`),
+  KEY `customer_idx` (`customer_id`),
   CONSTRAINT `proposal` FOREIGN KEY (`proposal_id`) REFERENCES `proposals` (`id`),
   CONSTRAINT `result_submission` FOREIGN KEY (`result_submission_id`) REFERENCES `result_submission` (`id`),
   CONSTRAINT `task` FOREIGN KEY (`task_id`) REFERENCES `tasks` (`id`),
   CONSTRAINT `user_creator` FOREIGN KEY (`user_creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `freelancer` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancers` (`id`),
+  CONSTRAINT `customer` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
   CONSTRAINT `user_executor` FOREIGN KEY (`user_executor_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -484,7 +548,7 @@ CREATE TABLE `privileges` (
 
 LOCK TABLES `privileges` WRITE;
 /*!40000 ALTER TABLE `privileges` DISABLE KEYS */;
-INSERT INTO `privileges` VALUES (1,'ANSWER_READ_PRIVILEGE'),(2,'ANSWER_WRITE_PRIVILEGE'),(3,'COMMENT_READ_PRIVILEGE'),(4,'COMMENT_WRITE_PRIVILEGE'),(5,'FEEDBACK_READ_PRIVILEGE'),(6,'FEEDBACK_WRITE_PRIVILEGE'),(7,'QUESTION_READ_PRIVILEGE'),(8,'QUESTION_WRITE_PRIVILEGE'),(9,'TEACHER_READ_PRIVILEGE'),(10,'TEACHER_WRITE_PRIVILEGE'),(11,'UNIVERSITY_READ_PRIVILEGE'),(12,'UNIVERSITY_WRITE_PRIVILEGE'),(13,'GROUP_READ_PRIVILEGE'),(14,'GROUP_WRITE_PRIVILEGE'),(15,'GRAND_ROLE_PRIVILEGE'),(16,'VOTE_READ_PRIVILEGE'),(17,'VOTE_WRITE_PRIVILEGE'),(18,'QUESTION_DELETE_ANY_PRIVILEGE'),(19,'ANSWER_DELETE_ANY_PRIVILEGE'),(20,'TEACHER_DELETE_ANY_PRIVILEGE'),(21,'FEEDBACK_DELETE_ANY_PRIVILEGE'),(22,'COMMENT_DELETE_ANY_PRIVILEGE'),(23,'GROUP_DELETE_ANY_PRIVILEGE'),(24,'UNIVERSITY_DELETE_ANY_PRIVILEGE'),(32,'TASK_READ_PRIVILEGE'),(33,'TASK_WRITE_PRIVILEGE'),(34,'TASK_DELETE_ANY_PRIVILEGE'),(35,'PROPOSAL_READ_PRIVILEGE'),(36,'PROPOSAL_WRITE_PRIVILEGE'),(37,'PROPOSAL_DELETE_ANY_PRIVILEGE'),(38,'ORDER_DELETE_ANY_PRIVILEGE');
+INSERT INTO `privileges` VALUES (1,'ANSWER_READ_PRIVILEGE'),(2,'ANSWER_WRITE_PRIVILEGE'),(3,'COMMENT_READ_PRIVILEGE'),(4,'COMMENT_WRITE_PRIVILEGE'),(5,'FEEDBACK_READ_PRIVILEGE'),(6,'FEEDBACK_WRITE_PRIVILEGE'),(7,'QUESTION_READ_PRIVILEGE'),(8,'QUESTION_WRITE_PRIVILEGE'),(9,'TEACHER_READ_PRIVILEGE'),(10,'TEACHER_WRITE_PRIVILEGE'),(11,'UNIVERSITY_READ_PRIVILEGE'),(12,'UNIVERSITY_WRITE_PRIVILEGE'),(13,'GROUP_READ_PRIVILEGE'),(14,'GROUP_WRITE_PRIVILEGE'),(15,'GRAND_ROLE_PRIVILEGE'),(16,'VOTE_READ_PRIVILEGE'),(17,'VOTE_WRITE_PRIVILEGE'),(18,'QUESTION_DELETE_ANY_PRIVILEGE'),(19,'ANSWER_DELETE_ANY_PRIVILEGE'),(20,'TEACHER_DELETE_ANY_PRIVILEGE'),(21,'FEEDBACK_DELETE_ANY_PRIVILEGE'),(22,'COMMENT_DELETE_ANY_PRIVILEGE'),(23,'GROUP_DELETE_ANY_PRIVILEGE'),(24,'UNIVERSITY_DELETE_ANY_PRIVILEGE'),(32,'TASK_READ_PRIVILEGE'),(33,'TASK_WRITE_PRIVILEGE'),(34,'TASK_DELETE_ANY_PRIVILEGE'),(35,'PROPOSAL_READ_PRIVILEGE'),(36,'PROPOSAL_WRITE_PRIVILEGE'),(37,'PROPOSAL_DELETE_ANY_PRIVILEGE'),(38,'ORDER_DELETE_ANY_PRIVILEGE'),(39,'READ_ANY_TEAM_PRIVILEGE'),(40,'WRITE_ANY_TEAM_PRIVILEGE'),(41,'DELETE_ANY_TEAM_PRIVILEGE');
 /*!40000 ALTER TABLE `privileges` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -533,7 +597,7 @@ CREATE TABLE `roles_privileges` (
 
 LOCK TABLES `roles_privileges` WRITE;
 /*!40000 ALTER TABLE `roles_privileges` DISABLE KEYS */;
-INSERT INTO `roles_privileges` VALUES (1,'1'),(1,'10'),(1,'13'),(1,'14'),(1,'16'),(1,'17'),(1,'2'),(1,'3'),(1,'32'),(1,'33'),(1,'35'),(1,'36'),(1,'4'),(1,'5'),(1,'6'),(1,'7'),(1,'8'),(1,'9'),(2,'1'),(2,'10'),(2,'11'),(2,'12'),(2,'13'),(2,'14'),(2,'15'),(2,'16'),(2,'17'),(2,'18'),(2,'19'),(2,'2'),(2,'20'),(2,'21'),(2,'22'),(2,'23'),(2,'24'),(2,'3'),(2,'32'),(2,'33'),(2,'34'),(2,'35'),(2,'36'),(2,'37'),(2,'38'),(2,'4'),(2,'5'),(2,'6'),(2,'7'),(2,'8'),(2,'9'),(3,'1'),(3,'10'),(3,'11'),(3,'12'),(3,'13'),(3,'14'),(3,'16'),(3,'17'),(3,'18'),(3,'19'),(3,'2'),(3,'20'),(3,'21'),(3,'22'),(3,'23'),(3,'24'),(3,'3'),(3,'32'),(3,'33'),(3,'34'),(3,'35'),(3,'36'),(3,'37'),(3,'38'),(3,'4'),(3,'5'),(3,'6'),(3,'7'),(3,'8'),(3,'9');
+INSERT INTO `roles_privileges` VALUES (1,'1'),(1,'10'),(1,'13'),(1,'14'),(1,'16'),(1,'17'),(1,'2'),(1,'3'),(1,'32'),(1,'33'),(1,'35'),(1,'36'),(1,'4'),(1,'5'),(1,'6'),(1,'7'),(1,'8'),(1,'9'),(2,'1'),(2,'10'),(2,'11'),(2,'12'),(2,'13'),(2,'14'),(2,'15'),(2,'16'),(2,'17'),(2,'18'),(2,'19'),(2,'2'),(2,'20'),(2,'21'),(2,'22'),(2,'23'),(2,'24'),(2,'3'),(2,'32'),(2,'33'),(2,'34'),(2,'35'),(2,'36'),(2,'37'),(2,'38'),(2,'4'),(2,'5'),(2,'6'),(2,'7'),(2,'8'),(2,'9'),(3,'1'),(3,'10'),(3,'11'),(3,'12'),(3,'13'),(3,'14'),(3,'16'),(3,'17'),(3,'18'),(3,'19'),(3,'2'),(3,'20'),(3,'21'),(3,'22'),(3,'23'),(3,'24'),(3,'3'),(3,'32'),(3,'33'),(3,'34'),(3,'35'),(3,'36'),(3,'37'),(3,'38'),(3,'4'),(3,'5'),(3,'6'),(3,'7'),(3,'8'),(3,'9'),(3,'39'),(3,'40'),(3,'41'),(2,'39'),(2,'40'),(2,'41');
 /*!40000 ALTER TABLE `roles_privileges` ENABLE KEYS */;
 UNLOCK TABLES;
 --
