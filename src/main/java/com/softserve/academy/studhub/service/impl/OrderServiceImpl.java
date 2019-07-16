@@ -36,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
         User userCreator = task.getUser();
         userCreator.setCookiesCount(userCreator.getCookiesCount() - proposal.getPrice());
         userCreator = userRepository.saveAndFlush(userCreator);
-        proposal.setUser(userCreator);
         order.setProposal(proposal);
 
         order.setUserCreator(task.getUser());
