@@ -1,9 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.entity.University;
-import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.UniversityRepository;
 import com.softserve.academy.studhub.service.UniversityService;
 import org.springframework.stereotype.Service;
@@ -26,9 +24,8 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public University findById(Integer universityId) throws NotFoundException {
-        return universityRepository.findById(universityId).orElseThrow(
-            () -> new NotFoundException(ErrorMessage.UNIVERSITY_NOTFOUND + universityId));
+    public Optional<University> findById(int id) {
+        return universityRepository.findById(id);
     }
 
     @Override
@@ -36,9 +33,24 @@ public class UniversityServiceImpl implements UniversityService {
         return universityRepository.saveAndFlush(teacher);
     }
 
-//    @Override
-//    public List<University> sortByMark() {
-//        return universityRepository.findAllByTagListInOrderByMarkAsc();
-//    }
+    @Override
+    public University update(University university) {
+        return universityRepository.saveAndFlush(university);
+    }
+
+  /*  @Override
+    public List<University> sortByAge() {
+        return universityRepository.findAllByOrdeByCreationDateAsc();
+    }
+
+    @Override
+    public List<University> sortByMark() {
+        return universityRepository.findAllByTagListInOrderByMarkAsc();
+    }*/
+
+    @Override
+    public void deleteById(int id) {
+        universityRepository.deleteById(id);
+    }
 
 }
