@@ -4,20 +4,25 @@ import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.security.dto.*;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.jwt.JwtProvider;
+import com.softserve.academy.studhub.security.services.FacebookService;
 import com.softserve.academy.studhub.security.services.GoogleVerifierService;
 import com.softserve.academy.studhub.security.entity.ConfirmToken;
 import com.softserve.academy.studhub.security.services.ConfirmTokenService;
 import com.softserve.academy.studhub.service.EmailService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -32,7 +37,10 @@ public class AuthController {
     private final ConfirmTokenService confirmTokenService;
     private final EmailService emailService;
     private final JwtProvider jwtProvider;
+    private final ModelMapper modelMapper;
+    private FacebookService facebookService;
     private final SignupConverter converter;
+
 
 
     @PostMapping("/signin")
@@ -72,6 +80,15 @@ public class AuthController {
 
         LoginForm form = googleVerifier.authenticateUser(userData);
 
+        return authenticate(form);
+    }
+
+    @PostMapping("/signinFacebook")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> authenticateFacebookUser(@Valid @RequestBody FacebookUserData userData) {
+
+        LoginForm form = facebookService.authenticateUser(userData);
+        System.out.println(form);
         return authenticate(form);
     }
 
