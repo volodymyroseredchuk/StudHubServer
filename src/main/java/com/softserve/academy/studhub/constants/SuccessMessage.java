@@ -16,4 +16,5 @@ public class SuccessMessage {
     public static final String VALID_TOKEN = "token is valid";
 
     public static final String QUESTION_DELETED_SUCCESSFULLY = "Question deleted";
+    public static final String TEAM_DELETED_SUCCESSFULLY = "Team deleted";
 }
