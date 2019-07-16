@@ -21,7 +21,6 @@ public class Teacher {
     @Column(name = "id")
     private Integer id;
 
-    //TODO: remove
     @EqualsAndHashCode.Exclude
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
@@ -30,11 +29,9 @@ public class Teacher {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @EqualsAndHashCode.Exclude
     @Column(name = "first_name")
     private String firstName;
-    //TODO: frist and last name ??? exculde?
-    @EqualsAndHashCode.Exclude
+
     @Column(name = "last_name")
     private String lastName;
 
@@ -42,7 +39,7 @@ public class Teacher {
     @Column(name = "image_url")
     private String imageUrl;
 
-    //TODO: add exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "university_id", referencedColumnName = "id")
     private University university;
