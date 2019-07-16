@@ -4,13 +4,15 @@ import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.entity.University;
 import com.softserve.academy.studhub.entity.User;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class FeedbackDTO {
+public class
+
+
+
+FeedbackDTO {
 
     private Integer id;
 
