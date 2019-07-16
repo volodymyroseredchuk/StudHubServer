@@ -72,10 +72,10 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void sendChatMessage(List<Integer> receiverIds, ChatMessage message) {
-
-        if (message == null) {
-            throw new IllegalArgumentException("Cannot send empty chat message.");
+        if (message == null || receiverIds == null) {
+            throw new IllegalArgumentException("Cannot send empty chat message or an empty receivers ID-s.");
         }
+
         for (Integer id : receiverIds) {
             WebSocketSession session = sessionIdMap.get(id);
 
@@ -93,46 +93,46 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void removeSession(WebSocketSession session) {
-        if (session != null) {
-            sessionIdMap.values().remove(session);
-            try {
-                session.close();
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Could not close session.");
-            }
-        } else {
+        if (session == null) {
             throw new IllegalArgumentException("Cannot remove an empty session.");
+        }
+
+        sessionIdMap.values().remove(session);
+        try {
+            session.close();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not close session.");
         }
     }
 
     @Override
     public void removeSession(Integer id) {
-        if (id != null) {
-            try {
-                WebSocketSession session = sessionIdMap.get(id);
-                if (session != null) {
-                    session.close();
-                    sessionIdMap.remove(id);
-                }
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Could not close session.");
-            }
-        } else {
+        if (id == null) {
             throw new IllegalArgumentException("Cannot remove an empty ID.");
+        }
+
+        try {
+            WebSocketSession session = sessionIdMap.get(id);
+            if (session != null) {
+                session.close();
+                sessionIdMap.remove(id);
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not close session.");
         }
     }
 
     @Override
-    public void sendCustomMessage(WebSocketSession session, String msg){
-        if (session != null && msg != null) {
-            SocketMessage message = new SocketMessage(msg, SocketMessageType.NOTIFICATION);
-            try {
-                session.sendMessage(new TextMessage(messageEncoder.encode(message)));
-            } catch (IOException | EncodeException e) {
-                throw new IllegalArgumentException("Could not send custom message.");
-            }
-        } else {
+    public void sendCustomMessage(WebSocketSession session, String msg) {
+        if (session == null || msg == null) {
             throw new IllegalArgumentException("Cannot send custom message with empty parameters.");
+        }
+
+        SocketMessage message = new SocketMessage(msg, SocketMessageType.NOTIFICATION);
+        try {
+            session.sendMessage(new TextMessage(messageEncoder.encode(message)));
+        } catch (IOException | EncodeException e) {
+            throw new IllegalArgumentException("Could not send custom message.");
         }
     }
 

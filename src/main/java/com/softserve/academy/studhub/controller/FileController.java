@@ -1,27 +1,30 @@
 package com.softserve.academy.studhub.controller;
 
 
+import com.softserve.academy.studhub.dto.UrlDTO;
 import com.softserve.academy.studhub.service.FileService;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@CrossOrigin
 @RestController
+@AllArgsConstructor
+@RequestMapping("/files")
 public class FileController {
 
-	private final FileService fileService;
+    private final FileService fileService;
 
+    @PostMapping("/upload")
+    @PreAuthorize("permitAll()")
+    ResponseEntity<UrlDTO> uploadFile(@RequestParam MultipartFile multipartFile) throws IOException {
 
-	public FileController(FileService fileService) {
-		this.fileService = fileService;
-	}
+        UrlDTO result = new UrlDTO(fileService.uploadFile(multipartFile));
 
-	@PostMapping(value = "/api/files")
-	@ResponseStatus(HttpStatus.OK)
-	public void handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
-		fileService.storeFile(file);
-	}
-
+        return ResponseEntity.ok(result);
+    }
 }

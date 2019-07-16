@@ -59,7 +59,7 @@ public class ChatController {
     @GetMapping("/new/{creatorUserId}/{userId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId) {
-        return ResponseEntity.ok().body(chatService.createChat(creatorUserId, userId));
+        return ResponseEntity.ok().body(chatService.getChatId(creatorUserId, userId));
     }
 
 }

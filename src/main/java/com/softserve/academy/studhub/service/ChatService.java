@@ -16,6 +16,6 @@ public interface ChatService {
     List<ChatListItem> getChatList(Integer userId);
     ChatMessage save(ChatMessagePostDTO messagePostDTO);
     ChatHeaderDTO getChatHeader(Integer chatId, Integer userId);
-    Integer createChat(Integer creatorUserId, Integer userId);
+    Integer getChatId(Integer creatorUserId, Integer userId);
 
 }

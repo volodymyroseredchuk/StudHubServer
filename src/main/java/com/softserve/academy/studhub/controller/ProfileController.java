@@ -2,7 +2,6 @@ package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.dto.UserDTO;
 
-import com.softserve.academy.studhub.entity.Privilege;
 import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.User;
@@ -35,11 +34,9 @@ public class ProfileController {
     @PreAuthorize("permitAll()")
     public List<UserForListDTO> getAllUsers() {
 
-        List<UserForListDTO> userForListDTOS = userService.findAll().stream()
+        return userService.findAll().stream()
                 .map(user -> modelMapper.map(user, UserForListDTO.class))
                 .collect(Collectors.toList());
-
-        return userForListDTOS;
     }
 
     @GetMapping("/current")
@@ -48,6 +45,7 @@ public class ProfileController {
 
         User user = userService.findByUsername(principal.getName());
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+
         Set<PrivilegeDTO> privileges = new HashSet<>();
         for (Role role :
                 user.getRoles()) {
@@ -55,7 +53,9 @@ public class ProfileController {
                     privilege -> modelMapper.map(privilege, PrivilegeDTO.class)
             ).collect(Collectors.toList()));
         }
+
         userDTO.setPrivileges(privileges);
+
         return ResponseEntity.ok(userDTO);
     }
 
