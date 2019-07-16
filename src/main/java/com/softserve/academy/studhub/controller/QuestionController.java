@@ -40,7 +40,7 @@ public class QuestionController {
                 .map(question -> modelMapper.map(question, QuestionForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
+        return ResponseEntity.ok(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
 
 
@@ -62,7 +62,7 @@ public class QuestionController {
                 .map(question -> modelMapper.map(question, QuestionForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
+        return ResponseEntity.ok(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
 
 
@@ -76,7 +76,7 @@ public class QuestionController {
                 .map(question -> modelMapper.map(question, QuestionForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
+        return ResponseEntity.ok(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
 
     @PostMapping("/create")

@@ -43,14 +43,14 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News findById(Integer newsId) {
         return newsRepository.findById(newsId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.QUESTION_NOTFOUND + newsId));
+                () -> new NotFoundException(ErrorMessage.NEWS_NOTFOUND + newsId));
     }
 
     @Override
     public String deleteById(Integer newsId) {
         News newsToDelete = findById(newsId);
         newsRepository.deleteById(newsId);
-        return SuccessMessage.QUESTION_DELETED_SUCCESSFULLY;
+        return SuccessMessage.NEWS_DELETED_SUCCESSFULLY;
     }
 
     @Override

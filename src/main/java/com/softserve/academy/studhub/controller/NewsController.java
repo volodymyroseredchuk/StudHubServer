@@ -37,20 +37,18 @@ public class NewsController {
                 .map(news -> modelMapper.map(news, NewsForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new NewsPaginatedDTO(newsForListDTOS, newsPage.getTotalElements()));
+        return ResponseEntity.ok(new NewsPaginatedDTO(newsForListDTOS, newsPage.getTotalElements()));
     }
 
 
     @GetMapping("/{newsId}")
     @PreAuthorize("permitAll()")
-    public News getNewsById(@PathVariable Integer newsId) {
+    public ResponseEntity<NewsDTO> getNewsById(@PathVariable Integer newsId) {
 
-        return newsService.findById(newsId);
+        News result = newsService.findById(newsId);
+        return ResponseEntity.ok(modelMapper.map(result, NewsDTO.class));
     }
 
-    // create, update, delete methods - in case admin page will be done.
-
-    
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')or hasRole('MODERATOR')")
     public ResponseEntity<NewsDTO> createNews(@Valid @RequestBody NewsDTO newsDTO) {
