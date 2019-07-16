@@ -33,6 +33,8 @@ public class ChatServiceImpl implements ChatService {
     private SocketService socketService;
     private UserService userService;
 
+    public static final LocalDateTime DEFAULT_CREATION_TIME = LocalDateTime.parse("1999-12-11T10:15:30");
+
     @Override
     public void handleChatMessage(ChatMessage message) {
 
@@ -69,42 +71,70 @@ public class ChatServiceImpl implements ChatService {
         if (userId == null) {
             throw new IllegalArgumentException("Cannot get chat list by empty ID.");
         }
-        List<ChatSubscription> subscriptions =  subscriptionRepository.findDistinctChatSubscriptionByUserId(userId);
+        List<ChatSubscription> subscriptions =  subscriptionRepository.findChatSubscriptionByUserId(userId);
         Map<ChatMessage, ChatListItem> listItemsMap = new HashMap<>();
+
         for(ChatSubscription sub : subscriptions) {
-
-            Integer chatId = sub.getChat().getId();
-            Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
-            List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
-
-            String chatName = null;
-            String photoUrl = null;
-
-            if (subscriptionList.size() == 2) {
-                for (ChatSubscription subscription : subscriptionList) {
-                    if (!subscription.getUser().getId().equals(userId)) {
-                        chatName = subscription.getUser().getUsername();
-                        photoUrl = subscription.getUser().getImageUrl();
-                        break;
-                    }
-                }
-            } else {
-                chatName = sub.getChat().getName();
-                for (ChatSubscription subscription : subscriptionList) {
-                    if (!subscription.getUser().getId().equals(userId)) {
-                        photoUrl = subscription.getUser().getImageUrl();
-                        break;
-                    }
-                }
-            }
-
-            ChatMessage msg = message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
-            ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
-            listItemsMap.put(msg, item);
-
+            Map.Entry<ChatMessage, ChatListItem> entry = getListItemEntry(sub, userId);
+            listItemsMap.put(entry.getKey(), entry.getValue());
         }
 
         return sortByCreationDateTime(listItemsMap);
+    }
+
+    private Map.Entry<ChatMessage, ChatListItem> getListItemEntry(ChatSubscription sub, Integer userId) {
+        Integer chatId = sub.getChat().getId();
+        List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+
+        if (subscriptionList.size() <= 2) {
+            return generateListItemPrivate(subscriptionList, userId, sub);
+        } else {
+            return generateListItemGroup(subscriptionList, userId, sub);
+        }
+
+    }
+
+    private Map.Entry<ChatMessage, ChatListItem> generateListItemPrivate(List<ChatSubscription> subscriptionList,
+                                                                         Integer userId, ChatSubscription sub) {
+        Integer chatId = sub.getChat().getId();
+        Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
+
+        ChatMessage msg =  message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
+
+
+        String chatName = null;
+        String photoUrl = null;
+        for (ChatSubscription subscription : subscriptionList) {
+            if (!subscription.getUser().getId().equals(userId)) {
+                chatName = subscription.getUser().getUsername();
+                photoUrl = subscription.getUser().getImageUrl();
+                break;
+            }
+        }
+        ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
+
+        return new AbstractMap.SimpleEntry<>(msg, item);
+    }
+
+    private Map.Entry<ChatMessage, ChatListItem> generateListItemGroup(List<ChatSubscription> subscriptionList,
+                                                                       Integer userId, ChatSubscription sub) {
+        Integer chatId = sub.getChat().getId();
+        Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
+
+        ChatMessage msg =  message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
+
+        String chatName;
+        String photoUrl = null;
+        chatName = sub.getChat().getName();
+        for (ChatSubscription subscription : subscriptionList) {
+            if (!subscription.getUser().getId().equals(userId)) {
+                photoUrl = subscription.getUser().getImageUrl();
+                break;
+            }
+        }
+        ChatListItem item = new ChatListItem(sub.getChat().getId(), photoUrl, chatName, msg.getContent());
+
+        return new AbstractMap.SimpleEntry<>(msg, item);
     }
 
     private List<ChatListItem> sortByCreationDateTime(Map<ChatMessage, ChatListItem> listItemMap) {
@@ -188,7 +218,6 @@ public class ChatServiceImpl implements ChatService {
             }
         }
 
-
         return createNewChat(creatorUserId, userId).getId();
 
     }
@@ -196,24 +225,23 @@ public class ChatServiceImpl implements ChatService {
     private Chat createNewChat(Integer creatorUserId, Integer userId) {
 
         Chat chat = chatRepository.saveAndFlush(new Chat());
+
         ChatSubscription creatorSubscription = new ChatSubscription();
         creatorSubscription.setChat(chat);
         creatorSubscription.setUser(userService.findById(creatorUserId));
         subscriptionRepository.saveAndFlush(creatorSubscription);
 
         ChatSubscription subscription = new ChatSubscription();
-        subscription.setUser(userService.findById(userId));
         subscription.setChat(chat);
+        subscription.setUser(userService.findById(userId));
         subscriptionRepository.saveAndFlush(subscription);
 
         ChatMessage defaultMessage = new ChatMessage();
-        defaultMessage.setCreationDateTime(LocalDateTime.parse("2007-12-03T10:15:30"));
+        defaultMessage.setCreationDateTime(DEFAULT_CREATION_TIME);
         defaultMessage.setChat(chat);
         defaultMessage.setContent("Chat successfully created.");
         defaultMessage.setSender(null);
         chatMessageRepository.saveAndFlush(defaultMessage);
-
-        System.out.println(defaultMessage);
 
         return chat;
     }
