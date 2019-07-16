@@ -181,6 +181,13 @@
             <version>1.22.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+
+
 
         <!-- https://mvnrepository.com/artifact/org.springframework.social/spring-social-facebook -->
 
