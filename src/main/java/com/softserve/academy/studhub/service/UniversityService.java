@@ -9,15 +9,9 @@ import java.util.Optional;
 public interface UniversityService {
     List<University> findAll();
 
-    Optional<University> findById(int id);
-
     University save(University university);
 
-    University update(University university);
-
-    void deleteById(int id);
-
-   // List<University> sortByAge();
+    University findById(Integer universityId);
 
     //List<University> sortByMark();
 }
