@@ -27,6 +27,7 @@
 ### VS Code ###
 .vscode/
 
+application.properties
+!src/main/resources/application.properties
 
-
-
+*.log

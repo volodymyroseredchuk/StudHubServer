@@ -53,6 +53,7 @@ public class TeacherController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
+//    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     Teacher newTeacher(@RequestBody Teacher teacher) {
         return teacherService.save(teacher);
     }
@@ -63,6 +64,12 @@ public class TeacherController {
                                               @RequestParam MultipartFile multipartFile) throws IOException {
         Integer result = teacherService.addPhotoToTeacher(teacherId, multipartFile);
         return ResponseEntity.ok(result);
-    }
 
+//        @DeleteMapping("/{id}")
+//    @PreAuthorize("hasAuthority('TEACHER_DELETE_ANY_PRIVILEGE')")
+//    void deleteTeacher(@PathVariable Integer id) {
+//        teacherService.deleteById(id);
+//    }
+
+    }
 }

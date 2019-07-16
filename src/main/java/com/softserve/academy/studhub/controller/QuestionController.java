@@ -37,8 +37,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.findAllSortedByAge(pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -46,9 +46,10 @@ public class QuestionController {
 
     @GetMapping("/{questionId}")
     @PreAuthorize("permitAll()")
-    public Question getQuestionById(@PathVariable Integer questionId) {
+    public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable Integer questionId) {
 
-        return questionService.findById(questionId);
+        Question result = questionService.findById(questionId);
+        return ResponseEntity.ok(modelMapper.map(result, QuestionDTO.class));
     }
 
     @GetMapping("/search/{keywords}")
@@ -58,8 +59,8 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchByKeywords(keywords, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
@@ -72,14 +73,14 @@ public class QuestionController {
         Page<Question> questionPage = questionService.searchByTags(tags, pageable);
 
         List<QuestionForListDTO> questionForListDTOs = questionPage.getContent().stream()
-            .map(question -> modelMapper.map(question, QuestionForListDTO.class))
-            .collect(Collectors.toList());
+                .map(question -> modelMapper.map(question, QuestionForListDTO.class))
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(new QuestionPaginatedDTO(questionForListDTOs, questionPage.getTotalElements()));
     }
 
     @PostMapping("/create")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE')")
     public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDto, Principal principal) {
 
         Question result = questionService.save(modelMapper.map(questionDto, Question.class), principal);
@@ -87,7 +88,7 @@ public class QuestionController {
     }
 
     @PutMapping("/{questionId}")
-    @PreAuthorize("isAuthenticated() and @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE') and @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<QuestionDTO> editQuestion(@PathVariable Integer questionId, @RequestBody QuestionDTO questionDto) {
 
         Question result = questionService.update(questionId, modelMapper.map(questionDto, Question.class));
@@ -96,20 +97,18 @@ public class QuestionController {
 
 
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or @questionServiceImpl.findById(#questionId).getUser().getUsername()== principal.username")
+    @PreAuthorize("hasAuthority('QUESTION_DELETE_ANY_PRIVILEGE') or @questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<String> deleteQuestion(@PathVariable Integer questionId) {
 
         return ResponseEntity.ok(questionService.deleteById(questionId));
     }
 
-    @GetMapping("/current")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(Principal principal) {
+    @GetMapping("/user/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<QuestionForListDTO>> getAllQuestionsByCurrentUser(@PathVariable String username) {
 
-        return new ResponseEntity<>(questionService.
-                findQuestionByUserUsernameOrderByCreationDateDesc(principal.getName()).
+        return ResponseEntity.ok(questionService.findQuestionByUserUsernameOrderByCreationDateDesc(username).
                 stream().map(question -> modelMapper.map(question, QuestionForListDTO.class)).
-                collect(Collectors.toList()), HttpStatus.OK);
+                collect(Collectors.toList()));
     }
-
 }

@@ -1,9 +1,10 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.constants.ValidationConstants;
-import com.softserve.academy.studhub.entity.Role;
 import com.softserve.academy.studhub.entity.University;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -15,7 +16,11 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@EqualsAndHashCode(exclude = {"firstName", "lastName", "university", "imageUrl", "privileges", "emailSubscription"})
 public class UserDTO {
+
+    private Integer id;
 
     @NotBlank(message = ValidationConstants.EMPTY_FIRSTNAME)
     @Size(min = ValidationConstants.FIRSTNAME_MIN_LENGTH, max = ValidationConstants.FIRSTNAME_MAX_LENGTH,
@@ -41,6 +46,7 @@ public class UserDTO {
 
     private String imageUrl;
 
-    private Set<Role> roles = new HashSet<>();
+    private Set<PrivilegeDTO> privileges = new HashSet<>();
 
+    private Boolean emailSubscription;
 }
