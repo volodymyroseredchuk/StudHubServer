@@ -75,6 +75,7 @@ public class GoogleVerifierServiceImpl implements GoogleVerifierService {
                 addUser.setPassword(encoder.encode(userData.getId()));
                 addUser.setGooglePassword(encoder.encode(userData.getId()));
                 addUser.setIsActivated(true);
+                addUser.setCookiesCount(1000);
                 userService.add(addUser);
                 form.setUsername(userData.getEmail());
                 form.setPassword(userData.getId());

@@ -25,6 +25,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         return feedbackRepository.findAll();
     }
 
+
     @Override
     public List<Feedback> findByTeacherId(Integer teacherId) {
         return feedbackRepository.findByTeacherId(teacherId);
@@ -37,7 +38,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public Feedback save(Feedback feedback) {
-//        feedback.setUser(userService.getCurrentUser());
+        feedback.setUser(userService.getCurrentUser());
         return feedbackRepository.saveAndFlush(feedback);
     }
 

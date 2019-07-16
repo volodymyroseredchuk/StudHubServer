@@ -27,7 +27,7 @@ public class UniversityController {
 
     @GetMapping("/{universityId}")
     @PreAuthorize("permitAll()")
-    public University getTeacherById(@PathVariable Integer universityId) {
+    public University getUniversityById(@PathVariable Integer universityId) {
         return universityService.findById(universityId);
     }
 }

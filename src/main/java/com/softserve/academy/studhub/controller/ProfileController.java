@@ -1,22 +1,23 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.dto.FeedbackDTO;
-import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.UserDTO;
+
+import com.softserve.academy.studhub.entity.Privilege;
+import com.softserve.academy.studhub.entity.Role;
+import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.User;
-import com.softserve.academy.studhub.service.FeedbackService;
-import com.softserve.academy.studhub.service.IQuestionService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -29,30 +30,50 @@ public class ProfileController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping("/my")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> gerCurrentUser(Principal principal) {
 
-        String username = principal.getName();
+    @GetMapping
+    @PreAuthorize("permitAll()")
+    public List<UserForListDTO> getAllUsers() {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findByUsername(username), UserDTO.class), HttpStatus.OK);
+        List<UserForListDTO> userForListDTOS = userService.findAll().stream()
+                .map(user -> modelMapper.map(user, UserForListDTO.class))
+                .collect(Collectors.toList());
+
+        return userForListDTOS;
     }
 
-    @GetMapping("/foreign/{id}")
-    @PreAuthorize("permitAll()")
-    public ResponseEntity<UserDTO> getForeignUser(@PathVariable Integer id) {
+    @GetMapping("/current")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.findById(id), UserDTO.class), HttpStatus.OK);
+        User user = userService.findByUsername(principal.getName());
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        Set<PrivilegeDTO> privileges = new HashSet<>();
+        for (Role role :
+                user.getRoles()) {
+            privileges.addAll(role.getPrivileges().stream().map(
+                    privilege -> modelMapper.map(privilege, PrivilegeDTO.class)
+            ).collect(Collectors.toList()));
+        }
+        userDTO.setPrivileges(privileges);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @GetMapping("/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(modelMapper.
+                map(userService.findByUsername(username), UserDTO.class));
     }
 
     @PostMapping("/update")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUser) {
+    @PreAuthorize("isAuthenticated() and #updatedUserDTO.getUsername() == principal.username")
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO updatedUserDTO) {
 
-        return new ResponseEntity<>(modelMapper.
-                map(userService.update(modelMapper.map(updatedUser, User.class)), UserDTO.class), HttpStatus.OK);
+        User updatedUser = modelMapper.map(updatedUserDTO, User.class);
+
+        return ResponseEntity.ok(modelMapper.
+                map(userService.update(updatedUser), UserDTO.class));
     }
-
 }
