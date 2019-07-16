@@ -29,6 +29,19 @@ To recompile the application
 mvn clean install
 ```
 
+## Additional Info
+
+When launching project for the first time, you have to load client and server both and allow
+ your browser to work with insecure connection. To do so, when getting warning screen 
+ you have to click 'show advanced' and let browser continue work with unregistered certificate.
+ 
+ ## Facebook login
+ Please add next lines to local application properties:
+ 
+ #Facebook Properties
+ spring.social.facebook.appId=
+ spring.social.facebook.appSecret=
+
 ## Authors
 
 * **Volodymyr Oseredchuk** - *Work description* - [VolodymyrOseredchuk](https://github.com/volodymyroseredchuk)

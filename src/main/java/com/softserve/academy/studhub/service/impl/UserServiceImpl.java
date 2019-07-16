@@ -29,35 +29,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public User add(User user) {
 
-        if (!(userRepository.existsByEmail(user.getEmail()))) {
-
-            if (!(userRepository.existsByUsername(user.getUsername()))) {
-                user.setCreationDate(LocalDate.now());
-                return userRepository.save(user);
-            } else {
-                throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
-            }
-        } else {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_EMAIL);
         }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UserAlreadyExistsAuthenticationException(ErrorMessage.USER_ALREADY_EXISTS_BY_USERNAME);
+        }
+
+        user.setCreationDate(LocalDate.now());
+        return userRepository.save(user);
     }
 
     @Override
-    public User update(User user) {
+    public User update(User updatedUser) {
 
-        String username = user.getUsername();
+        User updatable = findByUsername(updatedUser.getUsername());
 
-        User updatable = findByUsername(username);
-
-        if (!user.getFirstName().equals("")) {
-            updatable.setFirstName(user.getFirstName());
-        }
-        if (!user.getLastName().equals("")) {
-            updatable.setLastName(user.getLastName());
-        }
-        if (!user.getEmail().equals("")) {
-            updatable.setEmail(user.getEmail());
-        }
+        updatable.setFirstName(updatedUser.getFirstName());
+        updatable.setLastName(updatedUser.getLastName());
+        updatable.setEmailSubscription(updatedUser.getEmailSubscription());
+        updatable.setImageUrl(updatedUser.getImageUrl());
+        updatable.setUniversity(updatedUser.getUniversity());
 
         return userRepository.saveAndFlush(updatable);
     }
@@ -69,30 +62,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
     @Override
     public User findById(Integer id) throws NotFoundException {
 
-        return userRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
+        return userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_ID + id));
     }
 
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
 
-        return userRepository.findByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
+        return userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
     }
 
     @Override
     public User findByEmail(String email) throws NotFoundException {
 
-        return userRepository.findByEmail(email).orElseThrow(() ->
-                new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL + email));
     }
 
     @Override
@@ -134,19 +126,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean isUserActivated(String username) {
+    public void isUserActivated(String username) {
 
-        User user = null;
-
-        try {
-            user = findByUsername(username);
-        } catch (UsernameNotFoundException ex) {
-            return false;
-        }
-
-        if (user.getIsActivated()) {
-            return true;
-        } else {
+        if (!findByUsername(username).getIsActivated()) {
             throw new NotConfirmedException(ErrorMessage.ASK_TO_CONFIRM_ACC);
         }
     }

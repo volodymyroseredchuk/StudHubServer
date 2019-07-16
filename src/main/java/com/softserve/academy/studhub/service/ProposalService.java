@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service;
 
+import com.softserve.academy.studhub.entity.Order;
 import com.softserve.academy.studhub.entity.Proposal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +16,6 @@ public interface ProposalService {
     String deleteById(Integer proposalId);
 
     Page<Proposal> findAllByTaskId(Integer taskId, Pageable pageable);
+
+    Order approveProposal(Integer proposalId);
 }

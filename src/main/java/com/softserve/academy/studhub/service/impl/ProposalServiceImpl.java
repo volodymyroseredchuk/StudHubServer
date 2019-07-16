@@ -1,10 +1,12 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.config.Message;
+import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.entity.Order;
 import com.softserve.academy.studhub.entity.Proposal;
-import com.softserve.academy.studhub.exceptions.ErrorMessage;
+import com.softserve.academy.studhub.entity.Task;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.ProposalRepository;
+import com.softserve.academy.studhub.service.OrderService;
 import com.softserve.academy.studhub.service.ProposalService;
 import com.softserve.academy.studhub.service.TaskService;
 import com.softserve.academy.studhub.service.UserService;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
 import java.time.LocalDateTime;
 
@@ -23,6 +26,7 @@ public class ProposalServiceImpl implements ProposalService {
     private ProposalRepository proposalRepository;
     private UserService userService;
     private TaskService taskService;
+    private OrderService orderService;
 
     @Override
     public Proposal save(Proposal proposal, Integer taskId, Principal principal) {
@@ -41,11 +45,19 @@ public class ProposalServiceImpl implements ProposalService {
     @Override
     public String deleteById(Integer proposalId) {
         proposalRepository.deleteById(proposalId);
-        return Message.PROPOSAL_DELETED;
+        return ErrorMessage.PROPOSAL_DELETED;
     }
 
     @Override
     public Page<Proposal> findAllByTaskId(Integer taskId, Pageable pageable) {
         return proposalRepository.findAllByTaskIdOrderByCreationDateDesc(taskId, pageable);
+    }
+
+    @Override
+    @Transactional
+    public Order approveProposal(Integer proposalId) {
+        Proposal proposal = this.findById(proposalId);
+        Task task = proposal.getTask();
+        return orderService.create(task, proposal);
     }
 }

@@ -23,7 +23,7 @@ public class CommentController {
 
 
     @PostMapping("/comments/create")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('COMMENT_WRITE_PRIVILEGE')")
     public ResponseEntity<CommentDTO> createComment(@PathVariable Integer answerId,
                                                     @Valid @RequestBody CommentDTO commentDTO, Principal principal) {
 
@@ -33,18 +33,15 @@ public class CommentController {
     }
 
     @PutMapping("comments/{commentId}")
-    @PreAuthorize("isAuthenticated() and @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('COMMENT_WRITE_PRIVILEGE') and @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
     public ResponseEntity<CommentDTO> editComment(@PathVariable Integer commentId, @Valid @RequestBody CommentDTO commentDTO) {
         Comment result = commentService.update(commentId, modelMapper.map(commentDTO, Comment.class));
         return ResponseEntity.ok(modelMapper.map(result, CommentDTO.class));
-
     }
 
     @DeleteMapping("comments/{commentId}")
-    @PreAuthorize("hasRole('ADMIN') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
-    public ResponseEntity<String> deleteComment(@PathVariable Integer commentId) {
-
-        commentService.deleteById(commentId);
-        return ResponseEntity.ok("Comment deleted");
+    @PreAuthorize("hasAuthority('COMMENT_DELETE_ANY_PRIVILEGE') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
+    public ResponseEntity<String> deleteComment(@PathVariable Integer answerId, @PathVariable Integer commentId) {
+        return ResponseEntity.ok(commentService.deleteById(commentId));
     }
 }

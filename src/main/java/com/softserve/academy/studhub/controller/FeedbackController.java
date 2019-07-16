@@ -4,10 +4,12 @@ import com.softserve.academy.studhub.dto.FeedbackDTO;
 import com.softserve.academy.studhub.entity.Feedback;
 import com.softserve.academy.studhub.service.FeedbackService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +45,7 @@ public class FeedbackController {
     }
 
     @PostMapping(path = "/feedback")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('FEEDBACK_WRITE_PRIVILEGE')")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
 
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));
@@ -61,4 +63,12 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackDTOS);
     }
 
+    @GetMapping("/user/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(@PathVariable String username) {
+
+        return ResponseEntity.ok(feedbackService.findFeedbackByUserUsername(username).
+                stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
+                collect(Collectors.toList()));
+    }
 }

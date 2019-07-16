@@ -36,21 +36,22 @@ public class TeacherController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     Teacher newTeacher(@RequestBody Teacher newTeacher) {
         return teacherService.save(newTeacher);
     }
 
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     Teacher replaceTeacher(@RequestBody Teacher newTeacher, @PathVariable Integer id) {
                     return teacherService.update(newTeacher);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('TEACHER_DELETE_ANY_PRIVILEGE')")
     void deleteTeacher(@PathVariable Integer id) {
         teacherService.deleteById(id);
     }
-
 }
+

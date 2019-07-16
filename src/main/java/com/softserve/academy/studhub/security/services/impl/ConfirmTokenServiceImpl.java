@@ -18,12 +18,12 @@ public class ConfirmTokenServiceImpl implements ConfirmTokenService {
     public ConfirmToken findByValidToken(String token) {
 
         ConfirmToken confirmToken = confirmTokenRepository.findByToken(token).orElseThrow(() ->
-                new ExpiredTokenException(ErrorMessage.LINK_IS_EXPIRED_OR_INVALID));
+                new ExpiredTokenException(ErrorMessage.CONFIRMATION_LINK_IS_EXPIRED_OR_INVALID));
 
         if (confirmToken.isExpired()) {
 
             delete(confirmToken);
-            throw new ExpiredTokenException(ErrorMessage.LINK_IS_EXPIRED_OR_INVALID);
+            throw new ExpiredTokenException(ErrorMessage.CONFIRMATION_LINK_IS_EXPIRED_OR_INVALID);
         }
 
         return confirmToken;

@@ -48,7 +48,7 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('TASK_WRITE_PRIVILEGE')")
     public ResponseEntity<TaskDTO> createTask(@Valid @RequestBody TaskDTO taskDTO, Principal principal) {
 
         Task task = taskService.save(modelMapper.map(taskDTO, Task.class), principal);
@@ -66,11 +66,37 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('MODERATOR') or " +
+    @PreAuthorize("hasAuthority('TASK_DELETE_ANY_PRIVILEGE') or " +
         "@taskServiceImpl.findById(#taskId).getUser().getUsername()== principal.username")
     public ResponseEntity<DeleteDTO> deleteTask(@PathVariable Integer taskId) {
 
         return ResponseEntity.ok().body(new DeleteDTO(taskService.deleteById(taskId)));
+    }
 
+    @GetMapping("/search/{keywords}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<TaskPaginatedDTO> getSearchedByKeywordsTasks(@PathVariable String[] keywords, Pageable pageable) {
+
+        Page<Task> taskPage = taskService.searchByKeywords(keywords, pageable);
+
+        List<TaskForListDTO> taskForListDTOS = taskPage.getContent().stream()
+                .map(task -> modelMapper.map(task, TaskForListDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
+    }
+
+
+    @GetMapping("/tagged/{tags}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<TaskPaginatedDTO> getSearchedByTagsTasks(@PathVariable String[] tags, Pageable pageable) {
+
+        Page<Task> taskPage = taskService.searchByTags(tags, pageable);
+
+        List<TaskForListDTO> taskForListDTOS = taskPage.getContent().stream()
+                .map(task -> modelMapper.map(task, TaskForListDTO.class))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
     }
 }

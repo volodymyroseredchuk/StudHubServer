@@ -21,6 +21,10 @@ public class GoogleAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
+        if (auth == null) {
+            throw new BadCredentialsException("Cannot authenticate an empty authentication.");
+        }
+
         String username = auth.getName();
         String password = auth.getCredentials()
                 .toString();

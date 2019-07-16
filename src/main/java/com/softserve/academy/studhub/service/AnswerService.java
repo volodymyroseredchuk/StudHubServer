@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.dto.AnswerApproveDTO;
 import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.entity.Answer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface AnswerService {
@@ -13,8 +14,11 @@ public interface AnswerService {
 
     Answer findById(Integer answerId);
 
-    void deleteById(Integer answerId);
+    Boolean deleteById(Integer answerId);
 
     AnswerApproveDTO approve (AnswerApproveDTO answerApproveDTO);
 
+    Integer countByUserUsername(String username);
+
+    Integer countByApprovedTrueAndUserUsername(String username);
 }

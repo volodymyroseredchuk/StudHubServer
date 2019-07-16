@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagRepository extends JpaRepository<Tag, Integer> {
+
     Optional<Tag> findByNameIgnoreCase(String name);
 
     @Query("select t from Tag t order by t.questionList.size desc")

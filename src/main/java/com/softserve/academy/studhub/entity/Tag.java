@@ -18,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "tags")
 public class Tag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -31,4 +32,10 @@ public class Tag {
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<Question> questionList;
+
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @ManyToMany(targetEntity = Task.class, mappedBy = "tagList")
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    private List<Task> taskList;
 }

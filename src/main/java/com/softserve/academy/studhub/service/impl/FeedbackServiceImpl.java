@@ -25,11 +25,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         return feedbackRepository.findAll();
     }
 
-//    @Override
-//    public List<Feedback> sortByAge() {
-//        return feedbackRepository.findAllByOrderByCreationDateAsc();
-//    }
-
 
     @Override
     public List<Feedback> findByTeacherId(Integer teacherId) {
@@ -43,8 +38,15 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public Feedback save(Feedback feedback) {
-//        feedback.setUser(userService.getCurrentUser());
+        feedback.setUser(userService.getCurrentUser());
         return feedbackRepository.saveAndFlush(feedback);
     }
+
+    @Override
+    public List<Feedback> findFeedbackByUserUsername(String username) {
+
+        return feedbackRepository.findFeedbackByUserUsername(username);
+    }
+
 
 }

@@ -17,4 +17,8 @@ public interface TaskService {
     String deleteById(Integer taskId);
 
     Page<Task> findAll(Pageable pageable);
+
+    Page<Task> searchByTags(String[] tags, Pageable pageable);
+
+    Page<Task> searchByKeywords(String[] keywords, Pageable pageable);
 }

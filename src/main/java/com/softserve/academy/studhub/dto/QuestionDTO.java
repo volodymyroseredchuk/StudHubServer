@@ -1,7 +1,6 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.entity.Tag;
-import com.softserve.academy.studhub.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +19,8 @@ public class QuestionDTO {
     private String body;
     private LocalDateTime creationDate;
     private LocalDateTime modifiedDate;
-    private User user;
+    private UserGeneralInfoDTO user;
     private List<AnswerDTO> answerList;
     private Set<Tag> tagList;
-
+    private TeamForListDTO team;
 }

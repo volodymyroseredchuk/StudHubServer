@@ -13,7 +13,7 @@ public interface UserService {
 
     void delete(Integer id);
 
-    List<User> getAll();
+    List<User> findAll();
 
     User findById(Integer id);
 
@@ -31,5 +31,5 @@ public interface UserService {
 
     User getCurrentUser();
 
-    boolean isUserActivated(String username);
+    void isUserActivated(String username);
 }

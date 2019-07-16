@@ -12,5 +12,4 @@ public class TaskPaginatedDTO {
     private List<TaskForListDTO> tasks;
 
     private Long tasksTotalCount;
-
 }

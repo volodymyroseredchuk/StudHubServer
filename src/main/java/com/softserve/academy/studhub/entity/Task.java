@@ -1,6 +1,8 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +11,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -45,7 +48,17 @@ public class Task {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "task_status")
+    private TaskStatus status;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
     @JsonManagedReference
     private List<Proposal> proposalList;
+
+    @ManyToMany(targetEntity = Tag.class, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinTable(name = "tasks_tags", joinColumns = {@JoinColumn(name = "tasks_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tags_id")})
+    private Set<Tag> tagList;
 }
