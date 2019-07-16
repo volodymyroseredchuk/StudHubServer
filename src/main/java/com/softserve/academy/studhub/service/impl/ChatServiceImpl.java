@@ -98,24 +98,22 @@ public class ChatServiceImpl implements ChatService {
                 }
             }
 
-            if (message.isPresent()) {
-                ChatMessage msg = message.get();
-                ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
-                listItemsMap.put(msg, item);
-            } else {
-                ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, null);
-                ChatMessage mock = new ChatMessage();
-                mock.setCreationDateTime(LocalDateTime.MIN);
-                listItemsMap.put(mock, item);
-            }
+            ChatMessage msg = message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
+            ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
+            listItemsMap.put(msg, item);
 
         }
 
+        return sortByCreationDateTime(listItemsMap);
+    }
+
+    private List<ChatListItem> sortByCreationDateTime(Map<ChatMessage, ChatListItem> listItemMap) {
+
         List<ChatListItem> itemList = new ArrayList<>();
-        List<ChatMessage> messagesForSorting = new ArrayList<>(listItemsMap.keySet());
+        List<ChatMessage> messagesForSorting = new ArrayList<>(listItemMap.keySet());
         messagesForSorting.sort(Comparator.comparing(ChatMessage::getCreationDateTime).reversed());
         for (ChatMessage message : messagesForSorting) {
-            itemList.add(listItemsMap.get(message));
+            itemList.add(listItemMap.get(message));
         }
 
         return itemList;
@@ -160,7 +158,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Integer createChat(Integer creatorUserId, Integer userId) {
+    public Integer getChatId(Integer creatorUserId, Integer userId) {
         List<ChatSubscription> creatorSubs = subscriptionRepository.findChatSubscriptionByUserId(creatorUserId);
         List<ChatSubscription> receiverSubs = subscriptionRepository.findChatSubscriptionByUserId(userId);
 
@@ -189,17 +187,35 @@ public class ChatServiceImpl implements ChatService {
                 return chatId;
             }
         }
+
+
+        return createNewChat(creatorUserId, userId).getId();
+
+    }
+
+    private Chat createNewChat(Integer creatorUserId, Integer userId) {
+
         Chat chat = chatRepository.saveAndFlush(new Chat());
         ChatSubscription creatorSubscription = new ChatSubscription();
         creatorSubscription.setChat(chat);
         creatorSubscription.setUser(userService.findById(creatorUserId));
         subscriptionRepository.saveAndFlush(creatorSubscription);
+
         ChatSubscription subscription = new ChatSubscription();
         subscription.setUser(userService.findById(userId));
         subscription.setChat(chat);
         subscriptionRepository.saveAndFlush(subscription);
-        return chat.getId();
 
+        ChatMessage defaultMessage = new ChatMessage();
+        defaultMessage.setCreationDateTime(LocalDateTime.parse("2007-12-03T10:15:30"));
+        defaultMessage.setChat(chat);
+        defaultMessage.setContent("Chat successfully created.");
+        defaultMessage.setSender(null);
+        chatMessageRepository.saveAndFlush(defaultMessage);
+
+        System.out.println(defaultMessage);
+
+        return chat;
     }
 
     public List<String> getUsernameParticipantsByChat(Integer chatId) {

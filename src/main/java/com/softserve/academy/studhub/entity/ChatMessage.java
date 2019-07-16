@@ -22,7 +22,7 @@ public class ChatMessage {
     @Column(name = "content")
     private String content;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sender_user_id", referencedColumnName = "id")
     private User sender;
 
