@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class FeedbackListDTO {
-   private List<FeedbackDTO> fedback;
+    private List<FeedbackDTO> fedback;
 }

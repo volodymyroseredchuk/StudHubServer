@@ -44,7 +44,6 @@ public class GoogleVerifierServiceImpl implements GoogleVerifierService {
     }
 
 
-
     @Override
     public boolean isValidToken(String clientIdToken) {
         if (clientIdToken != null) {
@@ -66,40 +65,38 @@ public class GoogleVerifierServiceImpl implements GoogleVerifierService {
 
     @Override
     public LoginForm authenticateUser(GoogleUserData userData) throws IllegalArgumentException {
-        if (userData != null) {
-            isValidToken(userData.getIdToken());
-            LoginForm form = new LoginForm();
-
-            if (!userService.existsByEmail(userData.getEmail())) {
-                User addUser = userData.toUser(roleService);
-                addUser.setPassword(encoder.encode(userData.getId()));
-                addUser.setGooglePassword(encoder.encode(userData.getId()));
-                addUser.setIsActivated(true);
-                addUser.setCookiesCount(1000);
-                userService.add(addUser);
-                form.setUsername(userData.getEmail());
-                form.setPassword(userData.getId());
-            } else {
-                User foundUser = userService.findByEmail(userData.getEmail());
-                if (foundUser.getGooglePassword() == null) {
-                    foundUser.setIsActivated(true);
-                    foundUser.setGooglePassword(encoder.encode(userData.getId()));
-                    if (foundUser.getImageUrl() == null) {
-                        foundUser.setImageUrl(userData.getPhotoUrl());
-                    }
-                    userService.update(foundUser);
-                }
-
-                form.setUsername(foundUser.getUsername());
-                form.setPassword(userData.getId());
-            }
-
-            return form;
-
-        } else {
+        if (userData == null) {
             throw new IllegalArgumentException("Cannot authenticate an empty user data.");
         }
 
+        isValidToken(userData.getIdToken());
+        LoginForm form = new LoginForm();
+
+        if (!userService.existsByEmail(userData.getEmail())) {
+            User addUser = userData.toUser(roleService);
+            addUser.setPassword(encoder.encode(userData.getId()));
+            addUser.setGooglePassword(encoder.encode(userData.getId()));
+            addUser.setIsActivated(true);
+            addUser.setCookiesCount(1000);
+            userService.add(addUser);
+            form.setUsername(userData.getEmail());
+            form.setPassword(userData.getId());
+        } else {
+            User foundUser = userService.findByEmail(userData.getEmail());
+            if (foundUser.getGooglePassword() == null) {
+                foundUser.setIsActivated(true);
+                foundUser.setGooglePassword(encoder.encode(userData.getId()));
+                if (foundUser.getImageUrl() == null) {
+                    foundUser.setImageUrl(userData.getPhotoUrl());
+                }
+                userService.update(foundUser);
+            }
+
+            form.setUsername(foundUser.getUsername());
+            form.setPassword(userData.getId());
+        }
+
+        return form;
     }
 
 }

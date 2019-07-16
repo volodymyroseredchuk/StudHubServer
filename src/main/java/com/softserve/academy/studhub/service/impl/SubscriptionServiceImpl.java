@@ -30,45 +30,42 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Subscription save(Subscription subscription) {
-        if (subscription != null) {
-            return subscriptionRepository.saveAndFlush(subscription);
-        } else {
+        if (subscription == null) {
             throw new IllegalArgumentException("Invalid subscription argument.");
         }
+
+        return subscriptionRepository.saveAndFlush(subscription);
     }
 
     @Override
     public boolean subscriptionExists(Integer channelId, Integer userId) {
-        if (channelId != null && userId != null) {
-            return subscriptionRepository.findSubscriptionByChannelIdAndUserId(channelId, userId).isPresent();
-        } else {
+        if (channelId == null || userId == null) {
             throw new IllegalArgumentException("Invalid user id and/or channel id of a subscription argument.");
         }
+
+        return subscriptionRepository.findSubscriptionByChannelIdAndUserId(channelId, userId).isPresent();
     }
 
     @Override
     public void handleMessage(SocketMessage msg) {
-        if (msg != null) {
-            try {
-
-                Integer subjectId = Integer.parseInt(msg.getParam2());
-                List<User> userList = subscriptionRepository.findUserByChannelQuestionId(subjectId);
-                Question question = questionRepository.findById(subjectId).orElseThrow(
-                        () -> new IllegalArgumentException("Question not found."));
-                sendSocketNotifications(userList);
-                sendEmailNotifications(userList, question);
-
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid message arguments.");
-            }
-        } else {
+        if (msg == null) {
             throw new IllegalArgumentException("Cannot handle an empty message.");
         }
 
+        try {
+            Integer subjectId = Integer.parseInt(msg.getParam2());
+            List<User> userList = subscriptionRepository.findUserByChannelQuestionId(subjectId);
+            Question question = questionRepository.findById(subjectId).orElseThrow(
+                    () -> new IllegalArgumentException("Question not found."));
+            sendSocketNotifications(userList);
+            sendEmailNotifications(userList, question);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid message arguments.");
+        }
     }
 
     private void sendEmailNotifications(List<User> userList, Question question) {
-        new Thread(()->{
+        new Thread(() -> {
             for (User user : userList) {
                 try {
                     if (user.getEmailSubscription()) {
@@ -87,7 +84,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SocketMessageEncoder encoder = new SocketMessageEncoder();
         SocketMessage message = new SocketMessage("You've got a new answer for your question.", SocketMessageType.NOTIFICATION);
 
-        new Thread(()->{
+        new Thread(() -> {
             for (User user : userList) {
                 try {
                     socketService.sendNotification(user.getId(), new TextMessage(encoder.encode(message)));

@@ -23,5 +23,3 @@ public class TeacherForListDTO {
     private Double mark;
 
 }
-
-

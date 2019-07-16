@@ -6,11 +6,10 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-    @AllArgsConstructor
-    public class TeacherPaginatedDTO {
+@AllArgsConstructor
+public class TeacherPaginatedDTO {
 
-        private List<TeacherForListDTO> teachers;
+    private List<TeacherForListDTO> teachers;
 
-        private Long teachersTotalCount;
-    }
-
+    private Long teachersTotalCount;
+}

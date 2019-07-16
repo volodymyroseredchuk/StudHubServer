@@ -21,25 +21,25 @@ public class GoogleAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
-        if (auth != null) {
-            String username = auth.getName();
-            String password = auth.getCredentials()
-                    .toString();
+        if (auth == null) {
+            throw new BadCredentialsException("Cannot authenticate an empty authentication.");
+        }
 
-            User user = userService.findByUsername(username);
-            String hashedPass = user.getGooglePassword();
+        String username = auth.getName();
+        String password = auth.getCredentials()
+                .toString();
 
-            if (hashedPass == null) {
-                return null;
-            } else if (BCrypt.checkpw(password, hashedPass)) {
-                return new UsernamePasswordAuthenticationToken
-                        (UserPrinciple.build(user), password, Collections.emptyList());
-            } else {
-                throw new
-                        BadCredentialsException("External system authentication failed");
-            }
+        User user = userService.findByUsername(username);
+        String hashedPass = user.getGooglePassword();
+
+        if (hashedPass == null) {
+            return null;
+        } else if (BCrypt.checkpw(password, hashedPass)) {
+            return new UsernamePasswordAuthenticationToken
+                    (UserPrinciple.build(user), password, Collections.emptyList());
         } else {
-            throw new BadCredentialsException("Cannot authenticate empty authentication,");
+            throw new
+                    BadCredentialsException("External system authentication failed");
         }
     }
 
