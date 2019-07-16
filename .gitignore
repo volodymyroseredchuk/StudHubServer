@@ -28,5 +28,6 @@
 .vscode/
 
 
+application.properties
 
 *.log
