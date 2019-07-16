@@ -37,10 +37,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public void handleChatMessage(ChatMessage message) {
-
         if (message == null) {
             throw new IllegalArgumentException("Cannot send an empty chat message.");
         }
+
         List<ChatSubscription> chatSubscriptions = subscriptionRepository.findChatSubscriptionByChatId(message.getChat().getId());
         List<Integer> receiverIds = new ArrayList<>();
         for (ChatSubscription sub : chatSubscriptions) {
@@ -53,10 +53,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ChatMessage> getMessagesByChatId(Integer chatId, Pageable pageable) {
-
-        if (chatId == null) {
-            throw new IllegalArgumentException("Cannot get messages an empty chat.");
+        if (chatId == null || pageable == null) {
+            throw new IllegalArgumentException("Cannot get messages an empty chat or empty pagination settings.");
         }
+
         Page<ChatMessage> page = chatMessageRepository.findByChatIdOrderByCreationDateTimeDesc(chatId, pageable);
         List<ChatMessage> list = page.getContent();
         if (pageable.getPageNumber() == 0) {
@@ -71,6 +71,7 @@ public class ChatServiceImpl implements ChatService {
         if (userId == null) {
             throw new IllegalArgumentException("Cannot get chat list by empty ID.");
         }
+
         List<ChatSubscription> subscriptions =  subscriptionRepository.findChatSubscriptionByUserId(userId);
         Map<ChatMessage, ChatListItem> listItemsMap = new HashMap<>();
 
@@ -84,57 +85,27 @@ public class ChatServiceImpl implements ChatService {
 
     private Map.Entry<ChatMessage, ChatListItem> getListItemEntry(ChatSubscription sub, Integer userId) {
         Integer chatId = sub.getChat().getId();
-        List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
-
-        if (subscriptionList.size() <= 2) {
-            return generateListItemPrivate(subscriptionList, userId, sub);
-        } else {
-            return generateListItemGroup(subscriptionList, userId, sub);
-        }
-
-    }
-
-    private Map.Entry<ChatMessage, ChatListItem> generateListItemPrivate(List<ChatSubscription> subscriptionList,
-                                                                         Integer userId, ChatSubscription sub) {
-        Integer chatId = sub.getChat().getId();
+        List<ChatSubscription> chatSubscriptions = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
 
-        ChatMessage msg =  message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
-
+        ChatMessage lastMessage =  message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
 
         String chatName = null;
         String photoUrl = null;
-        for (ChatSubscription subscription : subscriptionList) {
+        for (ChatSubscription subscription : chatSubscriptions) {
             if (!subscription.getUser().getId().equals(userId)) {
                 chatName = subscription.getUser().getUsername();
                 photoUrl = subscription.getUser().getImageUrl();
                 break;
             }
         }
-        ChatListItem item = new ChatListItem(chatId, photoUrl, chatName, msg.getContent());
 
-        return new AbstractMap.SimpleEntry<>(msg, item);
-    }
+        boolean personal = (chatSubscriptions.size() == 2);
+        ChatListItem item = new ChatListItem(chatId, personal ? photoUrl : null,
+                personal ? chatName : sub.getChat().getName(), lastMessage.getContent());
 
-    private Map.Entry<ChatMessage, ChatListItem> generateListItemGroup(List<ChatSubscription> subscriptionList,
-                                                                       Integer userId, ChatSubscription sub) {
-        Integer chatId = sub.getChat().getId();
-        Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
+        return new AbstractMap.SimpleEntry<>(lastMessage, item);
 
-        ChatMessage msg =  message.orElseThrow(() -> new IllegalArgumentException("Could not get last chat message."));
-
-        String chatName;
-        String photoUrl = null;
-        chatName = sub.getChat().getName();
-        for (ChatSubscription subscription : subscriptionList) {
-            if (!subscription.getUser().getId().equals(userId)) {
-                photoUrl = subscription.getUser().getImageUrl();
-                break;
-            }
-        }
-        ChatListItem item = new ChatListItem(sub.getChat().getId(), photoUrl, chatName, msg.getContent());
-
-        return new AbstractMap.SimpleEntry<>(msg, item);
     }
 
     private List<ChatListItem> sortByCreationDateTime(Map<ChatMessage, ChatListItem> listItemMap) {
@@ -154,6 +125,7 @@ public class ChatServiceImpl implements ChatService {
         if (messagePostDTO == null) {
             throw new IllegalArgumentException("Cannot save an empty message.");
         }
+
         ChatMessage message = new ChatMessage();
         message.setContent(messagePostDTO.getContent());
         message.setSender(userService.findById(messagePostDTO.getSender()));
@@ -165,9 +137,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatHeaderDTO getChatHeader(Integer chatId, Integer userId) {
-        if (chatId == null) {
-            throw new IllegalArgumentException("Cannot get header for an empty chat ID");
+        if (chatId == null || userId == null) {
+            throw new IllegalArgumentException("Cannot get header for an empty chat ID or empty user ID.");
         }
+
         List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         String chatName;
         String photoUrl = null;
@@ -189,11 +162,14 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Integer getChatId(Integer creatorUserId, Integer userId) {
+        if (creatorUserId == null || userId == null) {
+            throw new IllegalArgumentException("Cannot get chat ID for an empty user.");
+        }
+
         List<ChatSubscription> creatorSubs = subscriptionRepository.findChatSubscriptionByUserId(creatorUserId);
         List<ChatSubscription> receiverSubs = subscriptionRepository.findChatSubscriptionByUserId(userId);
 
         List<Chat> commonChats = new ArrayList<>();
-
         for (ChatSubscription cSub : creatorSubs) {
             for (ChatSubscription rSub : receiverSubs) {
                 if (cSub.getChat().getId().equals(rSub.getChat().getId())) {
@@ -205,16 +181,11 @@ public class ChatServiceImpl implements ChatService {
         if (commonChats.size() == 1) {
             return commonChats.get(0).getId();
         } else if (commonChats.size() > 1) {
-            Integer chatId = 0;
             for (Chat chat : commonChats) {
                 List<ChatSubscription> chatSubs = subscriptionRepository.findChatSubscriptionByChatId(chat.getId());
                 if (chatSubs.size() == 2) {
-                    chatId = chat.getId();
-                    break;
+                    return chat.getId();
                 }
-            }
-            if (chatId != 0) {
-                return chatId;
             }
         }
 
@@ -247,6 +218,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     public List<String> getUsernameParticipantsByChat(Integer chatId) {
+        if (chatId == null) {
+            throw new IllegalArgumentException("Cannot get participants for an empty chat ID.");
+        }
+
         List<ChatSubscription> subscriptions = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         List<String> usernames = new ArrayList<>();
         for (ChatSubscription sub : subscriptions) {

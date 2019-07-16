@@ -10,6 +10,7 @@ import com.softserve.academy.studhub.service.SocketTokenService;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.websocket.EncodeException;
 import java.util.concurrent.TimeUnit;
 
@@ -33,46 +34,44 @@ public class SocketTokenServiceImpl implements SocketTokenService {
 
     @Override
     public Integer checkAccess(String token) {
-        if (token != null) {
-            try {
-                Integer id = tokenIdMap.asMap().get(token);
-                removeToken(token);
-                return id;
-            } catch (NullPointerException e) {
-                return 0;
-            }
-        } else {
+        if (token == null) {
             throw new IllegalArgumentException("Cannot check access of an empty token.");
         }
 
+        try {
+            Integer id = tokenIdMap.asMap().get(token);
+            removeToken(token);
+            return id;
+        } catch (NullPointerException e) {
+            return 0;
+        }
     }
 
     @Override
     public String generateToken(Integer id) {
-        if (id != null) {
-            socketService.removeSession(id);
-            String generatedString = RandomStringUtils.random(20, true, true);
-            tokenIdMap.put(generatedString, id);
-            SocketToken socketToken = new SocketToken(generatedString);
-
-            try {
-                return encoder.encode(socketToken);
-            } catch (EncodeException e) {
-                throw new IllegalArgumentException("Could not generate token.");
-            }
-
-        } else {
+        if (id == null) {
             throw new IllegalArgumentException("Cannot generate token for an empty ID.");
+        }
+
+        socketService.removeSession(id);
+        String generatedString = RandomStringUtils.random(20, true, true);
+        tokenIdMap.put(generatedString, id);
+        SocketToken socketToken = new SocketToken(generatedString);
+
+        try {
+            return encoder.encode(socketToken);
+        } catch (EncodeException e) {
+            throw new IllegalArgumentException("Could not generate token.");
         }
     }
 
     @Override
     public void removeToken(String token) {
-        if (token != null) {
-            tokenIdMap.asMap().remove(token);
-        } else {
+        if (token == null) {
             throw new IllegalArgumentException("Cannot remove an empty token.");
         }
+
+        tokenIdMap.asMap().remove(token);
     }
 
 }
