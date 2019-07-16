@@ -65,21 +65,13 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.saveAndFlush(teacher);
     }
 
-//    @Override
-//    public List<Teacher> sortByMark() {
-//        return teacherRepository.findAllByTagListInOrderByMarkAsc();
-//    }
 
     @Override
-    public Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile) {
+    public Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile) throws IOException {
         Teacher teacher = teacherRepository.findById(teacherId)
             .orElseThrow(() -> new NotFoundException(ErrorMessage.TEACHER_NOTFOUND));
-        try {
-            teacher.setImageUrl(uploadPhotoToCloudinary(multipartFile));
-            teacherRepository.saveAndFlush(teacher);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        teacher.setImageUrl(uploadPhotoToCloudinary(multipartFile));
+        teacherRepository.saveAndFlush(teacher);
         return teacherId;
     }
 
@@ -91,3 +83,9 @@ public class TeacherServiceImpl implements TeacherService {
         return (String) uploadResult.get("url");
     }
 }
+
+
+//@Override
+//    public List<Teacher> sortByMark() {
+//        return teacherRepository.findAllByTagListInOrderByMarkAsc();
+//    }
