@@ -72,9 +72,9 @@ public class OrderController {
 
     @PostMapping("/{orderId}/feedback/customer")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<CustomerDTO> rateCustomer(@PathVariable Integer orderId, @RequestBody FreelancerDTO freelancerDTO) {
+    public ResponseEntity<CustomerDTO> rateCustomer(@PathVariable Integer orderId, @RequestBody CustomerDTO customerDTO) {
 
-        Customer customer = customerService.add(modelMapper.map(freelancerDTO, Customer.class), orderId);
+        Customer customer = customerService.add(modelMapper.map(customerDTO, Customer.class), orderId);
 
         return ResponseEntity.ok().body(modelMapper.map(customer, CustomerDTO.class));
     }

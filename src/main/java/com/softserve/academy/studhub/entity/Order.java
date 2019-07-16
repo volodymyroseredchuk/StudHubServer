@@ -30,14 +30,6 @@ public class Order {
     private User userExecutor;
 
     @ManyToOne
-    @JoinColumn(name = "freelancer_id", referencedColumnName = "id")
-    private Freelancer freelancer;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    private Customer customer;
-
-    @ManyToOne
     @JoinColumn(name = "proposal_id", referencedColumnName = "id")
     private Proposal proposal;
 
@@ -57,7 +49,12 @@ public class Order {
     @EqualsAndHashCode.Exclude
     private LocalDateTime endDate;
 
+    @ManyToOne
+    @JoinColumn(name = "freelancer_id", referencedColumnName = "id")
+    private Freelancer freelancer;
 
-
+    @ManyToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 
 }
