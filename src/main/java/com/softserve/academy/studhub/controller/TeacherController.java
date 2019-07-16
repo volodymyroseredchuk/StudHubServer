@@ -58,12 +58,12 @@ public class TeacherController {
         return teacherService.save(teacher);
     }
 
-    @PostMapping("/addPhotoToTeacher")
-    @PreAuthorize("permitAll()")
-    ResponseEntity<Integer> addPhotoToTeacher(@RequestParam Integer teacherId,
-                                              @RequestParam MultipartFile multipartFile) throws IOException {
-        Integer result = teacherService.addPhotoToTeacher(teacherId, multipartFile);
-        return ResponseEntity.ok(result);
+//    @PostMapping("/addPhotoToTeacher")
+//    @PreAuthorize("permitAll()")
+//    ResponseEntity<Integer> addPhotoToTeacher(@RequestParam Integer teacherId,
+//                                              @RequestParam MultipartFile multipartFile) throws IOException {
+//        Integer result = teacherService.addPhotoToTeacher(teacherId, multipartFile);
+//        return ResponseEntity.ok(result);
 
 //        @DeleteMapping("/{id}")
 //    @PreAuthorize("hasAuthority('TEACHER_DELETE_ANY_PRIVILEGE')")
@@ -71,5 +71,5 @@ public class TeacherController {
 //        teacherService.deleteById(id);
 //    }
 
-    }
 }
+
