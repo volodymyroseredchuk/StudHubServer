@@ -17,13 +17,9 @@ public interface TeacherService {
 
     Teacher update(Teacher teacher);
 
-    void deleteById(int id);
-
     Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile);
 
     Page<Teacher> findByLastName (String keyword, Pageable pageable);
-
-    //List<Teacher> sortByAge();
 
     //List<Teacher> sortByMark();
 }

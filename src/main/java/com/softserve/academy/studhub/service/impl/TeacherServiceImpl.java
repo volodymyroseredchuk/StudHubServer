@@ -48,6 +48,11 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+    public Page<Teacher> findByLastName(String keyword, Pageable pageable) {
+        return teacherRepository.findByLastName(keyword, pageable);
+    }
+
+    @Override
     public Teacher save(Teacher teacher) {
 
 
@@ -60,20 +65,10 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.saveAndFlush(teacher);
     }
 
-   /* @Override
-    public List<Teacher> sortByAge() {
-        return teacherRepository.findAllByOrdeByCreationDateAsc();
-    }
-
-    @Override
-    public List<Teacher> sortByMark() {
-        return teacherRepository.findAllByTagListInOrderByMarkAsc();
-    }*/
-
-    @Override
-    public void deleteById(int id) {
-        teacherRepository.deleteById(id);
-    }
+//    @Override
+//    public List<Teacher> sortByMark() {
+//        return teacherRepository.findAllByTagListInOrderByMarkAsc();
+//    }
 
     @Override
     public Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile) {
@@ -86,11 +81,6 @@ public class TeacherServiceImpl implements TeacherService {
             e.printStackTrace();
         }
         return teacherId;
-    }
-
-    @Override
-    public Page<Teacher> findByLastName(String keyword, Pageable pageable) {
-        return teacherRepository.findByLastName(keyword, pageable);
     }
 
     private String uploadPhotoToCloudinary(MultipartFile toUpload) throws IOException {

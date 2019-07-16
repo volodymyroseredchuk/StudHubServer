@@ -32,33 +32,13 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public Optional<University> findById(int id) {
-        return universityRepository.findById(id);
-    }
-
-    @Override
     public University save(University teacher) {
         return universityRepository.saveAndFlush(teacher);
     }
 
-    @Override
-    public University update(University university) {
-        return universityRepository.saveAndFlush(university);
-    }
-
-  /*  @Override
-    public List<University> sortByAge() {
-        return universityRepository.findAllByOrdeByCreationDateAsc();
-    }
-
-    @Override
-    public List<University> sortByMark() {
-        return universityRepository.findAllByTagListInOrderByMarkAsc();
-    }*/
-
-    @Override
-    public void deleteById(int id) {
-        universityRepository.deleteById(id);
-    }
+//    @Override
+//    public List<University> sortByMark() {
+//        return universityRepository.findAllByTagListInOrderByMarkAsc();
+//    }
 
 }

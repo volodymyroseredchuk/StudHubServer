@@ -9,8 +9,6 @@ public interface TeacherRepository extends JpaRepository <Teacher, Integer> {
 
     Page<Teacher> findByLastName(String lastName, Pageable pageable);
 
-   // List<Teacher> findAllByOrdeByCreationDateAsc();
-
    // List<Teacher> findAllByTagListInOrderByMarkAsc();
 
 }
