@@ -17,4 +17,6 @@ public class SuccessMessage {
 
     public static final String QUESTION_DELETED_SUCCESSFULLY = "Question deleted";
     public static final String TEAM_DELETED_SUCCESSFULLY = "Team deleted";
+    public static final String TASK_DELETED_SUCCESSFULLY = "Task deleted";
+    public static final String PROPOSAL_DELETED_SUCCESSFULLY = "Proposal deleted";
 }

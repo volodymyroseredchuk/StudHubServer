@@ -26,7 +26,7 @@ public class SignupConverter {
         user.setRoles(new HashSet<Role>() {{
             add(roleService.findByName(RoleName.ROLE_USER));
         }});
-
+        user.setCookiesCount(1000);
         return user;
     }
 }

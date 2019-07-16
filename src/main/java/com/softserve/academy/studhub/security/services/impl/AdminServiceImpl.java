@@ -22,34 +22,30 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void addRole(Integer userId, RoleName roleName) {
 
-        User user = userService.findById(userId);
-
-        if (userService.isUserPrivilegedByRole(userId, roleName) == false) {
-
-            Set<Role> roles = user.getRoles();
-            Role role = roleService.findByName(roleName);
-            roles.add(role);
-            user.setRoles(roles);
-            userService.update(user);
-        } else {
+        if (!userService.isUserPrivilegedByRole(userId, roleName) == false) {
             throw new IllegalArgumentException(ErrorMessage.USER_IS_ALREADY + roleName);
         }
+
+        User user = userService.findById(userId);
+        Set<Role> roles = user.getRoles();
+        Role role = roleService.findByName(roleName);
+        roles.add(role);
+        user.setRoles(roles);
+        userService.update(user);
     }
 
     @Override
     public void removeRole(Integer userId, RoleName roleName) {
 
-        User user = userService.findById(userId);
-
-        if (userService.isUserPrivilegedByRole(userId, roleName)) {
-
-            Set<Role> roles = user.getRoles();
-            Role role = roleService.findByName(roleName);
-            roles.remove(role);
-            user.setRoles(roles);
-            userService.update(user);
-        } else {
+        if (!userService.isUserPrivilegedByRole(userId, roleName)) {
             throw new IllegalArgumentException(ErrorMessage.USER_IS_NOT + roleName);
         }
+
+        User user = userService.findById(userId);
+        Set<Role> roles = user.getRoles();
+        Role role = roleService.findByName(roleName);
+        roles.remove(role);
+        user.setRoles(roles);
+        userService.update(user);
     }
 }

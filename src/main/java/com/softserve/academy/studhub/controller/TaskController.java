@@ -1,7 +1,9 @@
 package com.softserve.academy.studhub.controller;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.Task;
+import com.softserve.academy.studhub.security.dto.MessageResponse;
 import com.softserve.academy.studhub.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,10 +34,10 @@ public class TaskController {
         Page<Task> taskPage = taskService.findAll(pageable);
 
         List<TaskForListDTO> taskDTOs = taskPage.getContent().stream()
-            .map(task -> modelMapper.map(task, TaskForListDTO.class))
-            .collect(Collectors.toList());
+                .map(task -> modelMapper.map(task, TaskForListDTO.class))
+                .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskDTOs, taskPage.getTotalElements()));
+        return ResponseEntity.ok(new TaskPaginatedDTO(taskDTOs, taskPage.getTotalElements()));
     }
 
     @GetMapping("/{taskId}")
@@ -53,29 +55,32 @@ public class TaskController {
 
         Task task = taskService.save(modelMapper.map(taskDTO, Task.class), principal);
 
-        return ResponseEntity.ok().body(modelMapper.map(task, TaskDTO.class));
+        return ResponseEntity.ok(modelMapper.map(task, TaskDTO.class));
     }
 
     @PutMapping("/{taskId}")
-    @PreAuthorize("isAuthenticated() and @taskServiceImpl.findById(#taskId).getUser().getUsername() == principal.username")
+    @PreAuthorize("isAuthenticated() and @taskServiceImpl.findById(#taskId)" +
+            ".getUser().getUsername() == principal.username")
     public ResponseEntity<TaskDTO> editTask(@PathVariable Integer taskId, @RequestBody TaskDTO taskDTO) {
 
         Task task = taskService.update(taskId, modelMapper.map(taskDTO, Task.class));
 
-        return ResponseEntity.ok().body(modelMapper.map(task, TaskDTO.class));
+        return ResponseEntity.ok(modelMapper.map(task, TaskDTO.class));
     }
 
     @DeleteMapping("/{taskId}")
     @PreAuthorize("hasAuthority('TASK_DELETE_ANY_PRIVILEGE') or " +
-        "@taskServiceImpl.findById(#taskId).getUser().getUsername()== principal.username")
-    public ResponseEntity<DeleteDTO> deleteTask(@PathVariable Integer taskId) {
+            "@taskServiceImpl.findById(#taskId).getUser().getUsername() == principal.username")
+    public ResponseEntity<MessageResponse> deleteTask(@PathVariable Integer taskId) {
 
-        return ResponseEntity.ok().body(new DeleteDTO(taskService.deleteById(taskId)));
+        taskService.deleteById(taskId);
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.TASK_DELETED_SUCCESSFULLY));
     }
 
     @GetMapping("/search/{keywords}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<TaskPaginatedDTO> getSearchedByKeywordsTasks(@PathVariable String[] keywords, Pageable pageable) {
+    public ResponseEntity<TaskPaginatedDTO> getSearchedByKeywordsTasks(@PathVariable String[] keywords,
+                                                                       Pageable pageable) {
 
         Page<Task> taskPage = taskService.searchByKeywords(keywords, pageable);
 
@@ -83,13 +88,14 @@ public class TaskController {
                 .map(task -> modelMapper.map(task, TaskForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
+        return ResponseEntity.ok(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
     }
 
 
     @GetMapping("/tagged/{tags}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<TaskPaginatedDTO> getSearchedByTagsTasks(@PathVariable String[] tags, Pageable pageable) {
+    public ResponseEntity<TaskPaginatedDTO> getSearchedByTagsTasks(@PathVariable String[] tags,
+                                                                   Pageable pageable) {
 
         Page<Task> taskPage = taskService.searchByTags(tags, pageable);
 
@@ -97,6 +103,6 @@ public class TaskController {
                 .map(task -> modelMapper.map(task, TaskForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
+        return ResponseEntity.ok(new TaskPaginatedDTO(taskForListDTOS, taskPage.getTotalElements()));
     }
 }

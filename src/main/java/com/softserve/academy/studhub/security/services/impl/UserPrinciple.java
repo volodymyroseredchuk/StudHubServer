@@ -3,7 +3,6 @@ package com.softserve.academy.studhub.security.services.impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.studhub.entity.Privilege;
 import com.softserve.academy.studhub.entity.Role;
-import com.softserve.academy.studhub.entity.University;
 import com.softserve.academy.studhub.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,9 +11,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.social.security.SocialUser;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,9 +44,8 @@ public class UserPrinciple implements UserDetails {
             privileges.addAll(role.getPrivileges());
         }
 
-        authorities.addAll(privileges.stream().map(privilege ->
-                new SimpleGrantedAuthority(privilege.getName())
-        ).collect(Collectors.toList()));
+        authorities.addAll(privileges.stream().map(
+                privilege -> new SimpleGrantedAuthority(privilege.getName())).collect(Collectors.toList()));
 
         return new UserPrinciple(
                 user.getId(),
