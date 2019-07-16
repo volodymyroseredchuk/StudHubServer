@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,7 @@ public class TeacherController {
     @PostMapping("/addPhotoToTeacher")
     @PreAuthorize("permitAll()")
     ResponseEntity<Integer> addPhotoToTeacher(@RequestParam Integer teacherId,
-                                              @RequestParam MultipartFile multipartFile) {
+                                              @RequestParam MultipartFile multipartFile) throws IOException {
         Integer result = teacherService.addPhotoToTeacher(teacherId, multipartFile);
         return ResponseEntity.ok(result);
     }
