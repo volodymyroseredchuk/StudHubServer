@@ -43,14 +43,14 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News findById(Integer newsId) {
         return newsRepository.findById(newsId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.QUESTION_NOTFOUND + newsId));
+                () -> new NotFoundException(ErrorMessage.NEWS_NOTFOUND + newsId));
     }
 
     @Override
     public String deleteById(Integer newsId) {
         News newsToDelete = findById(newsId);
         newsRepository.deleteById(newsId);
-        return SuccessMessage.QUESTION_DELETED_SUCCESSFULLY;
+        return SuccessMessage.NEWS_DELETED_SUCCESSFULLY;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Scheduled(fixedDelay = 1000)
     public void parseAndSave() {
-        Set<String> linkSet = parser.parseLinks("https://ain.ua");
+        Set<String> linkSet = parser.parseLinks("https://ain.ua/en");
         for (String link : linkSet) {
             if (!existByUrl(link)) {
                 String title = parser.parseTitle(link);
@@ -78,9 +78,7 @@ public class NewsServiceImpl implements NewsService {
                 news.setCreationDate(LocalDateTime.now());
                 news.setSourceUrl(link);
                 newsRepository.saveAndFlush(news);
-                System.out.println(title);
             }
-            //System.out.println(link);
         }
     }
 }
