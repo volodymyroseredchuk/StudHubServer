@@ -33,8 +33,6 @@ public class ChatServiceImpl implements ChatService {
     private SocketService socketService;
     private UserService userService;
 
-    public static final LocalDateTime DEFAULT_CREATION_TIME = LocalDateTime.parse("1999-12-11T10:15:30");
-
     @Override
     public void handleChatMessage(ChatMessage message) {
         if (message == null) {
@@ -142,10 +140,9 @@ public class ChatServiceImpl implements ChatService {
         }
 
         List<ChatSubscription> subscriptionList = subscriptionRepository.findChatSubscriptionByChatId(chatId);
-        String chatName;
+        String chatName = null;
         String photoUrl = null;
         if (subscriptionList.size() == 2) {
-            chatName = "Default name";
             for (ChatSubscription subscription : subscriptionList) {
                 if (!subscription.getUser().getId().equals(userId)) {
                     chatName = subscription.getUser().getUsername();
@@ -208,7 +205,7 @@ public class ChatServiceImpl implements ChatService {
         subscriptionRepository.saveAndFlush(subscription);
 
         ChatMessage defaultMessage = new ChatMessage();
-        defaultMessage.setCreationDateTime(DEFAULT_CREATION_TIME);
+        defaultMessage.setCreationDateTime(LocalDateTime.now());
         defaultMessage.setChat(chat);
         defaultMessage.setContent("Chat successfully created.");
         defaultMessage.setSender(null);
