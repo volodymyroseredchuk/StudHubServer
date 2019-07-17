@@ -9,9 +9,5 @@ import java.util.Optional;
 public interface UniversityService {
     List<University> findAll();
 
-    University save(University university);
-
     University findById(Integer universityId);
-
-    //List<University> sortByMark();
 }

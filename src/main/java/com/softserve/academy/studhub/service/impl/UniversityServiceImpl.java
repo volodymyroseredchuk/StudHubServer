@@ -31,14 +31,4 @@ public class UniversityServiceImpl implements UniversityService {
             () -> new NotFoundException(ErrorMessage.UNIVERSITY_NOTFOUND + universityId));
     }
 
-    @Override
-    public University save(University teacher) {
-        return universityRepository.saveAndFlush(teacher);
-    }
-
-//    @Override
-//    public List<University> sortByMark() {
-//        return universityRepository.findAllByTagListInOrderByMarkAsc();
-//    }
-
 }
