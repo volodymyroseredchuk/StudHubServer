@@ -27,7 +27,6 @@ public class SignupConverter {
         user.setRoles(new HashSet<Role>() {{
             add(roleService.findByName(RoleName.ROLE_USER));
         }});
-
         return user;
     }
 }

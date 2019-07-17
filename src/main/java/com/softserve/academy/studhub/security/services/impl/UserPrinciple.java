@@ -44,9 +44,8 @@ public class UserPrinciple implements UserDetails {
             privileges.addAll(role.getPrivileges());
         }
 
-        authorities.addAll(privileges.stream().map(privilege ->
-                new SimpleGrantedAuthority(privilege.getName())
-        ).collect(Collectors.toList()));
+        authorities.addAll(privileges.stream().map(
+                privilege -> new SimpleGrantedAuthority(privilege.getName())).collect(Collectors.toList()));
 
         return new UserPrinciple(
                 user.getId(),

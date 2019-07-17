@@ -39,7 +39,7 @@ public class TeamController {
                 .map(team -> modelMapper.map(team, TeamForListDTO.class))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(new TeamPaginatedDTO(teamForListDTOS, teamPage.getTotalElements()));
+        return ResponseEntity.ok(new TeamPaginatedDTO(teamForListDTOS, teamPage.getTotalElements()));
     }
 
     @GetMapping("/{teamId}")
@@ -50,7 +50,7 @@ public class TeamController {
 
         Team team = teamService.findById(teamId);
 
-        return ResponseEntity.ok().body(modelMapper.map(team, TeamDTO.class));
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
     }
 
     @PostMapping("/create")
@@ -61,7 +61,7 @@ public class TeamController {
                 UserForListDTO.class));
         Team team = teamService.save(modelMapper.map(teamDTO, Team.class), principal);
 
-        return ResponseEntity.ok().body(modelMapper.map(team, TeamDTO.class));
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
     }
 
     @PutMapping("/{teamId}")
@@ -71,17 +71,17 @@ public class TeamController {
 
         Team team = teamService.update(teamId, modelMapper.map(teamDTO, Team.class));
 
-        return ResponseEntity.ok().body(modelMapper.map(team, TeamDTO.class));
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
     }
 
     @DeleteMapping("/{teamId}")
     @PreAuthorize("hasAuthority('DELETE_ANY_TEAM_PRIVILEGE') or " +
-            "@teamServiceImpl.findById(#teamId).getUser().getUsername()== principal.username")
-    public ResponseEntity<?> deleteTeam(@PathVariable Integer teamId) {
+            "@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username")
+    public ResponseEntity<MessageResponse> deleteTeam(@PathVariable Integer teamId) {
 
         teamService.delete(teamId);
 
-        return ResponseEntity.ok().body(new MessageResponse(SuccessMessage.TEAM_DELETED_SUCCESSFULLY));
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.TEAM_DELETED_SUCCESSFULLY));
     }
 
 }

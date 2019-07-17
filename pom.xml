@@ -187,8 +187,6 @@
             <version>1.15.0</version>
         </dependency>
 
-
-
         <!-- https://mvnrepository.com/artifact/org.springframework.social/spring-social-facebook -->
 
         <dependency>

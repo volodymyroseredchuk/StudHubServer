@@ -28,15 +28,18 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task save(Task task, Principal principal) {
+
         task.setCreationDate(LocalDateTime.now());
         task.setUser(userService.findByUsername(principal.getName()));
         task.setStatus(TaskStatus.NEW);
         task.setTagList(tagService.reviewTagList(task.getTagList()));
+
         return taskRepository.saveAndFlush(task);
     }
 
     @Override
     public Task update(Integer taskId, Task task) {
+
         Task updatable = findById(taskId);
         updatable.setTitle(task.getTitle());
         updatable.setBody(task.getBody());
@@ -44,28 +47,26 @@ public class TaskServiceImpl implements TaskService {
         updatable.setDeadlineDate(task.getDeadlineDate());
         updatable.setTagList(task.getTagList());
         updatable.setModifiedDate(LocalDateTime.now());
+
         return taskRepository.saveAndFlush(updatable);
     }
 
     @Override
     public Task findById(Integer taskId) {
+
         return taskRepository.findById(taskId).orElseThrow(
-            () -> new NotFoundException(ErrorMessage.TASK_NOT_FOUND_BY_ID + taskId));
+                () -> new NotFoundException(ErrorMessage.TASK_NOT_FOUND_BY_ID + taskId));
     }
 
     @Override
-    public String deleteById(Integer taskId) {
-        Task taskToDelete = findById(taskId);
-        List<Proposal> proposalList = taskToDelete.getProposalList();
-        if ((proposalList == null) || (proposalList.isEmpty())) {
-            taskRepository.deleteById(taskId);
-            return ErrorMessage.TASK_DELETED;
-        }
-        return ErrorMessage.TASK_NOT_DELETED;
+    public void deleteById(Integer taskId) {
+
+        taskRepository.deleteById(taskId);
     }
 
     @Override
     public Page<Task> findAll(Pageable pageable) {
+
         return taskRepository.findAllByStatusOrderByCreationDateDesc(TaskStatus.NEW, pageable);
     }
 

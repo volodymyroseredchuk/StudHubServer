@@ -30,34 +30,39 @@ public class ProposalServiceImpl implements ProposalService {
 
     @Override
     public Proposal save(Proposal proposal, Integer taskId, Principal principal) {
+
         proposal.setCreationDate(LocalDateTime.now());
         proposal.setUser(userService.findByUsername(principal.getName()));
         proposal.setTask(taskService.findById(taskId));
+
         return proposalRepository.saveAndFlush(proposal);
     }
 
     @Override
     public Proposal findById(Integer proposalId) {
+
         return proposalRepository.findById(proposalId).orElseThrow(
-            () -> new NotFoundException(ErrorMessage.PROPOSAL_NOT_FOUND_BY_ID + proposalId));
+                () -> new NotFoundException(ErrorMessage.PROPOSAL_NOT_FOUND_BY_ID + proposalId));
     }
 
     @Override
-    public String deleteById(Integer proposalId) {
+    public void deleteById(Integer proposalId) {
         proposalRepository.deleteById(proposalId);
-        return ErrorMessage.PROPOSAL_DELETED;
     }
 
     @Override
     public Page<Proposal> findAllByTaskId(Integer taskId, Pageable pageable) {
+
         return proposalRepository.findAllByTaskIdOrderByCreationDateDesc(taskId, pageable);
     }
 
     @Override
     @Transactional
     public Order approveProposal(Integer proposalId) {
+
         Proposal proposal = this.findById(proposalId);
         Task task = proposal.getTask();
+
         return orderService.create(task, proposal);
     }
 }

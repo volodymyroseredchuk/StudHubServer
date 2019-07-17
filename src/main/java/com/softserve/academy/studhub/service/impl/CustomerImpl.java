@@ -23,6 +23,7 @@ public class CustomerImpl implements CustomerService {
         Order order = orderService.findById(orderId);
         customer.setUser(orderService.findById(orderId).getUserCreator());
         order.setCustomer(customer);
+
         return customerRepository.saveAndFlush(customer);
     }
 }

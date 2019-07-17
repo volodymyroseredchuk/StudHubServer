@@ -13,7 +13,7 @@ public interface ProposalService {
 
     Proposal findById(Integer proposalId);
 
-    String deleteById(Integer proposalId);
+    void deleteById(Integer proposalId);
 
     Page<Proposal> findAllByTaskId(Integer taskId, Pageable pageable);
 

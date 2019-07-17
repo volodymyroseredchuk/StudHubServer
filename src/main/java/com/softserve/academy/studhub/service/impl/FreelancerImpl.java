@@ -23,6 +23,7 @@ public class FreelancerImpl implements FreelancerService {
         Order order = orderService.findById(orderId);
         freelancer.setUser(orderService.findById(orderId).getUserExecutor());
         order.setFreelancer(freelancer);
+
         return freelancerRepository.saveAndFlush(freelancer);
     }
 }

@@ -14,7 +14,7 @@ public interface TaskService {
 
     Task findById(Integer taskId);
 
-    String deleteById(Integer taskId);
+    void deleteById(Integer taskId);
 
     Page<Task> findAll(Pageable pageable);
 
