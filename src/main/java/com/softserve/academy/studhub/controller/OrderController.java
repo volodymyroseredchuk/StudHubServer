@@ -36,13 +36,13 @@ public class OrderController {
     @GetMapping("/{orderId}")
     @PreAuthorize("@orderServiceImpl.findById(#orderId).getUserExecutor().getUsername() == principal.username or " +
             "@orderServiceImpl.findById(#orderId).getUserCreator().getUsername() == principal.username")
-    public ResponseEntity<OrderDTO> getOrder(@PathVariable Integer orderId){
+    public ResponseEntity<OrderDTO> getOrder(@PathVariable Integer orderId) {
         return ResponseEntity.ok(modelMapper.map(orderService.findById(orderId), OrderDTO.class));
     }
 
     @GetMapping("/created/my")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<OrderDTO>> getOrderAsTaskCreator(Principal principal){
+    public ResponseEntity<List<OrderDTO>> getOrderAsTaskCreator(Principal principal) {
         return ResponseEntity.ok(orderService.findByUserCreatorUsername(principal.getName())
                 .stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
@@ -52,7 +52,7 @@ public class OrderController {
 
     @GetMapping("/assigned/my")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<OrderDTO>> getOrderAsTaskExecutor(Principal principal){
+    public ResponseEntity<List<OrderDTO>> getOrderAsTaskExecutor(Principal principal) {
         return ResponseEntity.ok(orderService.findByUserExecutorUsername(principal.getName())
                 .stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
@@ -63,10 +63,10 @@ public class OrderController {
     @PostMapping("/{orderId}/submit")
     @PreAuthorize("@orderServiceImpl.findById(#orderId).getUserExecutor().getUsername() == principal.username")
     public ResponseEntity<ResultSubmission> submitResult(@RequestBody ResultSubmissionDTO resultSubmissionDTO,
-                                                         @PathVariable Integer orderId){
+                                                         @PathVariable Integer orderId) {
         return ResponseEntity.ok(orderService.submitResult(
                 orderId,
-                modelMapper.map(resultSubmissionDTO,ResultSubmission.class)
+                modelMapper.map(resultSubmissionDTO, ResultSubmission.class)
         ));
     }
 
@@ -75,7 +75,6 @@ public class OrderController {
     public ResponseEntity<CustomerDTO> rateCustomer(@PathVariable Integer orderId, @RequestBody CustomerDTO customerDTO) {
 
         Customer customer = customerService.add(modelMapper.map(customerDTO, Customer.class), orderId);
-
         return ResponseEntity.ok().body(modelMapper.map(customer, CustomerDTO.class));
     }
 
@@ -84,7 +83,6 @@ public class OrderController {
     public ResponseEntity<?> rateFreelancer(@PathVariable Integer orderId, @RequestBody FreelancerDTO freelancerDTO) {
 
         Freelancer freelancer = freelancerService.add(modelMapper.map(freelancerDTO, Freelancer.class), orderId);
-
         return ResponseEntity.ok().body(modelMapper.map(freelancer, FreelancerDTO.class));
     }
 }

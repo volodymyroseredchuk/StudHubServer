@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.*;
 import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import com.softserve.academy.studhub.repository.OrderRepository;
@@ -35,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
         User userCreator = task.getUser();
         userCreator.setCookiesCount(userCreator.getCookiesCount() - proposal.getPrice());
-        userCreator = userRepository.saveAndFlush(userCreator);
+        userRepository.saveAndFlush(userCreator);
         order.setProposal(proposal);
 
         order.setUserCreator(task.getUser());
@@ -58,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(Integer orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order with this Id does not exist!"));
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.ORDER_NOT_EXIST + orderId));
     }
 
     @Override
@@ -66,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
     public ResultSubmission submitResult(Integer orderId, ResultSubmission resultSubmission) {
         resultSubmission = resultSubmissionRepository.saveAndFlush(resultSubmission);
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order with this Id does not exist!"));
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.ORDER_NOT_EXIST + orderId));
         order.setResultSubmission(resultSubmission);
         order = orderRepository.saveAndFlush(order);
 

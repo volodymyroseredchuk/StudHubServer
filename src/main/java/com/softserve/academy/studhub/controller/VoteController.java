@@ -5,7 +5,6 @@ import com.softserve.academy.studhub.dto.VoteResponseDTO;
 import com.softserve.academy.studhub.service.VoteService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +49,7 @@ public class VoteController {
 
     @GetMapping("/votes/sum/{username}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Integer> getSumOfVotesByUsername(@PathVariable String username){
+    public ResponseEntity<Integer> getSumOfVotesByUsername(@PathVariable String username) {
 
         return ResponseEntity.ok(voteService.getVoteSumByUsername(username));
     }

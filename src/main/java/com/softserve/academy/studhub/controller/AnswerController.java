@@ -72,14 +72,14 @@ public class AnswerController {
 
     @GetMapping("questions/answers/count/approved/{username}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Integer> getCountOfApprovedAnswersByUsername(@PathVariable String username){
+    public ResponseEntity<Integer> getCountOfApprovedAnswersByUsername(@PathVariable String username) {
 
         return ResponseEntity.ok(answerService.countByApprovedTrueAndUserUsername(username));
     }
 
     @GetMapping("questions/answers/count/{username}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Integer> getCountOfAnswersByUsername(@PathVariable String username){
+    public ResponseEntity<Integer> getCountOfAnswersByUsername(@PathVariable String username) {
 
         return ResponseEntity.ok(answerService.countByUserUsername(username));
     }
