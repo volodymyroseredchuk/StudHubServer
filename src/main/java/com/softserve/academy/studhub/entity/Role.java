@@ -1,19 +1,15 @@
 package com.softserve.academy.studhub.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.softserve.academy.studhub.entity.enums.RoleName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -30,6 +26,12 @@ public class Role {
     @NaturalId
     @Column(length = 60)
     private RoleName name;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "roles_privileges",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "privilege_id"))
+    private Set<Privilege> privileges = new HashSet<>();
 
     public Role(RoleName name) {
         this.name = name;

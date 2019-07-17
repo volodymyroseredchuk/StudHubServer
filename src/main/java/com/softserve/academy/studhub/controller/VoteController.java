@@ -5,7 +5,6 @@ import com.softserve.academy.studhub.dto.VoteResponseDTO;
 import com.softserve.academy.studhub.service.VoteService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +27,7 @@ public class VoteController {
     private ModelMapper modelMapper;
 
     @PostMapping("/votes")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('VOTE_WRITE_PRIVILEGE')")
     public ResponseEntity<Object> addVote(@Valid @RequestBody VotePostDTO vote,
                                           Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(
@@ -37,7 +36,7 @@ public class VoteController {
     }
 
     @GetMapping("/votes/question/{questionId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('VOTE_READ_PRIVILEGE')")
     public ResponseEntity<Object> getVotesByUserAndQuestionId(@PathVariable Integer questionId,
                                                               Principal principal) {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -46,5 +45,12 @@ public class VoteController {
                         .collect(Collectors.toList())
         );
 
+    }
+
+    @GetMapping("/votes/sum/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Integer> getSumOfVotesByUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(voteService.getVoteSumByUsername(username));
     }
 }

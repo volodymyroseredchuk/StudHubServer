@@ -32,7 +32,14 @@ public class PasswordResetController {
 
     @PostMapping("/forgot-password")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<?> processForgotPasswordForm(@Valid @RequestBody PasswordForgotDto form) {
+    public void processForgotPasswordForm(@Valid @RequestBody PasswordForgotDto form) {
+
+        userService.findByEmail(form.getEmail());
+    }
+
+    @PostMapping("/forgot-password/confirm")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<MessageResponse> sendForgotPasswordLink(@Valid @RequestBody PasswordForgotDto form) {
 
         User user = userService.findByEmail(form.getEmail());
         PasswordResetToken token = new PasswordResetToken(user);
@@ -46,7 +53,7 @@ public class PasswordResetController {
     @PostMapping("/reset-password")
     @Transactional
     @PreAuthorize("permitAll()")
-    public ResponseEntity<?> handlePasswordReset(@Valid @RequestBody PasswordResetDto form) {
+    public ResponseEntity<MessageResponse> handlePasswordReset(@Valid @RequestBody PasswordResetDto form) {
 
         PasswordResetToken token = passwordResetTokenService.findByValidToken(form.getToken());
 

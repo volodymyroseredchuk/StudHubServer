@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.*;
+import com.softserve.academy.studhub.entity.enums.SocketMessageType;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.repository.SubscriptionRepository;
 import com.softserve.academy.studhub.service.EmailService;
@@ -82,7 +83,7 @@ public class SubscriptionServiceImplTest {
         questionList.add(new Question());
         when(subscriptionRepository.findUserByChannelQuestionId(1)).thenReturn(userList);
         when(questionRepository.findById(1)).thenReturn(Optional.of(new Question()));
-        subscriptionService.handleMessage(new SocketMessage("1"));
+        subscriptionService.handleMessage(new SocketMessage("1", SocketMessageType.NOTIFICATION));
     }
 
     @Test(expected = IllegalArgumentException.class)

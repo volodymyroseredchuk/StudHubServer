@@ -45,7 +45,7 @@ public class FeedbackController {
     }
 
     @PostMapping(path = "/feedback")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('FEEDBACK_WRITE_PRIVILEGE')")
     public ResponseEntity<FeedbackDTO> addNewFeedback(@RequestBody FeedbackDTO feedbackDTO) {
 
         Feedback result = feedbackService.save(modelMapper.map(feedbackDTO, Feedback.class));
@@ -63,14 +63,12 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackDTOS);
     }
 
-    @GetMapping("/current")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(Principal principal) {
+    @GetMapping("/user/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<FeedbackDTO>> getAllFeedbacksByCurrentUser(@PathVariable String username) {
 
-        return new ResponseEntity<>(feedbackService.
-                findFeedbackByUserUsername(principal.getName()).
+        return ResponseEntity.ok(feedbackService.findFeedbackByUserUsername(username).
                 stream().map(feedback -> modelMapper.map(feedback, FeedbackDTO.class)).
-                collect(Collectors.toList()), HttpStatus.OK);
+                collect(Collectors.toList()));
     }
-
 }

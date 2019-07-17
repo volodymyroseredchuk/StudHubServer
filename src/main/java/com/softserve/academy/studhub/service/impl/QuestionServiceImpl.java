@@ -85,14 +85,14 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public Page<Question> findAllSortedByAge(Pageable pageable) {
 
-        return repository.findAllByOrderByCreationDateDesc(pageable);
+        return repository.findAllByTeamIsNullOrderByCreationDateDesc(pageable);
 
     }
 
     @Override
     public Page<Question> searchByTags(String[] tags, Pageable pageable) {
 
-        return repository.findAllDistinctByTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
+        return repository.findAllDistinctByTeamIsNullAndTagListInOrderByCreationDateDesc(tagService.reviewTagList(tags), pageable);
     }
 
     @Override
@@ -105,6 +105,11 @@ public class QuestionServiceImpl implements IQuestionService {
     public List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username){
 
         return repository.findQuestionByUserUsernameOrderByCreationDateDesc(username);
+    }
+
+    @Override
+    public Page<Question> findAllByTeamId(Integer teamId, Pageable pageable) {
+        return repository.findAllByTeamIdOrderByCreationDateDesc(teamId, pageable);
     }
 
 }

@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.dto.AnswerCreateDTO;
 import com.softserve.academy.studhub.entity.Answer;
 import com.softserve.academy.studhub.entity.Comment;
 import com.softserve.academy.studhub.entity.SocketMessage;
+import com.softserve.academy.studhub.entity.enums.SocketMessageType;
 import com.softserve.academy.studhub.repository.AnswerRepository;
 import com.softserve.academy.studhub.repository.QuestionRepository;
 import com.softserve.academy.studhub.repository.UserRepository;
@@ -61,7 +62,7 @@ public class AnswerServiceImpl implements AnswerService {
         ));
         Answer returnAnswer = answerRepository.saveAndFlush(answer);
         subscriptionService.handleMessage(
-                new SocketMessage(returnAnswer.getQuestion().getId().toString()));
+                new SocketMessage(returnAnswer.getQuestion().getId().toString(), SocketMessageType.NOTIFICATION));
         return returnAnswer;
 
     }
@@ -94,6 +95,18 @@ public class AnswerServiceImpl implements AnswerService {
         } else {
             throw new IllegalArgumentException(ErrorMessage.ANSWER_NOTFOUND);
         }
+    }
+
+    @Override
+    public Integer countByUserUsername(String username) {
+
+        return answerRepository.countByUserUsername(username);
+    }
+
+    @Override
+    public Integer countByApprovedTrueAndUserUsername(String username) {
+
+        return answerRepository.countByApprovedTrueAndUserUsername(username);
     }
 
 

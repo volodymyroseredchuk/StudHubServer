@@ -22,7 +22,7 @@ public class TokenController {
 
     @PostMapping("/refresh")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<?> refreshAccessToken() {
+    public ResponseEntity<JwtResponse> refreshAccessToken() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String accessToken = jwtProvider.generateAccessToken(authentication);
@@ -33,7 +33,7 @@ public class TokenController {
 
     @PostMapping("/verify")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> verifyAccessToken() {
+    public ResponseEntity<MessageResponse> verifyAccessToken() {
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.VALID_TOKEN));
     }

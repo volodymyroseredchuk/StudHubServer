@@ -20,16 +20,16 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/raiseToModerator/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> raiseUserToModerator(@PathVariable("userId") Integer userId) {
+    @PreAuthorize("hasAuthority('GRAND_ROLE_PRIVILEGE')")
+    public ResponseEntity<MessageResponse> raiseUserToModerator(@PathVariable("userId") Integer userId) {
 
         adminService.addRole(userId, RoleName.ROLE_MODERATOR);
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.USER_RAISED));
     }
 
     @PostMapping("/downToUser/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> downModeratorToUser(@PathVariable("userId") Integer moderatorId) {
+    @PreAuthorize("hasAuthority('GRAND_ROLE_PRIVILEGE')")
+    public ResponseEntity<MessageResponse> downModeratorToUser(@PathVariable("userId") Integer moderatorId) {
 
         adminService.removeRole(moderatorId, RoleName.ROLE_MODERATOR);
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.MODERATOR_DOWNED));
