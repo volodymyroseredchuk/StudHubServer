@@ -29,7 +29,6 @@ public class University {
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
 
-    @EqualsAndHashCode.Exclude
     @Column(name = "name")
     private String name;
 

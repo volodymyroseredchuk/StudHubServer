@@ -83,9 +83,3 @@ public class TeacherServiceImpl implements TeacherService {
         return (String) uploadResult.get("url");
     }
 }
-
-
-//@Override
-//    public List<Teacher> sortByMark() {
-//        return teacherRepository.findAllByTagListInOrderByMarkAsc();
-//    }

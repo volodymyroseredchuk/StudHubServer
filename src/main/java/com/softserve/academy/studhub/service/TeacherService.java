@@ -22,5 +22,4 @@ public interface TeacherService {
 
     Page<Teacher> findByLastName (String keyword, Pageable pageable);
 
-    //List<Teacher> sortByMark();
 }
