@@ -35,15 +35,6 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
 
-        /*try {
-            SocketMessage msg = decoder.decode(message.getPayload());
-            subscriptionService.handleMessage(msg);
-        } catch (IllegalArgumentException e) {
-            socketService.sendGreetings(session, 3);
-        } catch (DecodeException e) {
-            socketService.sendGreetings(session, 3);
-        }*/
-
         ChatMessage chatMessage = chatMessageDecoder.decode(message.getPayload());
         chatService.handleChatMessage(chatMessage);
 

@@ -28,14 +28,14 @@ public class ChatController {
             + "and @chatServiceImpl.getUsernameParticipantsByChat(#chatId).contains(principal.username)")
     public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, @RequestParam Integer offset, @RequestParam Integer size) {
         List<ChatMessage> messages = chatService.getMessagesByChatId(chatId, new OffsetBasedPageable(offset, size));
-        return ResponseEntity.ok().body(messages);
+        return ResponseEntity.ok(messages);
     }
 
     @GetMapping("/list/{userId}")
     @PreAuthorize("isAuthenticated() and @userServiceImpl.findById(#userId).username == principal.username")
     public ResponseEntity<?> getChatMessages(@PathVariable Integer userId) {
         List<ChatListItem> itemList = chatService.getChatList(userId);
-        return ResponseEntity.ok().body(itemList);
+        return ResponseEntity.ok(itemList);
     }
 
     @GetMapping("/header/{chatId}/{userId}")
@@ -43,7 +43,7 @@ public class ChatController {
             + "and @chatServiceImpl.getUsernameParticipantsByChat(#chatId).contains(principal.username)"
             + "and @userServiceImpl.findById(#userId).username == principal.username")
     public ResponseEntity<?> getChatHeader(@PathVariable Integer chatId, @PathVariable Integer userId) {
-        return ResponseEntity.ok().body(chatService.getChatHeader(chatId, userId));
+        return ResponseEntity.ok(chatService.getChatHeader(chatId, userId));
     }
 
     @PostMapping
@@ -53,13 +53,13 @@ public class ChatController {
     public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
         ChatMessage savedMessage = chatService.save(message);
         chatService.handleChatMessage(savedMessage);
-        return ResponseEntity.ok().body(savedMessage);
+        return ResponseEntity.ok(savedMessage);
     }
 
     @GetMapping("/new/{creatorUserId}/{userId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId) {
-        return ResponseEntity.ok().body(chatService.getChatId(creatorUserId, userId));
+        return ResponseEntity.ok(chatService.getChatId(creatorUserId, userId));
     }
 
 }
