@@ -39,8 +39,7 @@ public class UserPrinciple implements UserDetails {
         List<GrantedAuthority> authorities = new ArrayList<>();
         Set<Privilege> privileges = new HashSet<>();
 
-        for (Role role :
-                user.getRoles()) {
+        for (Role role : user.getRoles()) {
             privileges.addAll(role.getPrivileges());
         }
 
