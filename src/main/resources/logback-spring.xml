@@ -89,6 +89,22 @@
         </root>
     </springProfile>
 
+    <springProfile name="dev">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="heroku">
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
     <springProfile name="console-warn">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
