@@ -67,6 +67,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     @Scheduled(fixedDelay = 1000000)
     public void parseAndSave() {
+        return;
         Set<String> linkSet = parser.parseLinks("https://ain.ua/en");
         for (String link : linkSet) {
             if (!existByUrl(link)) {
