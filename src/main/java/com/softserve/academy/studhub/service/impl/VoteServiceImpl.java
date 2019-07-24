@@ -104,9 +104,4 @@ public class VoteServiceImpl implements VoteService {
         }
     }
 
-    @Override
-    public Integer getVoteSumByUsername(String username) {
-
-        return voteRepository.getVoteSumByUsername(username);
-    }
 }

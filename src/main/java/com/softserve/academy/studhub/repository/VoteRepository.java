@@ -18,8 +18,4 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     Optional<Vote> findByUserAndFeedback(User user, Feedback feedback);
 
     List<Vote> findByUserAndAnswer_Question(User user, Question question);
-
-    @Query("select sum(v.value) from Vote v join Answer a on v.answer.id = a.id"
-            + " where a.user.id = (select id from User u where u.username = :username)")
-    Integer getVoteSumByUsername(@Param("username") String username);
 }
