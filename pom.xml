@@ -311,6 +311,7 @@
                     <password>${spring.datasource.password}</password>
 
                     <skip>${skip.db.init}</skip>
+                    <onError>continue</onError>
                 </configuration>
 
                 <executions>
