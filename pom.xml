@@ -272,6 +272,7 @@
                         <configuration>
                             <files>
                                 <file>application.properties</file>
+                                <file>application-dev.properties</file>
                             </files>
                         </configuration>
                     </execution>
@@ -284,6 +285,7 @@
                         <configuration>
                             <files>
                                 <file>application.properties</file>
+                                <file>application-dev.properties</file>
                             </files>
                         </configuration>
                     </execution>
