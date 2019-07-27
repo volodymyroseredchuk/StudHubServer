@@ -1,7 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
-
-import com.softserve.academy.studhub.dto.TeacherForListDTO;
+import com.softserve.academy.studhub.dto.TeacherDTO;
 import com.softserve.academy.studhub.dto.TeacherPaginatedDTO;
 import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.service.TeacherService;
@@ -44,18 +43,19 @@ public class TeacherController {
     ResponseEntity<TeacherPaginatedDTO> findTeachersByLastName(@PathVariable String keyword,
                                                                Pageable pageable) {
         Page<Teacher> result = teacherService.findByLastName(keyword, pageable);
-        List<TeacherForListDTO> teacherForListDTOS = result.getContent().stream()
-            .map(teacher -> modelMapper.map(teacher, TeacherForListDTO.class))
+        List<TeacherDTO> teacherDTOS = result.getContent().stream()
+            .map(teacher -> modelMapper.map(teacher, TeacherDTO.class))
             .collect(Collectors.toList());
-        return ResponseEntity.ok().body(new TeacherPaginatedDTO(teacherForListDTOS,
+        return ResponseEntity.ok().body(new TeacherPaginatedDTO(teacherDTOS,
             result.getTotalElements()));
     }
 
-    @PostMapping ("/teacher")
+    @PostMapping("/teacher")
     @PreAuthorize("permitAll()")
 //    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
-    Teacher newTeacher(@RequestBody Teacher teacher) {
-        return teacherService.save(teacher);
+    ResponseEntity.BodyBuilder newTeacher(@RequestBody TeacherDTO teacherDTO) {
+        teacherService.save(modelMapper.map(teacherDTO, Teacher.class));
+        return ResponseEntity.status(200);
     }
 
     @PostMapping("/addPhotoToTeacher")
@@ -64,12 +64,21 @@ public class TeacherController {
                                               @RequestParam MultipartFile multipartFile) throws IOException {
         Integer result = teacherService.addPhotoToTeacher(teacherId, multipartFile);
         return ResponseEntity.ok(result);
+    }
 
-//        @DeleteMapping("/{id}")
+    @DeleteMapping("/{teacherId}")
 //    @PreAuthorize("hasAuthority('TEACHER_DELETE_ANY_PRIVILEGE')")
-//    void deleteTeacher(@PathVariable Integer id) {
-//        teacherService.deleteById(id);
-//    }
+    ResponseEntity.BodyBuilder deleteTeacher(@PathVariable Integer teacherId) {
+        teacherService.delete(teacherId);
+        return ResponseEntity.status(200);
+    }
 
+    @PutMapping("/teacher")
+    @PreAuthorize("permitAll()")
+//    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
+    ResponseEntity<TeacherDTO> updateTeacher(@RequestBody TeacherDTO teacherDTO) {
+        Teacher result = teacherService.update(modelMapper.map(teacherDTO, Teacher.class));
+        TeacherDTO resultDTO = modelMapper.map(result, TeacherDTO.class);
+        return ResponseEntity.ok(resultDTO);
     }
 }

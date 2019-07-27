@@ -1,11 +1,10 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.entity.Teacher;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeacherRepository;
+import com.softserve.academy.studhub.service.FileService;
 import com.softserve.academy.studhub.service.TeacherService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,26 +13,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
+    private final FileService fileService;
 
-    private static final  Map<Object, Object> CONFIG = new HashMap<>();
-
-    static {
-        CONFIG.put("cloud_name", "studhubcloud");
-        CONFIG.put("api_key", "728188731214736");
-        CONFIG.put("api_secret", "8d9xEPsgdsDVGy71nWQxHZggOow");
-    }
-
-    private Cloudinary cloudinary = new Cloudinary(CONFIG);
-
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, FileService fileService) {
         this.teacherRepository = teacherRepository;
+        this.fileService = fileService;
     }
 
     @Override
@@ -55,8 +44,6 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public Teacher save(Teacher teacher) {
-
-
         teacher.setCreationDate(LocalDateTime.now());
         return teacherRepository.saveAndFlush(teacher);
     }
@@ -75,10 +62,8 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.saveAndFlush(teacherFromDB);
     }
 
-
     @Override
     public void delete(Integer teacherId) {
-
         teacherRepository.deleteById(teacherId);
     }
 
@@ -86,16 +71,8 @@ public class TeacherServiceImpl implements TeacherService {
     public Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile) throws IOException {
         Teacher teacher = teacherRepository.findById(teacherId)
             .orElseThrow(() -> new NotFoundException(ErrorMessage.TEACHER_NOTFOUND));
-        teacher.setImageUrl(uploadPhotoToCloudinary(multipartFile));
+        teacher.setImageUrl(fileService.uploadFile(multipartFile));
         teacherRepository.saveAndFlush(teacher);
         return teacherId;
-    }
-
-    private String uploadPhotoToCloudinary(MultipartFile toUpload) throws IOException {
-
-        @SuppressWarnings("rawtypes")
-        Map uploadResult = cloudinary.uploader().upload(toUpload.getBytes(),
-            ObjectUtils.asMap("use_filename", "true", "unique_filename", "true"));
-        return (String) uploadResult.get("url");
     }
 }
