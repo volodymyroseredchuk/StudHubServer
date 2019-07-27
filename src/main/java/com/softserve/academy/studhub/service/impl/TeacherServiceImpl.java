@@ -22,7 +22,7 @@ import java.util.Map;
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
 
-    private final static Map<Object, Object> CONFIG = new HashMap<>();
+    private static final  Map<Object, Object> CONFIG = new HashMap<>();
 
     static {
         CONFIG.put("cloud_name", "studhubcloud");
@@ -52,6 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherRepository.findByLastName(keyword, pageable);
     }
 
+
     @Override
     public Teacher save(Teacher teacher) {
 
@@ -61,10 +62,25 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public Teacher update(Teacher teacher) {
-        return teacherRepository.saveAndFlush(teacher);
+    public Teacher update(Teacher updatedTeacher) {
+
+        Teacher teacherFromDB = findById(updatedTeacher.getId());
+
+        teacherFromDB.setFirstName(updatedTeacher.getFirstName());
+        teacherFromDB.setLastName(updatedTeacher.getLastName());
+        teacherFromDB.setImageUrl(updatedTeacher.getImageUrl());
+        teacherFromDB.setUniversity(updatedTeacher.getUniversity());
+        teacherFromDB.setMark(updatedTeacher.getMark());
+
+        return teacherRepository.saveAndFlush(teacherFromDB);
     }
 
+
+    @Override
+    public void delete(Integer teacherId) {
+
+        teacherRepository.deleteById(teacherId);
+    }
 
     @Override
     public Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile) throws IOException {

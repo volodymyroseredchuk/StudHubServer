@@ -51,7 +51,7 @@ public class TeacherController {
             result.getTotalElements()));
     }
 
-    @PostMapping
+    @PostMapping ("/teacher")
     @PreAuthorize("permitAll()")
 //    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     Teacher newTeacher(@RequestBody Teacher teacher) {

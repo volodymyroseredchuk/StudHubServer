@@ -18,6 +18,8 @@ public interface TeacherService {
 
     Teacher update(Teacher teacher);
 
+    void delete(Integer teacherId);
+
     Integer addPhotoToTeacher(Integer teacherId, MultipartFile multipartFile) throws IOException;
 
     Page<Teacher> findByLastName (String keyword, Pageable pageable);
