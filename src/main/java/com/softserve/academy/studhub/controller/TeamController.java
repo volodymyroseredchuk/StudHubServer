@@ -43,7 +43,8 @@ public class TeamController {
     }
 
     @GetMapping("/{teamId}")
-    @PreAuthorize("hasAuthority('READ_ANY_TEAM_PRIVILEGE') or " +
+    @PreAuthorize("@teamServiceImpl.isTeamPublic(#teamId) or " +
+            "hasAuthority('READ_ANY_TEAM_PRIVILEGE') or " +
             "(isAuthenticated() and " +
             "@teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<TeamDTO> getTeam(@PathVariable Integer teamId) {

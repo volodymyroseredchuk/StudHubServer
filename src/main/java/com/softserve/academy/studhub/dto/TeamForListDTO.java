@@ -15,9 +15,13 @@ public class TeamForListDTO {
 
     private String title;
 
+    private String description;
+
     private UserGeneralInfoDTO user;
 
     private LocalDateTime creationDate;
 
     private LocalDateTime modifiedDate;
+
+    private Boolean isPublic;
 }

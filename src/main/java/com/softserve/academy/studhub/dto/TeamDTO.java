@@ -14,6 +14,8 @@ public class TeamDTO {
 
     private String title;
 
+    private String description;
+
     private UserForListDTO user;
 
     private LocalDateTime creationDate;
@@ -21,4 +23,6 @@ public class TeamDTO {
     private LocalDateTime modifiedDate;
 
     private List<UserForListDTO> userList;
+
+    private Boolean isPublic;
 }

@@ -796,9 +796,11 @@ SET character_set_client = utf8mb4 ;
 CREATE TABLE `teams` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
                          `title` varchar(32) DEFAULT NULL,
+                         `description` varchar(255) DEFAULT NULL,
                          `creator_id` int(11) NOT NULL,
                          `creation_date` datetime DEFAULT NULL,
                          `modified_date` datetime DEFAULT NULL,
+                         `public` bit(1) NOT NULL DEFAULT _binary '\0',
                          PRIMARY KEY (`id`),
                          KEY `creator_id` (`creator_id`),
                          CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
@@ -811,7 +813,7 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
-INSERT INTO `teams` VALUES (1,'dreamteam',3, '2019-06-02 00:00:00', '2019-06-02 00:01:01'),(2,'adminteam',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03'),(3,'tarasteam',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01');
+INSERT INTO `teams` VALUES (1,'dreamteam', 'Its public team for dream members', 3, '2019-06-02 00:00:00', '2019-06-02 00:01:01', 1),(2,'adminteam','Its public team for admin members',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03', 0),(3,'tarasteam','Its public team for taras members',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01', 1);
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
 UNLOCK TABLES;
 
