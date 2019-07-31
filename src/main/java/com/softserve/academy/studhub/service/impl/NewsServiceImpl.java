@@ -75,7 +75,7 @@ public class NewsServiceImpl implements NewsService {
             if (!existByUrl(link)) {
                 String title = parser.parseTitle(link);
                 String body = parser.parseBody(link);
-                log.debug("News body " + body);
+                log.trace("News body " + body);
                 News news = new News();
                 news.setTitle(title);
                 news.setBody(body);
