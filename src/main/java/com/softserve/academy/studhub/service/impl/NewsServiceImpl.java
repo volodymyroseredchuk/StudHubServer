@@ -7,6 +7,8 @@ import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.NewsRepository;
 import com.softserve.academy.studhub.service.NewsService;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +19,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class NewsServiceImpl implements NewsService {
 
     private NewsRepository newsRepository;
@@ -72,6 +75,7 @@ public class NewsServiceImpl implements NewsService {
             if (!existByUrl(link)) {
                 String title = parser.parseTitle(link);
                 String body = parser.parseBody(link);
+                log.debug("News body " + body);
                 News news = new News();
                 news.setTitle(title);
                 news.setBody(body);
