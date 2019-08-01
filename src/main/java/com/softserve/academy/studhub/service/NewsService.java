@@ -18,6 +18,6 @@ public interface NewsService {
 
     Boolean existByUrl(String url);
 
-    void parseAndSave ();
+//    void parseAndSave ();
 
 }
