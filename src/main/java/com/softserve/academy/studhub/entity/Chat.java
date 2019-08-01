@@ -21,4 +21,7 @@ public class Chat {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "secret", columnDefinition = "boolean default true")
+    private Boolean secret = false;
+
 }

@@ -11,5 +11,6 @@ public class ChatListItem {
     private String photoUrl;
     private String username;
     private String lastMessageText;
+    private Boolean secret;
 
 }

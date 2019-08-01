@@ -56,10 +56,24 @@ public class ChatController {
         return ResponseEntity.ok(savedMessage);
     }
 
-    @GetMapping("/new/{creatorUserId}/{userId}")
+    @GetMapping("/new/{creatorUserId}/{userId}/{secret}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId) {
-        return ResponseEntity.ok(chatService.getChatId(creatorUserId, userId));
+    public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId, @PathVariable Boolean secret) {
+        return ResponseEntity.ok(chatService.getChatId(creatorUserId, userId, secret));
+    }
+
+    @GetMapping("/testPerformance")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> testPerformance() {
+        chatService.testPerformance();
+        return ResponseEntity.ok().body("1");
+    }
+
+    @GetMapping("/testPerformance2")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> testPerformance2() {
+        chatService.testPerformance2();
+        return ResponseEntity.ok().body("2");
     }
 
 }

@@ -7,6 +7,7 @@ import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.Chat;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.ChatSubscription;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.repository.ChatMessageRepository;
 import com.softserve.academy.studhub.repository.ChatRepository;
 import com.softserve.academy.studhub.repository.ChatSubscriptionRepository;
@@ -17,8 +18,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -83,6 +86,7 @@ public class ChatServiceImpl implements ChatService {
 
     private Map.Entry<ChatMessage, ChatListItem> getListItemEntry(ChatSubscription sub, Integer userId) {
         Integer chatId = sub.getChat().getId();
+        Boolean secret = sub.getChat().getSecret();
         List<ChatSubscription> chatSubscriptions = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
 
@@ -100,7 +104,7 @@ public class ChatServiceImpl implements ChatService {
 
         boolean personal = (chatSubscriptions.size() == 2);
         ChatListItem item = new ChatListItem(chatId, personal ? photoUrl : null,
-                personal ? chatName : sub.getChat().getName(), lastMessage.getContent());
+                personal ? chatName : sub.getChat().getName(), lastMessage.getContent(), secret);
 
         return new AbstractMap.SimpleEntry<>(lastMessage, item);
 
@@ -158,7 +162,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Integer getChatId(Integer creatorUserId, Integer userId) {
+    public Integer getChatId(Integer creatorUserId, Integer userId, Boolean secret) {
         if (creatorUserId == null || userId == null) {
             throw new IllegalArgumentException("Cannot get chat ID for an empty user.");
         }
@@ -175,24 +179,25 @@ public class ChatServiceImpl implements ChatService {
             }
         }
 
-        if (commonChats.size() == 1) {
+        if (commonChats.size() == 1 && commonChats.get(0).getSecret().equals(secret)) {
             return commonChats.get(0).getId();
         } else if (commonChats.size() > 1) {
             for (Chat chat : commonChats) {
                 List<ChatSubscription> chatSubs = subscriptionRepository.findChatSubscriptionByChatId(chat.getId());
-                if (chatSubs.size() == 2) {
+                if (chatSubs.size() == 2 && chat.getSecret().equals(secret)) {
                     return chat.getId();
                 }
             }
         }
 
-        return createNewChat(creatorUserId, userId).getId();
+        return createNewChat(creatorUserId, userId, secret).getId();
 
     }
 
-    private Chat createNewChat(Integer creatorUserId, Integer userId) {
-
-        Chat chat = chatRepository.saveAndFlush(new Chat());
+    private Chat createNewChat(Integer creatorUserId, Integer userId, Boolean secret) {
+        Chat chatToSave = new Chat();
+        chatToSave.setSecret(secret);
+        Chat chat = chatRepository.saveAndFlush(chatToSave);
 
         ChatSubscription creatorSubscription = new ChatSubscription();
         creatorSubscription.setChat(chat);
@@ -226,5 +231,95 @@ public class ChatServiceImpl implements ChatService {
         }
         return usernames;
     }
+
+    @Override
+    public void testPerformance() {
+        System.out.println(LocalDateTime.now());
+        for(int i = 0; i < 1000; i++) {
+            User user = new User();
+            user.setCreationDate(LocalDate.now());
+            user.setEmail("test" + i + "@mail.com");
+            user.setFirstName("TestF" + i);
+            user.setImageUrl(null);
+            user.setLastName("TestL" + i);
+            user.setPassword(BCrypt.hashpw(Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i), BCrypt.gensalt()));
+            user.setUsername("TestU" + i);
+            user.setCookiesCount(1000);
+            user.setUniversity(null);
+            user.setEmailSubscription(false);
+            user.setGooglePassword(null);
+            user.setIsActivated(true);
+            user = userService.add(user);
+
+            User user1 = new User();
+            user1.setCreationDate(LocalDate.now());
+            user1.setEmail("testSecond" + i + "@mail.com");
+            user1.setFirstName("TestFN" + i);
+            user1.setImageUrl(null);
+            user1.setLastName("TestLN" + i);
+            user1.setPassword(BCrypt.hashpw(Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i), BCrypt.gensalt()));
+            user1.setUsername("TestUN" + i);
+            user1.setCookiesCount(1000);
+            user1.setUniversity(null);
+            user1.setEmailSubscription(false);
+            user1.setGooglePassword(null);
+            user1.setIsActivated(true);
+            user1 = userService.add(user1);
+
+            Chat chat = new Chat();
+            chat.setName("test" + i);
+            chat = chatRepository.saveAndFlush(chat);
+
+            ChatSubscription chatSubscription = new ChatSubscription();
+            chatSubscription.setChat(chat);
+            chatSubscription.setUser(user);
+            chatSubscription = subscriptionRepository.saveAndFlush(chatSubscription);
+
+            ChatSubscription chatSubscription1 = new ChatSubscription();
+            chatSubscription1.setUser(user1);
+            chatSubscription1.setChat(chat);
+            chatSubscription1 = subscriptionRepository.saveAndFlush(chatSubscription1);
+
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.setCreationDateTime(LocalDateTime.now());
+            chatMessage.setSender(user);
+            chatMessage.setContent("Test" + i);
+            chatMessage.setChat(chat);
+            chatMessage = chatMessageRepository.saveAndFlush(chatMessage);
+
+            ChatMessage chatMessage1 = new ChatMessage();
+            chatMessage1.setContent("Test2" + i);
+            chatMessage1.setSender(user1);
+            chatMessage1.setCreationDateTime(LocalDateTime.now());
+            chatMessage1.setChat(chat);
+            chatMessage1 = chatMessageRepository.saveAndFlush(chatMessage1);
+        }
+        System.out.println(LocalDateTime.now());
+    }
+
+    public void testPerformance2() {
+        System.out.println(LocalDateTime.now());
+        User user = userService.findByUsername("avash");
+        for (int i = 0; i < 1000; i++) {
+            Chat chat = chatRepository.findByName("Test" + i);
+            ChatSubscription chatSubscription = new ChatSubscription();
+            chatSubscription.setChat(chat);
+            chatSubscription.setUser(user);
+            subscriptionRepository.saveAndFlush(chatSubscription);
+        }
+        System.out.println(LocalDateTime.now());
+    }
+
+    public List<Integer> findUserIdByUserIdNotAndChatId(Integer userId, Integer chatId) {
+        List<ChatSubscription> subs = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+        List<Integer> subIds = new ArrayList<>();
+        for (ChatSubscription sub : subs) {
+            if (!sub.getUser().getId().equals(userId)) {
+                subIds.add(sub.getUser().getId());
+            }
+        }
+        return subIds;
+    }
+
 
 }

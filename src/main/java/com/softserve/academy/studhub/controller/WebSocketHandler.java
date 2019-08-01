@@ -1,7 +1,9 @@
 package com.softserve.academy.studhub.controller;
 
 import com.softserve.academy.studhub.coders.SocketChatMessageDecoder;
+import com.softserve.academy.studhub.coders.SocketMessageDecoder;
 import com.softserve.academy.studhub.entity.ChatMessage;
+import com.softserve.academy.studhub.entity.SocketMessage;
 import com.softserve.academy.studhub.service.ChatService;
 import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.SocketTokenService;
@@ -11,6 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
+import javax.websocket.EncodeException;
 import java.io.IOException;
 
 public class WebSocketHandler extends AbstractWebSocketHandler {
@@ -18,6 +21,8 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     private SocketService socketService;
 
     private SocketTokenService tokenService;
+
+    private SocketMessageDecoder socketMessageDecoder = new SocketMessageDecoder();
 
     private SubscriptionService subscriptionService;
 
@@ -35,8 +40,14 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
 
-        ChatMessage chatMessage = chatMessageDecoder.decode(message.getPayload());
-        chatService.handleChatMessage(chatMessage);
+        SocketMessage socketMessage = socketMessageDecoder.decode(message.getPayload());
+        boolean status = false;
+        try {
+            status = socketService.handleSocketMessage(session, socketMessage);
+        } catch (EncodeException | IOException e) {
+            socketService.sendStatus(session, false);
+        }
+        socketService.sendStatus(session, status);
 
     }
 

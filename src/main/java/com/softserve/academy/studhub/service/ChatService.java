@@ -4,6 +4,7 @@ import com.softserve.academy.studhub.dto.ChatHeaderDTO;
 import com.softserve.academy.studhub.dto.ChatListItem;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.ChatMessage;
+import com.softserve.academy.studhub.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,6 +17,9 @@ public interface ChatService {
     List<ChatListItem> getChatList(Integer userId);
     ChatMessage save(ChatMessagePostDTO messagePostDTO);
     ChatHeaderDTO getChatHeader(Integer chatId, Integer userId);
-    Integer getChatId(Integer creatorUserId, Integer userId);
+    Integer getChatId(Integer creatorUserId, Integer userId, Boolean secret);
+    void testPerformance();
+    void testPerformance2();
+    List<Integer> findUserIdByUserIdNotAndChatId(Integer userId, Integer chatId);
 
 }
