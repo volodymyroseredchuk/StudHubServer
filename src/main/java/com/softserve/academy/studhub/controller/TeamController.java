@@ -3,7 +3,11 @@ package com.softserve.academy.studhub.controller;
 import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.dto.*;
 import com.softserve.academy.studhub.entity.Team;
+import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.dto.MessageResponse;
+import com.softserve.academy.studhub.entity.Invitation;
+import com.softserve.academy.studhub.service.EmailService;
+import com.softserve.academy.studhub.service.InvitationService;
 import com.softserve.academy.studhub.service.TeamService;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
@@ -28,6 +32,8 @@ public class TeamController {
     private final TeamService teamService;
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final EmailService emailService;
+    private final InvitationService invitationService;
 
     @GetMapping
     @PreAuthorize("permitAll()")
@@ -73,6 +79,35 @@ public class TeamController {
         Team team = teamService.update(teamId, modelMapper.map(teamDTO, Team.class));
 
         return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
+    }
+
+    @PutMapping("/{teamId}/invite/{userId}")
+    @PreAuthorize("hasAuthority('WRITE_ANY_TEAM_PRIVILEGE') or " +
+            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    public ResponseEntity<TeamDTO> inviteMember(@PathVariable Integer teamId,
+                                                @PathVariable Integer userId) {
+
+        Team team = teamService.findById(teamId);
+        User user = userService.findById(userId);
+
+        Invitation invitation = Invitation.builder().team(team).user(user).build();
+
+        invitationService.save(invitation);
+
+        emailService.sendInvitation(invitation);
+
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
+    }
+
+    @DeleteMapping("/{teamId}/invitations/{invitationId}")
+    @PreAuthorize("hasAuthority('WRITE_ANY_TEAM_PRIVILEGE') or " +
+            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    public ResponseEntity<MessageResponse> cancelInvitation(@PathVariable Integer teamId,
+                                                    @PathVariable Integer invitationId) {
+
+        invitationService.deleteById(invitationId);
+
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.INVITATION_DELETED_SUCCESSFULLY));
     }
 
     @DeleteMapping("/{teamId}")

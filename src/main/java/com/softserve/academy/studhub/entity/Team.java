@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,4 +42,9 @@ public class Team {
     @JoinTable(name = "teams_users", joinColumns = {@JoinColumn(name = "team_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> userList;
+
+    @OneToMany(mappedBy = "team")
+    @JsonManagedReference
+    private List<Invitation> invitations;
+
 }

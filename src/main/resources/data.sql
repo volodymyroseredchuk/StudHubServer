@@ -315,6 +315,35 @@ LOCK TABLES `freelancers` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `invitations`
+--
+
+DROP TABLE IF EXISTS `invitations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `invitations` (
+                              `id` int(11) NOT NULL AUTO_INCREMENT,
+                              `expiry_date` date NOT NULL,
+                              `user_id` int(11) DEFAULT NULL,
+                              `team_id` int(11) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `user_id` (`user_id`),
+                              KEY `team_id` (`team_id`),
+                              CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+                              CONSTRAINT `invitations_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `invitations`
+--
+
+LOCK TABLES `invitations` WRITE;
+/*!40000 ALTER TABLE `invitations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invitations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `password_reset_token`
 --
 

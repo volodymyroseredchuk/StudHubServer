@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.dto;
 
+import com.softserve.academy.studhub.entity.Invitation;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -25,4 +26,7 @@ public class TeamDTO {
     private List<UserForListDTO> userList;
 
     private Boolean isPublic;
+
+    private List<Invitation> invitations;
+
 }

@@ -3,6 +3,7 @@ package com.softserve.academy.studhub.service.impl;
 import com.softserve.academy.studhub.entity.Question;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.entity.ConfirmToken;
+import com.softserve.academy.studhub.entity.Invitation;
 import com.softserve.academy.studhub.security.entity.Mail;
 import com.softserve.academy.studhub.security.entity.PasswordResetToken;
 import com.softserve.academy.studhub.service.EmailService;
@@ -43,9 +44,11 @@ public class EmailServiceImpl implements EmailService {
     private String signature;
 
     @Override
-    public void sendResetPasswordEmail(User receiver, PasswordResetToken token) {
+    public void sendResetPasswordEmail(PasswordResetToken token) {
 
         try {
+
+            User receiver = token.getUser();
 
             Map<String, Object> model = new HashMap<>();
             model.put("token", token);
@@ -68,9 +71,11 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendConfirmAccountEmail(User receiver, ConfirmToken token) {
+    public void sendConfirmAccountEmail(ConfirmToken token) {
 
         try {
+
+            User receiver = token.getUser();
 
             Map<String, Object> model = new HashMap<>();
             model.put("token", token);
@@ -86,6 +91,34 @@ public class EmailServiceImpl implements EmailService {
             );
 
             MimeMessage message = createEmailTemplate(mail, "email-confirm-registration");
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendInvitation(Invitation invitation) {
+
+        try {
+
+            User receiver = invitation.getUser();
+
+            Map<String, Object> model = new HashMap<>();
+
+            model.put("user", receiver);
+            model.put("team", invitation.getTeam());
+            model.put("signature", signature);
+            model.put("resetUrl", clientHost + "/invitation");
+
+            Mail mail = new Mail(
+                    senderMail,
+                    receiver.getEmail(),
+                    "Invitations",
+                    model
+            );
+
+            MimeMessage message = createEmailTemplate(mail, "team-invite");
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -115,7 +148,6 @@ public class EmailServiceImpl implements EmailService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private MimeMessage createEmailTemplate(Mail mail, String templateName) throws MessagingException {
