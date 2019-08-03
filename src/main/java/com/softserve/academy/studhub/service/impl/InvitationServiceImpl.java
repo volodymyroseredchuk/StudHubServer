@@ -8,11 +8,18 @@ import com.softserve.academy.studhub.service.InvitationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class InvitationServiceImpl implements InvitationService {
 
     private final InvitationRepository invitationRepository;
+
+    @Override
+    public List<Invitation> findAllByUserUsernameAndTeamId(String username, Integer teamId) {
+        return invitationRepository.findAllByUserUsernameAndTeamId(username, teamId);
+    }
 
     @Override
     public Invitation findById(Integer invitationId) {

@@ -81,6 +81,17 @@ public class TeamController {
         return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
     }
 
+
+    @DeleteMapping("/{teamId}")
+    @PreAuthorize("hasAuthority('DELETE_ANY_TEAM_PRIVILEGE') or " +
+            "@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username")
+    public ResponseEntity<MessageResponse> deleteTeam(@PathVariable Integer teamId) {
+
+        teamService.delete(teamId);
+
+        return ResponseEntity.ok(new MessageResponse(SuccessMessage.TEAM_DELETED_SUCCESSFULLY));
+    }
+
     @PutMapping("/{teamId}/invite/{userId}")
     @PreAuthorize("hasAuthority('WRITE_ANY_TEAM_PRIVILEGE') or " +
             "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
@@ -91,33 +102,48 @@ public class TeamController {
         User user = userService.findById(userId);
 
         Invitation invitation = Invitation.builder().team(team).user(user).build();
-
         invitationService.save(invitation);
-
         emailService.sendInvitation(invitation);
+
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
+    }
+
+    @GetMapping("/{teamId}/invitations")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> getInvitationsOfUserByTeam(@PathVariable Integer teamId,
+                                                        Principal principal) {
+
+        List<Invitation> invitations = invitationService
+                .findAllByUserUsernameAndTeamId(principal.getName(), teamId);
+
+        return ResponseEntity.ok(invitations);
+    }
+
+    @PutMapping("/{teamId}/invitations/{invitationId}")
+    @PreAuthorize("isAuthenticated() and (@invitationServiceImpl.findById(#invitationId)" +
+                    ".getUser().getUsername() == principal.username)")
+    public ResponseEntity<TeamDTO> acceptInvitation(@PathVariable Integer teamId,
+                                                    @PathVariable Integer invitationId,
+                                                    @RequestBody TeamDTO teamDTO) {
+
+        Team team = teamService.update(teamId, modelMapper.map(teamDTO, Team.class));
+        invitationService.deleteById(invitationId);
 
         return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
     }
 
     @DeleteMapping("/{teamId}/invitations/{invitationId}")
     @PreAuthorize("hasAuthority('WRITE_ANY_TEAM_PRIVILEGE') or " +
-            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
-    public ResponseEntity<MessageResponse> cancelInvitation(@PathVariable Integer teamId,
-                                                    @PathVariable Integer invitationId) {
+            "(isAuthenticated() and " +
+            "(@invitationServiceImpl.findById(#invitationId)" +
+                    ".getUser().getUsername() == principal.username or " +
+            "@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username))")
+    public ResponseEntity<MessageResponse> deleteInvitation(@PathVariable Integer teamId,
+                                                            @PathVariable Integer invitationId) {
 
         invitationService.deleteById(invitationId);
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.INVITATION_DELETED_SUCCESSFULLY));
-    }
-
-    @DeleteMapping("/{teamId}")
-    @PreAuthorize("hasAuthority('DELETE_ANY_TEAM_PRIVILEGE') or " +
-            "@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username")
-    public ResponseEntity<MessageResponse> deleteTeam(@PathVariable Integer teamId) {
-
-        teamService.delete(teamId);
-
-        return ResponseEntity.ok(new MessageResponse(SuccessMessage.TEAM_DELETED_SUCCESSFULLY));
     }
 
 }

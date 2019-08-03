@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.entity.Question;
+import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.security.entity.ConfirmToken;
 import com.softserve.academy.studhub.entity.Invitation;
@@ -103,13 +104,14 @@ public class EmailServiceImpl implements EmailService {
         try {
 
             User receiver = invitation.getUser();
+            Team team = invitation.getTeam();
 
             Map<String, Object> model = new HashMap<>();
 
             model.put("user", receiver);
-            model.put("team", invitation.getTeam());
+            model.put("team", team);
             model.put("signature", signature);
-            model.put("resetUrl", clientHost + "/invitation");
+            model.put("resetUrl", clientHost + "/teams/" + team.getId() + "/invitations");
 
             Mail mail = new Mail(
                     senderMail,
