@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
+
 import com.softserve.academy.studhub.dto.QuestionDTO;
 import com.softserve.academy.studhub.dto.QuestionForListDTO;
 import com.softserve.academy.studhub.dto.QuestionPaginatedDTO;
@@ -67,6 +68,7 @@ public class QuestionController {
 
 
     @GetMapping("/tagged/{tags}")
+
     @PreAuthorize("permitAll()")
     public ResponseEntity<QuestionPaginatedDTO> getSearchedByTagsQuestions(@PathVariable String[] tags, Pageable pageable) {
 
