@@ -21,5 +21,6 @@ public interface ChatService {
     void testPerformance();
     void testPerformance2();
     List<Integer> findUserIdByUserIdNotAndChatId(Integer userId, Integer chatId);
+    void deleteChat(Integer chatId);
 
 }

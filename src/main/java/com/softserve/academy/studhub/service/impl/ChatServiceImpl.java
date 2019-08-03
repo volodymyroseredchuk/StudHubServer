@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class ChatServiceImpl implements ChatService {
     private ChatSubscriptionRepository subscriptionRepository;
     private SocketService socketService;
     private UserService userService;
+
 
     @Override
     public void handleChatMessage(ChatMessage message) {
@@ -319,6 +321,14 @@ public class ChatServiceImpl implements ChatService {
             }
         }
         return subIds;
+    }
+
+    @Override
+    @Transactional
+    public void deleteChat(Integer chatId) {
+        chatMessageRepository.deleteAllByChatId(chatId);
+        subscriptionRepository.deleteAllByChatId(chatId);
+        chatRepository.deleteById(chatId);
     }
 
 

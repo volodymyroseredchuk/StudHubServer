@@ -115,13 +115,14 @@ public class SocketServiceImpl implements SocketService {
             Integer userId = findByValue(sessionIdMap, session);
             List<Integer> otherSubscribers =  chatService.findUserIdByUserIdNotAndChatId(userId, Integer.parseInt(socketMessage.getParam1()));
             if (otherSubscribers.size() > 1) {
-                throw new IllegalArgumentException("Secret chat features are not allowed for group chats");
+                throw new IllegalArgumentException("Secret chat features are not allowed for group chats.");
             }
             WebSocketSession receiver = sessionIdMap.get(otherSubscribers.get(0));
-            if (session != null) {
+            if (receiver != null) {
                 receiver.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
                 return true;
             } else {
+                chatService.deleteChat(Integer.parseInt(socketMessage.getParam1()));
                 return false;
             }
 

@@ -10,5 +10,6 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Intege
 
     Page<ChatMessage> findByChatIdOrderByCreationDateTimeDesc(Integer chatId, Pageable pageable);
     Optional<ChatMessage> findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(Integer chatId);
+    Long deleteAllByChatId(Integer chatId);
 
 }
