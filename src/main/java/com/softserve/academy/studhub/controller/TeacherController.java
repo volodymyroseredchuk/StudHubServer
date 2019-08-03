@@ -53,9 +53,9 @@ public class TeacherController {
     @PostMapping("/teacher")
     @PreAuthorize("permitAll()")
 //    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
-    ResponseEntity.BodyBuilder newTeacher(@RequestBody TeacherDTO teacherDTO) {
+    ResponseEntity<TeacherDTO> newTeacher(@RequestBody TeacherDTO teacherDTO) {
         teacherService.save(modelMapper.map(teacherDTO, Teacher.class));
-        return ResponseEntity.status(200);
+        return ResponseEntity.ok(teacherDTO);
     }
 
     @PostMapping("/addPhotoToTeacher")
