@@ -83,4 +83,11 @@ public class AnswerController {
 
         return ResponseEntity.ok(answerService.countByUserUsername(username));
     }
+
+    @GetMapping("questions/answers/sum/rating/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Integer> getSumOfRatingByUserUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(answerService.sumOfRatingByUserUsername(username));
+    }
 }
