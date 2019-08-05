@@ -18,8 +18,8 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
             + "  select chats.id as chatId, chats.secret, contentQuery.content, contentQuery.lastMessageTime from chats\n"
             + "  inner join chat_subscriptions\n"
             + "  on chat_subscriptions.chat_id = chats.id\n"
-            + "  and chat_subscriptions.user_id = :userId\n" +
-            "  left join (\n"
+            + "  and chat_subscriptions.user_id = :userId\n"
+            + "  left join (\n"
             + "    select M1.content, M1.chat_id, M2.lastMessageTime from chat_messages as M1\n"
             + "    inner join (\n"
             + "      select max(chat_messages.creation_datetime) as lastMessageTime, chat_messages.chat_id from chat_messages\n"

@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.google.gson.Gson;
 import com.softserve.academy.studhub.coders.SocketMessageEncoder;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
@@ -23,7 +24,7 @@ public class SocketServiceImpl implements SocketService {
     private static Map<Integer, WebSocketSession> sessionIdMap = new ConcurrentHashMap<>();
     private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
 
-    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.", SocketMessageType.NOTIFICATION);
+    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Welcome.", SocketMessageType.NOTIFICATION);
     private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.", SocketMessageType.NOTIFICATION);
     private static final SocketMessage ERROR_MESSAGE = new SocketMessage("Error occurred.", SocketMessageType.NOTIFICATION);
 
@@ -82,8 +83,10 @@ public class SocketServiceImpl implements SocketService {
 
             if (session != null) {
                 try {
+                    Gson gson = new Gson();
+                    message.setSender(null);
                     SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(),
-                            Boolean.toString(message.getChat().getSecret()), SocketMessageType.CHAT_MESSAGE);
+                           gson.toJson(message) , SocketMessageType.CHAT_MESSAGE);
                     session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
                 } catch (EncodeException | IOException e) {
                     throw new IllegalArgumentException("Could not send chat message.");

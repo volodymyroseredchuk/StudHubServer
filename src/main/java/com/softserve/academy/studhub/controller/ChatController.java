@@ -50,8 +50,9 @@ public class ChatController {
             + "and @userServiceImpl.findById(#message.sender).username == principal.username")
     public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
         ChatMessage savedMessage = chatService.save(message);
+        ChatMessage clonedMessage = savedMessage.clone();
         chatService.handleChatMessage(savedMessage);
-        return ResponseEntity.ok(savedMessage);
+        return ResponseEntity.ok(clonedMessage);
     }
 
     @GetMapping("/new/{creatorUserId}/{userId}/{secret}")
