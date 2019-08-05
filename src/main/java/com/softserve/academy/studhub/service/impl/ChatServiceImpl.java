@@ -2,12 +2,11 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.google.common.collect.Lists;
 import com.softserve.academy.studhub.dto.ChatHeaderDTO;
-import com.softserve.academy.studhub.dto.ChatListItem;
+import com.softserve.academy.studhub.dto.ChatListItemDTO;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.Chat;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.ChatSubscription;
-import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.repository.ChatMessageRepository;
 import com.softserve.academy.studhub.repository.ChatRepository;
 import com.softserve.academy.studhub.repository.ChatSubscriptionRepository;
@@ -18,11 +17,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -70,6 +67,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public List<ChatListItemDTO> getChatList(Integer userId) {
+        return chatRepository.findChatListByUserId(userId);
+    }
+
+
+    // Leave it here for now. I want people to know what kind of shit I am writing.
+
+    /*@Override
     public List<ChatListItem> getChatList(Integer userId) {
         if (userId == null) {
             throw new IllegalArgumentException("Cannot get chat list by empty ID.");
@@ -122,7 +127,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return itemList;
-    }
+    }*/
 
     @Override
     public ChatMessage save(ChatMessagePostDTO messagePostDTO) {
@@ -221,6 +226,7 @@ public class ChatServiceImpl implements ChatService {
         return chat;
     }
 
+    @Override
     public List<String> getUsernameParticipantsByChat(Integer chatId) {
         if (chatId == null) {
             throw new IllegalArgumentException("Cannot get participants for an empty chat ID.");
@@ -235,83 +241,6 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void testPerformance() {
-        System.out.println(LocalDateTime.now());
-        for(int i = 0; i < 1000; i++) {
-            User user = new User();
-            user.setCreationDate(LocalDate.now());
-            user.setEmail("test" + i + "@mail.com");
-            user.setFirstName("TestF" + i);
-            user.setImageUrl(null);
-            user.setLastName("TestL" + i);
-            user.setPassword(BCrypt.hashpw(Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i), BCrypt.gensalt()));
-            user.setUsername("TestU" + i);
-            user.setCookiesCount(1000);
-            user.setUniversity(null);
-            user.setEmailSubscription(false);
-            user.setGooglePassword(null);
-            user.setIsActivated(true);
-            user = userService.add(user);
-
-            User user1 = new User();
-            user1.setCreationDate(LocalDate.now());
-            user1.setEmail("testSecond" + i + "@mail.com");
-            user1.setFirstName("TestFN" + i);
-            user1.setImageUrl(null);
-            user1.setLastName("TestLN" + i);
-            user1.setPassword(BCrypt.hashpw(Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i) + Integer.toString(i), BCrypt.gensalt()));
-            user1.setUsername("TestUN" + i);
-            user1.setCookiesCount(1000);
-            user1.setUniversity(null);
-            user1.setEmailSubscription(false);
-            user1.setGooglePassword(null);
-            user1.setIsActivated(true);
-            user1 = userService.add(user1);
-
-            Chat chat = new Chat();
-            chat.setName("test" + i);
-            chat = chatRepository.saveAndFlush(chat);
-
-            ChatSubscription chatSubscription = new ChatSubscription();
-            chatSubscription.setChat(chat);
-            chatSubscription.setUser(user);
-            chatSubscription = subscriptionRepository.saveAndFlush(chatSubscription);
-
-            ChatSubscription chatSubscription1 = new ChatSubscription();
-            chatSubscription1.setUser(user1);
-            chatSubscription1.setChat(chat);
-            chatSubscription1 = subscriptionRepository.saveAndFlush(chatSubscription1);
-
-            ChatMessage chatMessage = new ChatMessage();
-            chatMessage.setCreationDateTime(LocalDateTime.now());
-            chatMessage.setSender(user);
-            chatMessage.setContent("Test" + i);
-            chatMessage.setChat(chat);
-            chatMessage = chatMessageRepository.saveAndFlush(chatMessage);
-
-            ChatMessage chatMessage1 = new ChatMessage();
-            chatMessage1.setContent("Test2" + i);
-            chatMessage1.setSender(user1);
-            chatMessage1.setCreationDateTime(LocalDateTime.now());
-            chatMessage1.setChat(chat);
-            chatMessage1 = chatMessageRepository.saveAndFlush(chatMessage1);
-        }
-        System.out.println(LocalDateTime.now());
-    }
-
-    public void testPerformance2() {
-        System.out.println(LocalDateTime.now());
-        User user = userService.findByUsername("avash");
-        for (int i = 0; i < 1000; i++) {
-            Chat chat = chatRepository.findByName("Test" + i);
-            ChatSubscription chatSubscription = new ChatSubscription();
-            chatSubscription.setChat(chat);
-            chatSubscription.setUser(user);
-            subscriptionRepository.saveAndFlush(chatSubscription);
-        }
-        System.out.println(LocalDateTime.now());
-    }
-
     public List<Integer> findUserIdByUserIdNotAndChatId(Integer userId, Integer chatId) {
         List<ChatSubscription> subs = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         List<Integer> subIds = new ArrayList<>();
