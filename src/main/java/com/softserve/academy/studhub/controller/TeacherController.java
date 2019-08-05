@@ -28,8 +28,8 @@ public class TeacherController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    List<Teacher> findAllTeacher() {
-        return teacherService.findAll();
+    List<Teacher> findAllTeacherOrderByMarkDesc() {
+        return teacherService.findAllOrderByMarkDesc();
     }
 
     @GetMapping("/{teacherId}")
@@ -73,7 +73,7 @@ public class TeacherController {
         return ResponseEntity.status(200);
     }
 
-    @PutMapping("/teacher")
+    @PutMapping("/{teacherId}/update")
     @PreAuthorize("permitAll()")
 //    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     ResponseEntity<TeacherDTO> updateTeacher(@RequestBody TeacherDTO teacherDTO) {

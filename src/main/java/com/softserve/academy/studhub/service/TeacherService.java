@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface TeacherService {
-    List<Teacher> findAll();
+    List<Teacher> findAllOrderByMarkDesc();
 
     Teacher findById(Integer teacherId);
 
