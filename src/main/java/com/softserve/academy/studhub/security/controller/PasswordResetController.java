@@ -45,7 +45,7 @@ public class PasswordResetController {
         PasswordResetToken token = new PasswordResetToken(user);
         passwordResetTokenService.save(token);
 
-        emailService.sendResetPasswordEmail(user, token);
+        emailService.sendResetPasswordEmail(token);
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_RESET_PASSWORD_LINK + user.getEmail()));
     }
