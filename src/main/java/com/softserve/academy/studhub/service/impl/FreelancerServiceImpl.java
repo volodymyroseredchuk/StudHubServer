@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class FreelancerImpl implements FreelancerService {
+public class FreelancerServiceImpl implements FreelancerService {
 
     private final FreelancerRepository freelancerRepository;
     private final OrderService orderService;
@@ -21,7 +21,7 @@ public class FreelancerImpl implements FreelancerService {
     public Freelancer add(Freelancer freelancer, Integer orderId) {
 
         Order order = orderService.findById(orderId);
-        freelancer.setUser(orderService.findById(orderId).getUserExecutor());
+        freelancer.setUser(order.getUserExecutor());
         order.setFreelancer(freelancer);
 
         return freelancerRepository.saveAndFlush(freelancer);

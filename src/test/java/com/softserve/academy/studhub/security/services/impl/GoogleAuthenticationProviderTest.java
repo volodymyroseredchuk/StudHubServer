@@ -2,12 +2,12 @@ package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.entity.SocketToken;
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.entity.UserPrinciple;
 import com.softserve.academy.studhub.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class CustomerImpl implements CustomerService {
+public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final OrderService orderService;
@@ -21,7 +21,7 @@ public class CustomerImpl implements CustomerService {
     public Customer add(Customer customer, Integer orderId) {
 
         Order order = orderService.findById(orderId);
-        customer.setUser(orderService.findById(orderId).getUserCreator());
+        customer.setUser(order.getUserCreator());
         order.setCustomer(customer);
 
         return customerRepository.saveAndFlush(customer);
