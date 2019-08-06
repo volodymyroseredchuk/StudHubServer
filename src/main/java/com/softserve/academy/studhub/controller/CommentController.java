@@ -32,12 +32,12 @@ public class CommentController {
 
     }
 
-    @PutMapping("comments/{commentId}")
+    /*@PutMapping("comments/{commentId}")
     @PreAuthorize("hasAuthority('COMMENT_WRITE_PRIVILEGE') and @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
     public ResponseEntity<CommentDTO> editComment(@PathVariable Integer commentId, @Valid @RequestBody CommentDTO commentDTO) {
         Comment result = commentService.update(commentId, modelMapper.map(commentDTO, Comment.class));
         return ResponseEntity.ok(modelMapper.map(result, CommentDTO.class));
-    }
+    }*/
 
     @DeleteMapping("comments/{commentId}")
     @PreAuthorize("hasAuthority('COMMENT_DELETE_ANY_PRIVILEGE') or @commentServiceImpl.findById(#commentId).getUser().getUsername() == principal.username")
