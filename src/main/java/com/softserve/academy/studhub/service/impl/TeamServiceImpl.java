@@ -1,11 +1,13 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.dto.UserForListDTO;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeamRepository;
 import com.softserve.academy.studhub.service.TeamService;
+import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +21,12 @@ import java.time.LocalDateTime;
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
+    private final UserService userService;
 
     @Override
     public Team save(Team team, Principal principal) {
 
+        team.setUser(userService.findByUsername(principal.getName()));
         team.setCreationDate(LocalDateTime.now());
 
         return teamRepository.saveAndFlush(team);

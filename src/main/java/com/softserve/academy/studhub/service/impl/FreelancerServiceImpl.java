@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class FreelancerImpl implements FreelancerService {
+public class FreelancerServiceImpl implements FreelancerService {
 
     private final FreelancerRepository freelancerRepository;
     private final OrderService orderService;
