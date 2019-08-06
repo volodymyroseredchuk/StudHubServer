@@ -15,5 +15,5 @@ public interface OrderService {
     Order findById(Integer orderId);
     ResultSubmission submitResult(Integer orderId, ResultSubmission resultSubmission);
 
-
+    Integer countByFreelancerAndTaskDone(String username);
 }

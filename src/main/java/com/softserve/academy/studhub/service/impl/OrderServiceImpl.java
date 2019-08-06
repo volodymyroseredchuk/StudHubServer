@@ -83,5 +83,9 @@ public class OrderServiceImpl implements OrderService {
         return resultSubmission;
     }
 
+    @Override
+    public Integer countByFreelancerAndTaskDone(String username) {
 
+        return orderRepository.countByFreelancerAndTaskDone(username);
+    }
 }
