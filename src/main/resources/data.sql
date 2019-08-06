@@ -316,6 +316,35 @@ LOCK TABLES `freelancers` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `invitations`
+--
+
+DROP TABLE IF EXISTS `invitations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `invitations` (
+                              `id` int(11) NOT NULL AUTO_INCREMENT,
+                              `expiry_date` date NOT NULL,
+                              `user_id` int(11) DEFAULT NULL,
+                              `team_id` int(11) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `user_id` (`user_id`),
+                              KEY `team_id` (`team_id`),
+                              CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+                              CONSTRAINT `invitations_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `invitations`
+--
+
+LOCK TABLES `invitations` WRITE;
+/*!40000 ALTER TABLE `invitations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invitations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `password_reset_token`
 --
 
@@ -797,9 +826,11 @@ SET character_set_client = utf8mb4 ;
 CREATE TABLE `teams` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
                          `title` varchar(32) DEFAULT NULL,
+                         `description` varchar(255) DEFAULT NULL,
                          `creator_id` int(11) NOT NULL,
                          `creation_date` datetime DEFAULT NULL,
                          `modified_date` datetime DEFAULT NULL,
+                         `public` bit(1) NOT NULL DEFAULT _binary '\0',
                          PRIMARY KEY (`id`),
                          KEY `creator_id` (`creator_id`),
                          CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
@@ -812,7 +843,7 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
-INSERT INTO `teams` VALUES (1,'dreamteam',3, '2019-06-02 00:00:00', '2019-06-02 00:01:01'),(2,'adminteam',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03'),(3,'tarasteam',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01');
+INSERT INTO `teams` VALUES (1,'dreamteam', 'Its public team for dream members', 3, '2019-06-02 00:00:00', '2019-06-02 00:01:01', 1),(2,'adminteam','Its public team for admin members',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03', 0),(3,'tarasteam','Its public team for taras members',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01', 1);
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
 UNLOCK TABLES;
 

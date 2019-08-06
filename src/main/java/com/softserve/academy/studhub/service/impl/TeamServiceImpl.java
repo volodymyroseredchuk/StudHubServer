@@ -6,7 +6,6 @@ import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeamRepository;
 import com.softserve.academy.studhub.service.TeamService;
-import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,11 +19,12 @@ import java.time.LocalDateTime;
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
-    private final UserService userService;
 
     @Override
     public Team save(Team team, Principal principal) {
+
         team.setCreationDate(LocalDateTime.now());
+
         return teamRepository.saveAndFlush(team);
     }
 
@@ -56,7 +56,15 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Page<Team> findAll(Pageable pageable) {
 
-        return teamRepository.findAllByOrderByCreationDateDesc(pageable);
+        return teamRepository.findAllByIsPublicTrueOrderByCreationDateDesc(pageable);
+    }
+
+    @Override
+    public boolean isTeamPublic(Integer teamId) {
+
+        Team team = findById(teamId);
+
+        return team.getIsPublic();
     }
 
     @Override
@@ -64,7 +72,7 @@ public class TeamServiceImpl implements TeamService {
 
         Team team = findById(teamId);
 
-        if(team.getUser().getUsername().equals(username)){
+        if (team.getUser().getUsername().equals(username)) {
             return true;
         }
 
