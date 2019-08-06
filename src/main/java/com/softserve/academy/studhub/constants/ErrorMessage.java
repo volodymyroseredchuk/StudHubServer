@@ -54,4 +54,6 @@ public class ErrorMessage {
     public static final String PROPOSAL_DELETED = "Proposal was successfully deleted";
 
     public static final String ORDER_NOT_EXIST = "The order does not exist with id: ";
+
+    public static final String USER_NEITHER_QUESTION_CREATOR_NOR_EXECUTOR = "The user is neither question creator not executor";
 }

@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.dto.UserForListDTO;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
@@ -22,12 +23,14 @@ import java.util.List;
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
+    private final UserService userService;
 
     private final UserService userService;
 
     @Override
     public Team save(Team team, Principal principal) {
 
+        team.setUser(userService.findByUsername(principal.getName()));
         team.setCreationDate(LocalDateTime.now());
 
         return teamRepository.saveAndFlush(team);

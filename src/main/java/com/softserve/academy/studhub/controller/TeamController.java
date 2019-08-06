@@ -64,8 +64,6 @@ public class TeamController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<TeamDTO> createTeam(@Valid @RequestBody TeamDTO teamDTO, Principal principal) {
 
-        teamDTO.setUser(modelMapper.map(userService.findByUsername(principal.getName()),
-                UserForListDTO.class));
         Team team = teamService.save(modelMapper.map(teamDTO, Team.class), principal);
 
         return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));

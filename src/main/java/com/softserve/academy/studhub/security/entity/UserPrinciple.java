@@ -1,4 +1,4 @@
-package com.softserve.academy.studhub.security.services.impl;
+package com.softserve.academy.studhub.security.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softserve.academy.studhub.entity.Privilege;

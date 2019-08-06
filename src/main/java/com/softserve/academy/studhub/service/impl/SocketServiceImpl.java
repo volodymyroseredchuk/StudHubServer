@@ -1,16 +1,16 @@
 package com.softserve.academy.studhub.service.impl;
 
-import com.softserve.academy.studhub.coders.SocketChatMessageEncoder;
+import com.google.gson.Gson;
 import com.softserve.academy.studhub.coders.SocketMessageEncoder;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
-import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.entity.enums.SocketMessageType;
+import com.softserve.academy.studhub.service.ChatService;
 import com.softserve.academy.studhub.service.SocketService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
 import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.util.*;
@@ -18,11 +18,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SocketServiceImpl implements SocketService {
+    @Autowired
+    private ChatService chatService;
 
     private static Map<Integer, WebSocketSession> sessionIdMap = new ConcurrentHashMap<>();
     private SocketMessageEncoder messageEncoder = new SocketMessageEncoder();
 
-    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Connected successfully.", SocketMessageType.NOTIFICATION);
+    private static final SocketMessage CONNECTED_MESSAGE = new SocketMessage("Welcome.", SocketMessageType.NOTIFICATION);
     private static final SocketMessage NOT_CONNECTED_MESSAGE = new SocketMessage("Connected unsuccessfully. Access denied.", SocketMessageType.NOTIFICATION);
     private static final SocketMessage ERROR_MESSAGE = new SocketMessage("Error occurred.", SocketMessageType.NOTIFICATION);
 
@@ -81,7 +83,10 @@ public class SocketServiceImpl implements SocketService {
 
             if (session != null) {
                 try {
-                    SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(), message.getContent(), SocketMessageType.CHAT_MESSAGE);
+                    Gson gson = new Gson();
+                    message.setSender(null);
+                    SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(),
+                           gson.toJson(message) , SocketMessageType.CHAT_MESSAGE);
                     session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
                 } catch (EncodeException | IOException e) {
                     throw new IllegalArgumentException("Could not send chat message.");
@@ -90,6 +95,46 @@ public class SocketServiceImpl implements SocketService {
         }
 
     }
+
+    @Override
+    public void sendStatus(WebSocketSession session, boolean status) {
+        SocketMessage socketMessage;
+        if (status) {
+            socketMessage = new SocketMessage("STATUS", "OK", SocketMessageType.STATUS);
+        } else {
+            socketMessage = new SocketMessage("STATUS", "ERR", SocketMessageType.STATUS);
+        }
+        try {
+            session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
+        } catch (IOException | EncodeException e) {
+            throw new IllegalArgumentException("Could not send status message.");
+        }
+    }
+
+    @Override
+    public boolean handleSocketMessage(WebSocketSession session, SocketMessage socketMessage) throws EncodeException, IOException {
+        System.out.println(socketMessage);
+        if (socketMessage.getType().equalsIgnoreCase(SocketMessageType.ENCRYPTION_PUBLIC_KEY_EXCHANGE.toString())) {
+            Integer userId = findByValue(sessionIdMap, session);
+            List<Integer> otherSubscribers =  chatService.findUserIdByUserIdNotAndChatId(userId, Integer.parseInt(socketMessage.getParam1()));
+            if (otherSubscribers.size() > 1) {
+                throw new IllegalArgumentException("Secret chat features are not allowed for group chats.");
+            }
+            WebSocketSession receiver = sessionIdMap.get(otherSubscribers.get(0));
+            if (receiver != null) {
+                receiver.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
+                return true;
+            } else {
+                chatService.deleteChat(Integer.parseInt(socketMessage.getParam1()));
+                return false;
+            }
+
+        } else {
+            return false;
+        }
+
+    }
+
 
     @Override
     public void removeSession(WebSocketSession session) {
@@ -134,6 +179,16 @@ public class SocketServiceImpl implements SocketService {
         } catch (IOException | EncodeException e) {
             throw new IllegalArgumentException("Could not send custom message.");
         }
+    }
+
+    private Integer findByValue(Map<Integer, WebSocketSession> map, WebSocketSession value) {
+        return map
+                .entrySet()
+                .stream()
+                .filter(entry -> value.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findAny()
+                .orElseThrow(NoSuchElementException::new);
     }
 
 }

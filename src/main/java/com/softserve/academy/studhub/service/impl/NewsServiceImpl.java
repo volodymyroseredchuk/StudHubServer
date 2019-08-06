@@ -64,21 +64,22 @@ public class NewsServiceImpl implements NewsService {
         return newsRepository.existsBySourceUrl(url);
     }
 
-    @Override
-    @Scheduled(fixedDelay = 1000)
-    public void parseAndSave() {
-        Set<String> linkSet = parser.parseLinks("https://ain.ua/en");
-        for (String link : linkSet) {
-            if (!existByUrl(link)) {
-                String title = parser.parseTitle(link);
-                String body = parser.parseBody(link);
-                News news = new News();
-                news.setTitle(title);
-                news.setBody(body);
-                news.setCreationDate(LocalDateTime.now());
-                news.setSourceUrl(link);
-                newsRepository.saveAndFlush(news);
-            }
-        }
-    }
+//    @Override
+//    @Scheduled(fixedDelay = 1000)
+//    public void parseAndSave() {
+//        Set<String> linkSet = parser.parseLinks("https://ain.ua/en");
+//        for (String link : linkSet) {
+//            if (!existByUrl(link)) {
+//                String title = parser.parseTitle(link);
+//                String body = parser.parseBody(link);
+//                News news = new News();
+//                news.setTitle(title);
+//                news.setBody(body);
+//                news.setCreationDate(LocalDateTime.now());
+//                news.setSourceUrl(link);
+//                newsRepository.saveAndFlush(news);
+//            }
+//        }
+//    }
+
 }

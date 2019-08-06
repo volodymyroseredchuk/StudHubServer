@@ -1,7 +1,7 @@
 package com.softserve.academy.studhub.security.jwt;
 
 import com.softserve.academy.studhub.security.constants.JwtConstants;
-import com.softserve.academy.studhub.security.services.impl.UserPrinciple;
+import com.softserve.academy.studhub.security.entity.UserPrinciple;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
