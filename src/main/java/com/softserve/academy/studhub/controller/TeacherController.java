@@ -66,14 +66,14 @@ public class TeacherController {
         return ResponseEntity.ok(result);
     }
 
-    @DeleteMapping("/{teacherId}")
-//    @PreAuthorize("hasAuthority('TEACHER_DELETE_ANY_PRIVILEGE')")
+    @DeleteMapping("/delete/{teacherId}")
+    @PreAuthorize("hasAuthority('TEACHER_DELETE_ANY_PRIVILEGE')")
     ResponseEntity.BodyBuilder deleteTeacher(@PathVariable Integer teacherId) {
         teacherService.delete(teacherId);
         return ResponseEntity.status(200);
     }
 
-    @PutMapping("/{teacherId}/update")
+    @PostMapping("/update")
     @PreAuthorize("permitAll()")
 //    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     ResponseEntity<TeacherDTO> updateTeacher(@RequestBody TeacherDTO teacherDTO) {
