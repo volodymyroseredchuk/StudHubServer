@@ -6,7 +6,6 @@ import com.softserve.academy.studhub.service.FeedbackService;
 import com.softserve.academy.studhub.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
 
 @Service

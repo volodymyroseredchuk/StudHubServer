@@ -2,6 +2,7 @@ package com.softserve.academy.studhub.repository;
 
 import com.softserve.academy.studhub.entity.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 import java.util.Optional;
 

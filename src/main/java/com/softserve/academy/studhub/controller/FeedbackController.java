@@ -59,10 +59,10 @@ public class FeedbackController {
         Feedback newFeedback = new Feedback();
         newFeedback.setBody(feedbackDTO.getBody());
         newFeedback.setMark(feedbackDTO.getMark());
-        if (Objects.nonNull(feedbackDTO.getTeacherId())){
+        if (Objects.nonNull(feedbackDTO.getTeacherId())) {
             newFeedback.setTeacher(teacherService.findById(feedbackDTO.getTeacherId()));
         }
-        if (Objects.nonNull(feedbackDTO.getUniversityId())){
+        if (Objects.nonNull(feedbackDTO.getUniversityId())) {
             newFeedback.setUniversity(universityService.findById(feedbackDTO.getUniversityId()));
         }
         newFeedback.setRate(feedbackDTO.getRate());
