@@ -174,6 +174,7 @@ SET character_set_client = utf8mb4 ;
 CREATE TABLE `chats` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
                          `name` varchar(45) DEFAULT NULL,
+                         `secret` bit(1) DEFAULT 0,
                          PRIMARY KEY (`id`),
                          UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -185,7 +186,7 @@ CREATE TABLE `chats` (
 
 LOCK TABLES `chats` WRITE;
 /*!40000 ALTER TABLE `chats` DISABLE KEYS */;
-INSERT INTO `chats` VALUES (1,'Test'), (2, null);
+INSERT INTO `chats` VALUES (1,'Test', 0), (2, null, 0);
 /*!40000 ALTER TABLE `chats` ENABLE KEYS */;
 UNLOCK TABLES;
 
