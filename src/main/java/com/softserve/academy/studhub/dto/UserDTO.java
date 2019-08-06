@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -32,10 +31,6 @@ public class UserDTO {
             message = ValidationConstants.INVALID_LASTNAME_LENGTH)
     private String lastName;
 
-    @NotBlank(message = ValidationConstants.EMPTY_EMAIL)
-    @Email(message = ValidationConstants.INVALID_EMAIL)
-    @Size(min = ValidationConstants.EMAIL_MIN_LENGTH, max = ValidationConstants.EMAIL_MAX_LENGTH,
-            message = ValidationConstants.INVALID_EMAIL_LENGTH)
     private String email;
 
     private String username;
@@ -49,4 +44,6 @@ public class UserDTO {
     private Set<PrivilegeDTO> privileges = new HashSet<>();
 
     private Boolean emailSubscription;
+
+    private Integer cookiesCount;
 }
