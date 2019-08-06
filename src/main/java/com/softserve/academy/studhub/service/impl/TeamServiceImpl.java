@@ -25,8 +25,6 @@ public class TeamServiceImpl implements TeamService {
     private final TeamRepository teamRepository;
     private final UserService userService;
 
-    private final UserService userService;
-
     @Override
     public Team save(Team team, Principal principal) {
 
