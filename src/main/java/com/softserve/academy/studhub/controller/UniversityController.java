@@ -27,8 +27,8 @@ public class UniversityController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    List<University> findAllUniversity() {
-        return universityService.findAll();
+    List<University> findAllByOrderByMarkDesc() {
+        return universityService.findAllByOrderByMarkDesc();
     }
 
     @GetMapping("/{universityId}")

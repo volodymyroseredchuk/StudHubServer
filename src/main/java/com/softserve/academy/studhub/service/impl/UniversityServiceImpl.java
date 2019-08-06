@@ -27,8 +27,8 @@ public class UniversityServiceImpl implements UniversityService {
     }
 
     @Override
-    public List<University> findAll() {
-        return universityRepository.findAll();
+    public List<University> findAllByOrderByMarkDesc() {
+        return universityRepository.findAllByOrderByMarkDesc();
     }
 
     @Override

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface UniversityRepository extends JpaRepository <University, Integer> {
 
-
+    List<University> findAllByOrderByMarkDesc ();
 }

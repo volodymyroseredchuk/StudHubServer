@@ -26,8 +26,8 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> findAllOrderByMarkDesc() {
-        return teacherRepository.findAll();
+    public List<Teacher> findAllByOrderByMarkDesc() {
+        return teacherRepository.findAllByOrderByMarkDesc();
     }
 
     @Override

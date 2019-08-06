@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UniversityService {
-    List<University> findAll();
+    List<University> findAllByOrderByMarkDesc();
 
     University findById(Integer universityId);
 

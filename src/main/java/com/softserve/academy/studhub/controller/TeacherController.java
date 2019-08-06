@@ -28,8 +28,8 @@ public class TeacherController {
 
     @GetMapping
     @PreAuthorize("permitAll()")
-    List<Teacher> findAllTeacherOrderByMarkDesc() {
-        return teacherService.findAllOrderByMarkDesc();
+    List<Teacher> findAllByOrderByMarkDesc() {
+        return teacherService.findAllByOrderByMarkDesc();
     }
 
     @GetMapping("/{teacherId}")
