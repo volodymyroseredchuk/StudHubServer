@@ -24,7 +24,8 @@ public class ChatController {
     @GetMapping("/{chatId}")
     @PreAuthorize("isAuthenticated() "
             + "and @chatServiceImpl.getUsernameParticipantsByChat(#chatId).contains(principal.username)")
-    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, @RequestParam Integer offset, @RequestParam Integer size) {
+    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, @RequestParam Integer offset,
+                                             @RequestParam Integer size) {
         List<ChatMessage> messages = chatService.getMessagesByChatId(chatId, new OffsetBasedPageable(offset, size));
         return ResponseEntity.ok(messages);
     }
@@ -50,14 +51,14 @@ public class ChatController {
             + "and @userServiceImpl.findById(#message.sender).username == principal.username")
     public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
         ChatMessage savedMessage = chatService.save(message);
-        ChatMessage clonedMessage = savedMessage.clone();
-        chatService.handleChatMessage(savedMessage);
-        return ResponseEntity.ok(clonedMessage);
+        chatService.handleChatMessage(savedMessage.clone());
+        return ResponseEntity.ok(savedMessage);
     }
 
     @GetMapping("/new/{creatorUserId}/{userId}/{secret}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId, @PathVariable Boolean secret) {
+    public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId,
+                                     @PathVariable Boolean secret) {
         return ResponseEntity.ok(chatService.getChatId(creatorUserId, userId, secret));
     }
 

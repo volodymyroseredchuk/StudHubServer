@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+
 import javax.websocket.EncodeException;
 import java.io.IOException;
 import java.util.*;
@@ -30,34 +31,34 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void addSession(Integer id, WebSocketSession session) {
-        if (id != null && session != null) {
-            sessionIdMap.put(id, session);
-        } else {
+        if (id == null || session == null) {
             throw new IllegalArgumentException("Cannot add session with empty parameters.");
         }
+
+        sessionIdMap.put(id, session);
     }
 
     @Override
     public void sendNotification(Integer userId, TextMessage message) {
-        if (userId != null && message != null) {
-            if (sessionIdMap.containsKey(userId)) {
-                try {
-                    sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
-                } catch (IOException e) {
-                    throw new IllegalArgumentException("Could not send message.");
-                }
-            }
-        } else {
+        if (userId == null || message == null) {
             throw new IllegalArgumentException("Cannot send notification with empty parameters.");
+        }
+
+        if (sessionIdMap.containsKey(userId)) {
+            try {
+                sessionIdMap.get(userId).sendMessage(new TextMessage(message.getPayload()));
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Could not send message.");
+            }
         }
     }
 
     @Override
     public void sendGreetings(WebSocketSession session, Integer textId) {
-
         if (session == null || textId == null) {
             throw new IllegalArgumentException("Cannot send greetings with empty parameters.");
         }
+
         try {
             if (textId.equals(1)) {
                 session.sendMessage(new TextMessage(messageEncoder.encode(CONNECTED_MESSAGE)));
@@ -86,7 +87,7 @@ public class SocketServiceImpl implements SocketService {
                     Gson gson = new Gson();
                     message.setSender(null);
                     SocketMessage socketMessage = new SocketMessage(message.getChat().getId().toString(),
-                           gson.toJson(message) , SocketMessageType.CHAT_MESSAGE);
+                            gson.toJson(message), SocketMessageType.CHAT_MESSAGE);
                     session.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
                 } catch (EncodeException | IOException e) {
                     throw new IllegalArgumentException("Could not send chat message.");
@@ -98,6 +99,10 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public void sendStatus(WebSocketSession session, boolean status) {
+        if (session == null) {
+            throw new IllegalArgumentException("An argument cannot be empty.");
+        }
+
         SocketMessage socketMessage;
         if (status) {
             socketMessage = new SocketMessage("STATUS", "OK", SocketMessageType.STATUS);
@@ -113,13 +118,17 @@ public class SocketServiceImpl implements SocketService {
 
     @Override
     public boolean handleSocketMessage(WebSocketSession session, SocketMessage socketMessage) throws EncodeException, IOException {
-        System.out.println(socketMessage);
+        if (session == null || socketMessage == null) {
+            throw new IllegalArgumentException("Arguments cannot be empty.");
+        }
+
         if (socketMessage.getType().equalsIgnoreCase(SocketMessageType.ENCRYPTION_PUBLIC_KEY_EXCHANGE.toString())) {
             Integer userId = findByValue(sessionIdMap, session);
-            List<Integer> otherSubscribers =  chatService.findUserIdByUserIdNotAndChatId(userId, Integer.parseInt(socketMessage.getParam1()));
+            List<Integer> otherSubscribers = chatService.findUserIdByUserIdNotAndChatId(userId, Integer.parseInt(socketMessage.getParam1()));
             if (otherSubscribers.size() > 1) {
                 throw new IllegalArgumentException("Secret chat features are not allowed for group chats.");
             }
+
             WebSocketSession receiver = sessionIdMap.get(otherSubscribers.get(0));
             if (receiver != null) {
                 receiver.sendMessage(new TextMessage(messageEncoder.encode(socketMessage)));
