@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
 import com.softserve.academy.studhub.repository.TeamRepository;
 import com.softserve.academy.studhub.service.TeamService;
+import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,12 +14,16 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
+
+    private final UserService userService;
 
     @Override
     public Team save(Team team, Principal principal) {
@@ -84,5 +89,31 @@ public class TeamServiceImpl implements TeamService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Team> findAllByIsPublicTrueAndUserUsernameOrderByCreationDateDesc(String username) {
+
+        return getAllTeamsByAccessAndUsername(teamRepository.findAllByIsPublicTrueOrderByCreationDateDesc(), username);
+    }
+
+    @Override
+    public List<Team> findAllByIsPublicFalseAndUserUsernameOrderByCreationDateDesc(String username) {
+
+        return getAllTeamsByAccessAndUsername(teamRepository.findAllByIsPublicFalseOrderByCreationDateDesc(), username);
+    }
+
+    private List<Team> getAllTeamsByAccessAndUsername(List<Team> teamList, String username){
+        List<Team> teamPublicListByUserUsername = new ArrayList<>();
+
+        User user = userService.findByUsername(username);
+
+        for (Team team: teamList) {
+            if(team.getUserList().contains(user)){
+                teamPublicListByUserUsername.add(team);
+            }
+        }
+
+        return teamPublicListByUserUsername;
     }
 }
