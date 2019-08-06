@@ -31,6 +31,19 @@ public class ConfirmTokenServiceImplTest {
     }
 
     @Test
+    public void save(){
+
+        ConfirmToken token = new ConfirmToken();
+        token.setId(1);
+
+        when(confirmTokenRepository.saveAndFlush(token)).thenReturn(token);
+
+        ConfirmToken resultToken = confirmTokenService.save(token);
+
+        Assert.assertEquals(resultToken.getId(), token.getId());
+    }
+
+    @Test
     public void findByValidToken() {
 
         String token = "validToken";

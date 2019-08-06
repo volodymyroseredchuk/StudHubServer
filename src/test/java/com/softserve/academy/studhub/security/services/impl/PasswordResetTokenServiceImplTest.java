@@ -31,6 +31,19 @@ public class PasswordResetTokenServiceImplTest {
     }
 
     @Test
+    public void save(){
+
+        PasswordResetToken token = new PasswordResetToken();
+        token.setId(1);
+
+        when(passwordResetTokenRepository.saveAndFlush(token)).thenReturn(token);
+
+        PasswordResetToken resultToken = passwordResetTokenService.save(token);
+
+        Assert.assertEquals(resultToken.getId(), token.getId());
+    }
+
+    @Test
     public void findByValidToken() {
 
         String token = "validToken";
