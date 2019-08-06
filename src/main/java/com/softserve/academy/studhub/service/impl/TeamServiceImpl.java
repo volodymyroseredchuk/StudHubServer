@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.dto.UserForListDTO;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
@@ -24,7 +25,10 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team save(Team team, Principal principal) {
+
+        team.setUser(userService.findByUsername(principal.getName()));
         team.setCreationDate(LocalDateTime.now());
+
         return teamRepository.saveAndFlush(team);
     }
 
@@ -56,7 +60,15 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Page<Team> findAll(Pageable pageable) {
 
-        return teamRepository.findAllByOrderByCreationDateDesc(pageable);
+        return teamRepository.findAllByIsPublicTrueOrderByCreationDateDesc(pageable);
+    }
+
+    @Override
+    public boolean isTeamPublic(Integer teamId) {
+
+        Team team = findById(teamId);
+
+        return team.getIsPublic();
     }
 
     @Override
@@ -64,7 +76,7 @@ public class TeamServiceImpl implements TeamService {
 
         Team team = findById(teamId);
 
-        if(team.getUser().getUsername().equals(username)){
+        if (team.getUser().getUsername().equals(username)) {
             return true;
         }
 

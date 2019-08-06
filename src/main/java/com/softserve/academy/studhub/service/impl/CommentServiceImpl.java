@@ -36,13 +36,13 @@ public class CommentServiceImpl implements ICommentService {
         return commentRepository.saveAndFlush(comment);
     }
 
-    @Override
+    /*@Override
     public Comment update(Integer commentId, Comment comment) {
         Comment updatable = findById(commentId);
         updatable.setBody(comment.getBody());
         updatable.setModifiedDate(LocalDateTime.now());
         return commentRepository.saveAndFlush(updatable);
-    }
+    }*/
 
     @Override
     public List<Comment> findAll() {

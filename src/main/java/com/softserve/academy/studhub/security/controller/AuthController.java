@@ -62,7 +62,7 @@ public class AuthController {
         ConfirmToken token = new ConfirmToken(user);
         confirmTokenService.save(token);
 
-        emailService.sendConfirmAccountEmail(user, token);
+        emailService.sendConfirmAccountEmail(token);
 
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.SENT_CONFIRM_ACC_LINK + user.getEmail()));
     }

@@ -13,6 +13,7 @@ import com.softserve.academy.studhub.repository.UserRepository;
 import com.softserve.academy.studhub.service.AnswerService;
 import com.softserve.academy.studhub.service.SubscriptionService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -109,5 +110,9 @@ public class AnswerServiceImpl implements AnswerService {
         return answerRepository.countByApprovedTrueAndUserUsername(username);
     }
 
+    @Override
+    public Integer sumOfRatingByUserUsername(String username) {
 
+        return answerRepository.sumOfRatingByUserUsername(username);
+    }
 }

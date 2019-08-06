@@ -9,5 +9,5 @@ public interface ChatSubscriptionRepository extends JpaRepository<ChatSubscripti
 
     List<ChatSubscription> findChatSubscriptionByChatId(Integer chatId);
     List<ChatSubscription> findChatSubscriptionByUserId(Integer userId);
-
+    Long deleteAllByChatId(Integer chatId);
 }
