@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "chat_messages")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class ChatMessage {
+public class ChatMessage implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +32,15 @@ public class ChatMessage {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "chat_id", referencedColumnName = "id")
     private Chat chat;
+
+    public ChatMessage clone() {
+        ChatMessage message = new ChatMessage();
+        message.setId(this.id);
+        message.setSender(this.sender);
+        message.setChat(this.chat);
+        message.setCreationDateTime(this.creationDateTime);
+        message.setContent(this.content);
+        return message;
+    }
 
 }

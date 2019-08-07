@@ -26,7 +26,7 @@ public class WebSocketAuth {
         try {
 
             String token = tokenService.generateToken(Integer.parseInt(id));
-            return ResponseEntity.status(HttpStatus.OK).body(token);
+            return ResponseEntity.ok(token);
 
         } catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

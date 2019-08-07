@@ -22,6 +22,8 @@ public class ErrorMessage {
     public static final String TEAM_NOT_FOUND_BY_ID = "The team does not exist by this id: ";
     public static final String PROPOSAL_NOT_FOUND_BY_ID = "The proposal does not exist by this id: ";
 
+    public static final String INVITATION_NOT_FOUNT_BY_ID = "The invitation does not exist by this id: ";
+
     public static final String NOT_AUTHORISED = "You don't have rights to access this resource ";
     public static final String WRONG_GOOGLE_DATA = "Invalid Google information.";
 
@@ -52,4 +54,6 @@ public class ErrorMessage {
     public static final String PROPOSAL_DELETED = "Proposal was successfully deleted";
 
     public static final String ORDER_NOT_EXIST = "The order does not exist with id: ";
+
+    public static final String USER_NEITHER_QUESTION_CREATOR_NOR_EXECUTOR = "The user is neither question creator not executor";
 }

@@ -18,5 +18,7 @@ public interface TeamService {
 
     Page<Team> findAll(Pageable pageable);
 
+    boolean isTeamPublic(Integer teamId);
+
     boolean hasAccessForUser(Integer teamId, String username);
 }

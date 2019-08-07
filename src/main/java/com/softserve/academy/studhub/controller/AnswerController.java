@@ -40,7 +40,7 @@ public class AnswerController {
     }
 
     @PostMapping("/questions/{questionId}/answers")
-    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE')")
+    @PreAuthorize("hasAuthority('ANSWER_WRITE_PRIVILEGE')")
     public ResponseEntity<AnswerDTO> createAnswer(@Valid @RequestBody AnswerCreateDTO answerCreateDTO,
                                                   @PathVariable Integer questionId,
                                                   Principal principal) {
@@ -51,7 +51,7 @@ public class AnswerController {
 
 
     @DeleteMapping("/questions/{questionId}/answers/{answerId}/delete")
-    @PreAuthorize("hasAuthority('QUESTION_DELETE_ANY_PRIVILEGE') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('ANSWER_DELETE_ANY_PRIVILEGE') or @answerServiceImpl.findById(#answerId).getUser().getUsername() == principal.username")
     public ResponseEntity<DeleteResultDTO> deleteAnswer(@PathVariable Integer answerId) {
         Boolean isDeleted = answerService.deleteById(answerId);
         DeleteResultDTO deleteResultDTO = new DeleteResultDTO();
@@ -61,7 +61,7 @@ public class AnswerController {
 
 
     @PutMapping("/questions/{questionId}/answers/{answerId}/approve")
-    @PreAuthorize("hasAuthority('QUESTION_WRITE_PRIVILEGE') and @answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
+    @PreAuthorize("hasAuthority('ANSWER_WRITE_PRIVILEGE') and @answerServiceImpl.findById(#answerId).getQuestion().getUser().getUsername() == principal.username")
     public ResponseEntity<AnswerApproveDTO> setApprovedAnswer(@PathVariable Integer answerId,
                                                               @RequestBody Boolean approved) {
         AnswerApproveDTO answerApproveDTO = new AnswerApproveDTO();
@@ -82,5 +82,12 @@ public class AnswerController {
     public ResponseEntity<Integer> getCountOfAnswersByUsername(@PathVariable String username) {
 
         return ResponseEntity.ok(answerService.countByUserUsername(username));
+    }
+
+    @GetMapping("questions/answers/sum/rating/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Integer> getSumOfRatingByUserUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(answerService.sumOfRatingByUserUsername(username));
     }
 }

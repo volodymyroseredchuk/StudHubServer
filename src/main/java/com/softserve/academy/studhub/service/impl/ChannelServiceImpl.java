@@ -14,14 +14,14 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public Channel save(Channel channel) {
-        if (channel != null) {
-            if (channel.getQuestion() != null) {
-                return channelRepository.saveAndFlush(channel);
-            } else {
-                throw new IllegalArgumentException("Question in channel cannot be empty.");
-            }
-        } else {
+        if (channel == null) {
             throw new IllegalArgumentException("Channel cannot be empty.");
+        }
+
+        if (channel.getQuestion() != null) {
+            return channelRepository.saveAndFlush(channel);
+        } else {
+            throw new IllegalArgumentException("Question in channel cannot be empty.");
         }
     }
 

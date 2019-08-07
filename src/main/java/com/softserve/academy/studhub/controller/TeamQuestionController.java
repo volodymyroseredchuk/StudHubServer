@@ -31,7 +31,8 @@ public class TeamQuestionController {
 
 
     @GetMapping
-    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    @PreAuthorize("@teamServiceImpl.isTeamPublic(#teamId) or " +
+            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<QuestionPaginatedDTO> getAllQuestionsByTeamId(@PathVariable Integer teamId,
                                                                         Pageable pageable) {
 
@@ -45,7 +46,8 @@ public class TeamQuestionController {
     }
 
     @GetMapping("/{questionId}")
-    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    @PreAuthorize("@teamServiceImpl.isTeamPublic(#teamId) or " +
+            "(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
     public ResponseEntity<QuestionDTO> getTeamQuestionById(@PathVariable Integer teamId,
                                                            @PathVariable Integer questionId) {
 
@@ -95,8 +97,8 @@ public class TeamQuestionController {
     }
 
     @PutMapping("/{questionId}")
-    @PreAuthorize("isAuthenticated() and @questionServiceImpl.findById(#questionId)" +
-            ".getUser().getUsername() == principal.username")
+    @PreAuthorize("isAuthenticated() and " +
+            "@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username")
     public ResponseEntity<QuestionDTO> editTeamQuestion(@PathVariable Integer questionId,
                                                         @RequestBody QuestionDTO questionDto) {
 
@@ -105,10 +107,9 @@ public class TeamQuestionController {
     }
 
     @DeleteMapping("/{questionId}")
-    @PreAuthorize("isAuthenticated() and @teamServiceImpl.findById(#teamId)" +
-                    ".getUser().getUsername() == principal.username or " +
-            "isAuthenticated() and @questionServiceImpl.findById(#questionId)" +
-                    ".getUser().getUsername() == principal.username")
+    @PreAuthorize("isAuthenticated() and " +
+            "(@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username or " +
+            "@questionServiceImpl.findById(#questionId).getUser().getUsername() == principal.username)")
     public ResponseEntity<MessageResponse> deleteTeamQuestion(@PathVariable Integer teamId,
                                                               @PathVariable Integer questionId) {
 
