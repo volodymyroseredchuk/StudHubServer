@@ -26,7 +26,9 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team save(Team team, Principal principal) {
 
-        team.setUser(userService.findByUsername(principal.getName()));
+        User creator = userService.findByUsername(principal.getName());
+        team.setUser(creator);
+        team.getUserList().add(creator);
         team.setCreationDate(LocalDateTime.now());
 
         return teamRepository.saveAndFlush(team);
