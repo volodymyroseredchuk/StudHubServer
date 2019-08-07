@@ -30,6 +30,7 @@ public class TeamServiceImpl implements TeamService {
 
         User creator = userService.findByUsername(principal.getName());
         team.setUser(creator);
+        team.setUserList(new ArrayList<>());
         team.getUserList().add(creator);
         team.setCreationDate(LocalDateTime.now());
 
