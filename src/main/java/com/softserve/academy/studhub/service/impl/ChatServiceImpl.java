@@ -62,12 +62,15 @@ public class ChatServiceImpl implements ChatService {
         if (pageable.getPageNumber() == 0) {
             list = Lists.reverse(list);
         }
-
         return list;
     }
 
     @Override
     public List<ChatListItemDTO> getChatList(Integer userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("Cannot get a chat list for an empty user ID.");
+        }
+
         return chatRepository.findChatListByUserId(userId);
     }
 
@@ -140,7 +143,7 @@ public class ChatServiceImpl implements ChatService {
         message.setSender(userService.findById(messagePostDTO.getSender()));
         message.setCreationDateTime(messagePostDTO.getCreationDateTime());
         message.setChat(chatRepository.findById(messagePostDTO.getChat())
-                .orElseThrow(() -> new IllegalArgumentException("Cannot save message for not existing chat.")));
+                .orElseThrow(() -> new IllegalArgumentException("Cannot save the message for a not existing chat.")));
         return chatMessageRepository.saveAndFlush(message);
     }
 
@@ -242,6 +245,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<Integer> findUserIdByUserIdNotAndChatId(Integer userId, Integer chatId) {
+        if (userId == null || chatId == null) {
+            throw new IllegalArgumentException("Cannot find user ID by with empty user ID and/or chat ID.");
+        }
+
         List<ChatSubscription> subs = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         List<Integer> subIds = new ArrayList<>();
         for (ChatSubscription sub : subs) {
@@ -255,6 +262,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void deleteChat(Integer chatId) {
+        if (chatId == null) {
+            throw new IllegalArgumentException("Cannot delete chat with an empty ID.");
+        }
+
         chatMessageRepository.deleteAllByChatId(chatId);
         subscriptionRepository.deleteAllByChatId(chatId);
         chatRepository.deleteById(chatId);

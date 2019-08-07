@@ -1,10 +1,7 @@
 package com.softserve.academy.studhub.controller;
 
-import com.softserve.academy.studhub.coders.SocketChatMessageDecoder;
 import com.softserve.academy.studhub.coders.SocketMessageDecoder;
-import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.entity.SocketMessage;
-import com.softserve.academy.studhub.service.ChatService;
 import com.softserve.academy.studhub.service.SocketService;
 import com.softserve.academy.studhub.service.SocketTokenService;
 import com.softserve.academy.studhub.service.SubscriptionService;
@@ -25,10 +22,6 @@ public class WebSocketHandler extends AbstractWebSocketHandler {
     private SocketMessageDecoder socketMessageDecoder = new SocketMessageDecoder();
 
     private SubscriptionService subscriptionService;
-
-    private ChatService chatService;
-
-    private SocketChatMessageDecoder chatMessageDecoder = new SocketChatMessageDecoder();
 
     public WebSocketHandler(SocketService socketService, SocketTokenService tokenService,
                             SubscriptionService subscriptionService) {
