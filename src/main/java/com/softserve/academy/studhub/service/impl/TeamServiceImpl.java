@@ -60,6 +60,28 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public Team deleteMemberFromTeam(Integer teamId, Integer userId) {
+
+        Team team = findById(teamId);
+        User user = userService.findById(userId);
+
+        team.getUserList().remove(user);
+
+        return update(teamId, team);
+    }
+
+    @Override
+    public Team joinTeam(Integer teamId, Integer userId) {
+
+        Team team = findById(teamId);
+        User user = userService.findById(userId);
+
+        team.getUserList().add(user);
+
+        return update(teamId, team);
+    }
+
+    @Override
     public Page<Team> findAll(Pageable pageable) {
 
         return teamRepository.findAllByIsPublicTrueOrderByCreationDateDesc(pageable);

@@ -79,6 +79,25 @@ public class TeamController {
         return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
     }
 
+    @PutMapping("/{teamId}/join/{userId}")
+    @PreAuthorize("isAuthenticated() and @teamServiceImpl.isTeamPublic(#teamId)")
+    public ResponseEntity<TeamDTO> joinTeam(@PathVariable Integer teamId,
+                                            @PathVariable Integer userId) {
+
+        Team team = teamService.joinTeam(teamId, userId);
+
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
+    }
+
+    @PutMapping("/{teamId}/leave/{userId}")
+    @PreAuthorize("(isAuthenticated() and @teamServiceImpl.hasAccessForUser(#teamId, principal.username))")
+    public ResponseEntity<TeamDTO> leaveTeam(@PathVariable Integer teamId,
+                                             @PathVariable Integer userId) {
+
+        Team team = teamService.deleteMemberFromTeam(teamId, userId);
+
+        return ResponseEntity.ok(modelMapper.map(team, TeamDTO.class));
+    }
 
     @DeleteMapping("/{teamId}")
     @PreAuthorize("hasAuthority('DELETE_ANY_TEAM_PRIVILEGE') or " +
@@ -119,7 +138,7 @@ public class TeamController {
 
     @PutMapping("/{teamId}/invitations/{invitationId}")
     @PreAuthorize("isAuthenticated() and (@invitationServiceImpl.findById(#invitationId)" +
-                    ".getUser().getUsername() == principal.username)")
+            ".getUser().getUsername() == principal.username)")
     public ResponseEntity<TeamDTO> acceptInvitation(@PathVariable Integer teamId,
                                                     @PathVariable Integer invitationId,
                                                     @RequestBody TeamDTO teamDTO) {
@@ -134,7 +153,7 @@ public class TeamController {
     @PreAuthorize("hasAuthority('WRITE_ANY_TEAM_PRIVILEGE') or " +
             "(isAuthenticated() and " +
             "(@invitationServiceImpl.findById(#invitationId)" +
-                    ".getUser().getUsername() == principal.username or " +
+            ".getUser().getUsername() == principal.username or " +
             "@teamServiceImpl.findById(#teamId).getUser().getUsername() == principal.username))")
     public ResponseEntity<MessageResponse> deleteInvitation(@PathVariable Integer teamId,
                                                             @PathVariable Integer invitationId) {
