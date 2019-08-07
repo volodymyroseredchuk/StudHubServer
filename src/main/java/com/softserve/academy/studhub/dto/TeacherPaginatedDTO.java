@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TeacherPaginatedDTO {
 
-    private List<TeacherForListDTO> teachers;
+    private List<TeacherDTO> teachers;
 
     private Long teachersTotalCount;
 }

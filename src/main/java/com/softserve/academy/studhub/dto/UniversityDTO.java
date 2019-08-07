@@ -4,16 +4,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewsDTO {
+public class UniversityDTO {
 
     private Integer id;
-    private String title;
-    private String body;
-    private LocalDateTime creationDate;
-    private String sourceUrl;
+
+    private String name;
+
+    private String city;
+
+    private String imageUrl;
+
+    private Double mark;
 }

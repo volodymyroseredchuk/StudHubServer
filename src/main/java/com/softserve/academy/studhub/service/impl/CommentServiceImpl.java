@@ -1,5 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
+import com.softserve.academy.studhub.constants.SuccessMessage;
 import com.softserve.academy.studhub.entity.Comment;
 import com.softserve.academy.studhub.constants.ErrorMessage;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
@@ -36,14 +37,6 @@ public class CommentServiceImpl implements ICommentService {
         return commentRepository.saveAndFlush(comment);
     }
 
-    /*@Override
-    public Comment update(Integer commentId, Comment comment) {
-        Comment updatable = findById(commentId);
-        updatable.setBody(comment.getBody());
-        updatable.setModifiedDate(LocalDateTime.now());
-        return commentRepository.saveAndFlush(updatable);
-    }*/
-
     @Override
     public List<Comment> findAll() {
         return commentRepository.findAll();
@@ -61,7 +54,7 @@ public class CommentServiceImpl implements ICommentService {
     public String deleteById(Integer commentId) {
         findById(commentId);
         commentRepository.deleteById(commentId);
-        return "Comment deleted";
+        return SuccessMessage.COMMENT_DELETED_SUCCESSFULLY;
     }
 
     @Override

@@ -84,6 +84,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Integer countByFreelancerAndTaskDone(String username) {
+
+        return orderRepository.countByFreelancerAndTaskDone(username);
+    }
+
     @Transactional
     public Order cancelOrder(Integer orderId, String username) {
         Order order = orderRepository.findById(orderId)
@@ -125,6 +130,5 @@ public class OrderServiceImpl implements OrderService {
     private boolean isOrderExpired(Order order){
         return order.getEndDate().isBefore(LocalDateTime.now());
     }
-
 
 }

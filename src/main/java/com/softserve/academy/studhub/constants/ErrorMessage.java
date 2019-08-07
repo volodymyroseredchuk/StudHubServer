@@ -11,7 +11,7 @@ public class ErrorMessage {
     public static final String QUESTION_NOTFOUND = "Requested question does not exist by this id: ";
     public static final String ANSWER_NOTFOUND = "Requested answer does not exist by this id: ";
     public static final String COMMENT_NOTFOUND = "Requested comment does not exist by this id: ";
-    public static final String NEWS_NOTFOUND = "Requested news does not exist by this id: ";
+    public static final String FEED_NOTFOUND = "Requested feed does not exist by this id: ";
     public static final String TEACHER_NOTFOUND = "Requested teacher does not exist by this id: ";
     public static final String UNIVERSITY_NOTFOUND = "Requested university does not exist by this id: ";
     public static final String TAG_NOT_FOUND_BY_ID = "Requested tag does not exist by this id: ";

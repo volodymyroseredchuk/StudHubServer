@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TeacherForListDTO {
+public class TeacherDTO {
 
     private Integer id;
 

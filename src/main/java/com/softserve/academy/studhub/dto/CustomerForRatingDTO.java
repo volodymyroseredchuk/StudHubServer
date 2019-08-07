@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewsForListDTO {
+public class CustomerForRatingDTO {
 
-    private Integer id;
+    private Double payment;
 
-    private String title;
+    private Double formulation;
 
-    private LocalDateTime creationDate;
+    private Double clarity;
+
+    private Double contact;
 }

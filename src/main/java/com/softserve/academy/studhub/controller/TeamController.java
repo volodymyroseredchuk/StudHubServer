@@ -163,4 +163,21 @@ public class TeamController {
         return ResponseEntity.ok(new MessageResponse(SuccessMessage.INVITATION_DELETED_SUCCESSFULLY));
     }
 
+    @GetMapping("/public/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<TeamForListDTO>> getAllPublicTeamsByUserUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(teamService.findAllByIsPublicTrueAndUserUsernameOrderByCreationDateDesc(username).
+                stream().map(team -> modelMapper.map(team, TeamForListDTO.class)).
+                collect(Collectors.toList()));
+    }
+
+    @GetMapping("/private/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<TeamForListDTO>> getAllPrivateTeamsByUserUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(teamService.findAllByIsPublicFalseAndUserUsernameOrderByCreationDateDesc(username).
+                stream().map(team -> modelMapper.map(team, TeamForListDTO.class)).
+                collect(Collectors.toList()));
+    }
 }

@@ -14,6 +14,8 @@ public interface OrderService {
 
     Order findById(Integer orderId);
 
+    Integer countByFreelancerAndTaskDone(String username);
+
     ResultSubmission submitResult(Integer orderId, ResultSubmission resultSubmission);
 
     Order cancelOrder(Integer orderId, String username);
