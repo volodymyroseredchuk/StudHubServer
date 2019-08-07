@@ -16,6 +16,10 @@ public interface TeamService {
 
     void delete(Integer teamId);
 
+    Team deleteMemberFromTeam(Integer teamId, Integer userId);
+
+    Team joinTeam(Integer teamId, Integer userId);
+
     Page<Team> findAll(Pageable pageable);
 
     boolean isTeamPublic(Integer teamId);
