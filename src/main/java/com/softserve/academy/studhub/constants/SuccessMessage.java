@@ -16,7 +16,9 @@ public class SuccessMessage {
     public static final String VALID_TOKEN = "token is valid";
 
     public static final String QUESTION_DELETED_SUCCESSFULLY = "Question deleted";
-    public static final String NEWS_DELETED_SUCCESSFULLY = "News deleted";
+    public static final String COMMENT_DELETED_SUCCESSFULLY = "Comment deleted";
+    public static final String FEED_DELETED_SUCCESSFULLY = "feed removed";
+    public static final String FEED_ADDED_SUCCESSFULLY = "feed added";
     public static final String TEAM_DELETED_SUCCESSFULLY = "Team deleted";
     public static final String TASK_DELETED_SUCCESSFULLY = "Task deleted";
     public static final String PROPOSAL_DELETED_SUCCESSFULLY = "Proposal deleted";

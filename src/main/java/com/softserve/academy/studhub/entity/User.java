@@ -11,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,4 +98,12 @@ public class User {
     @ManyToMany(targetEntity = Team.class, mappedBy = "userList")
     @JsonIgnore
     private List<Team> teamList;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(targetEntity = Feed.class)
+    @JoinTable(name = "user_feeds",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "feed_id"))
+    private List<Feed> feeds;
+
 }
