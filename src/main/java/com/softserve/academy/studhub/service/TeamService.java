@@ -1,10 +1,12 @@
 package com.softserve.academy.studhub.service;
 
 import com.softserve.academy.studhub.entity.Team;
+import com.softserve.academy.studhub.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
+import java.util.List;
 
 public interface TeamService {
 
@@ -21,4 +23,8 @@ public interface TeamService {
     boolean isTeamPublic(Integer teamId);
 
     boolean hasAccessForUser(Integer teamId, String username);
+
+    List<Team> findAllByIsPublicTrueAndUserUsernameOrderByCreationDateDesc(String username);
+
+    List<Team> findAllByIsPublicFalseAndUserUsernameOrderByCreationDateDesc(String username);
 }

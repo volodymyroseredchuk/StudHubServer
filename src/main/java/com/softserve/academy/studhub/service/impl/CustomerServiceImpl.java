@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 
+import com.softserve.academy.studhub.dto.CustomerForRatingDTO;
 import com.softserve.academy.studhub.entity.Customer;
 import com.softserve.academy.studhub.entity.Order;
 import com.softserve.academy.studhub.repository.CustomerRepository;
@@ -25,5 +26,18 @@ public class CustomerServiceImpl implements CustomerService {
         order.setCustomer(customer);
 
         return customerRepository.saveAndFlush(customer);
+    }
+
+    @Override
+    public CustomerForRatingDTO getRatingByUserUsername(String username) {
+
+        CustomerForRatingDTO result = new CustomerForRatingDTO();
+
+        result.setClarity(customerRepository.avgClarityByUserUsername(username));
+        result.setContact(customerRepository.avgContactByUserUsername(username));
+        result.setFormulation(customerRepository.avgFormulationByUserUsername(username));
+        result.setPayment(customerRepository.avgPaymentByUserUsername(username));
+
+        return result;
     }
 }

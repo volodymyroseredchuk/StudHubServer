@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.dto;
 
 import com.softserve.academy.studhub.constants.ValidationConstants;
+import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.entity.University;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -46,4 +48,6 @@ public class UserDTO {
     private Boolean emailSubscription;
 
     private Integer cookiesCount;
+
+    private List<Team> teamList;
 }

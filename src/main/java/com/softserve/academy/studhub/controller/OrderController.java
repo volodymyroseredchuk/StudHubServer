@@ -93,4 +93,11 @@ public class OrderController {
         Freelancer freelancer = freelancerService.add(modelMapper.map(freelancerDTO, Freelancer.class), orderId);
         return ResponseEntity.ok(modelMapper.map(freelancer, FreelancerDTO.class));
     }
+
+    @GetMapping("/count/done/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Integer> getCountOfDoneOrdersByUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(orderService.countByFreelancerAndTaskDone(username));
+    }
 }
