@@ -49,8 +49,7 @@ public class TeacherController {
     }
 
     @PostMapping("/teacher")
-    @PreAuthorize("permitAll()")
-//    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
+    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     ResponseEntity<TeacherDTO> newTeacher(@RequestBody TeacherDTO teacherDTO) {
         teacherService.save(modelMapper.map(teacherDTO, Teacher.class));
         return ResponseEntity.ok(teacherDTO);
@@ -65,8 +64,7 @@ public class TeacherController {
     }
 
     @PostMapping("/update")
-    @PreAuthorize("permitAll()")
-//    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
+    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
     ResponseEntity<TeacherDTO> updateTeacher(@RequestBody TeacherDTO teacherDTO) {
         Teacher result = teacherService.update(modelMapper.map(teacherDTO, Teacher.class));
         TeacherDTO resultDTO = modelMapper.map(result, TeacherDTO.class);

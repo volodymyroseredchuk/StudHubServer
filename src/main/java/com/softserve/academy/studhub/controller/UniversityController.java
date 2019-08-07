@@ -36,8 +36,7 @@ public class UniversityController {
     }
 
     @PostMapping("/university")
-    @PreAuthorize("permitAll()")
-//    @PreAuthorize("hasAuthority('UNIVERSITY_WRITE_PRIVILEGE')")
+    @PreAuthorize("hasAuthority('UNIVERSITY_WRITE_PRIVILEGE')")
     ResponseEntity<UniversityDTO> newUniversity(@RequestBody UniversityDTO universityDTO) {
         universityService.save(modelMapper.map(universityDTO, University.class));
         return ResponseEntity.ok(universityDTO);
@@ -45,15 +44,14 @@ public class UniversityController {
 
 
     @DeleteMapping("/{universityId}")
-//    @PreAuthorize("hasAuthority('UNIVERSITY_DELETE_ANY_PRIVILEGE')")
+    @PreAuthorize("hasAuthority('UNIVERSITY_DELETE_ANY_PRIVILEGE')")
     ResponseEntity.BodyBuilder deleteUniversity(@PathVariable Integer universityId) {
         universityService.delete(universityId);
         return ResponseEntity.status(200);
     }
 
     @PutMapping("/{universityId}/update")
-    @PreAuthorize("permitAll()")
-//    @PreAuthorize("hasAuthority('TEACHER_WRITE_PRIVILEGE')")
+    @PreAuthorize("hasAuthority('UNIVERSITY_WRITE_PRIVILEGE')")
     ResponseEntity<UniversityDTO> updateUniversity(@RequestBody UniversityDTO universityDTO) {
         University result = universityService.update(modelMapper.map(universityDTO, University.class));
         UniversityDTO resultDTO = modelMapper.map(result, UniversityDTO.class);

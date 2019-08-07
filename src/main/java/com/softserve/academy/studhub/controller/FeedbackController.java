@@ -6,6 +6,7 @@ import com.softserve.academy.studhub.service.FeedbackService;
 import com.softserve.academy.studhub.service.TeacherService;
 import com.softserve.academy.studhub.service.UniversityService;
 import com.softserve.academy.studhub.service.UserService;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @CrossOrigin
 @RestController
 @RequestMapping(path = "/feedback")
@@ -26,16 +28,6 @@ public class FeedbackController {
     private final UserService userService;
 
     private final ModelMapper modelMapper;
-
-    public FeedbackController(FeedbackService feedbackService, ModelMapper modelMapper,
-                              TeacherService teacherService, UniversityService universityService,
-                              UserService userService) {
-        this.feedbackService = feedbackService;
-        this.modelMapper = modelMapper;
-        this.teacherService = teacherService;
-        this.universityService = universityService;
-        this.userService = userService;
-    }
 
     @GetMapping
     @PreAuthorize("permitAll()")
@@ -59,13 +51,15 @@ public class FeedbackController {
         Feedback newFeedback = new Feedback();
         newFeedback.setBody(feedbackDTO.getBody());
         newFeedback.setMark(feedbackDTO.getMark());
+
         if (Objects.nonNull(feedbackDTO.getTeacherId())) {
             newFeedback.setTeacher(teacherService.findById(feedbackDTO.getTeacherId()));
         }
+
         if (Objects.nonNull(feedbackDTO.getUniversityId())) {
             newFeedback.setUniversity(universityService.findById(feedbackDTO.getUniversityId()));
         }
-        newFeedback.setRate(feedbackDTO.getRate());
+        newFeedback.setRate(0);
         Feedback result = feedbackService.save(newFeedback);
         return ResponseEntity.ok(modelMapper.map(result, FeedbackDTO.class));
     }
