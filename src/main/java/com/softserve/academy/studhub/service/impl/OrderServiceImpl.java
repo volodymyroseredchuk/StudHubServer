@@ -83,5 +83,52 @@ public class OrderServiceImpl implements OrderService {
         return resultSubmission;
     }
 
+    @Override
+    public Integer countByFreelancerAndTaskDone(String username) {
+
+        return orderRepository.countByFreelancerAndTaskDone(username);
+    }
+
+    @Transactional
+    public Order cancelOrder(Integer orderId, String username) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.ORDER_NOT_EXIST + orderId));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.USER_NOT_FOUND_BY_USERNAME + username));
+        order = returnMoney(order, user);
+        order.getTask().setStatus(TaskStatus.FAILED);
+        taskRepository.saveAndFlush(order.getTask());
+        return order;
+    }
+
+    private Order returnMoney(Order order, User user) {
+        if (isOrderExecutor(order, user) || isOrderExpired(order)){
+            order.getUserCreator().setCookiesCount(order.getUserCreator().getCookiesCount()
+                    + order.getProposal().getPrice());
+        } else if (isOrderCreator(order, user)){
+            order.getUserCreator().setCookiesCount(order.getUserCreator().getCookiesCount()
+                    + (order.getProposal().getPrice() / 2));
+            order.getUserExecutor().setCookiesCount(order.getUserExecutor().getCookiesCount()
+                    + (order.getProposal().getPrice() / 2));
+        } else {
+            throw new IllegalArgumentException(ErrorMessage.USER_NEITHER_QUESTION_CREATOR_NOR_EXECUTOR);
+        }
+        userRepository.saveAndFlush(order.getUserCreator());
+        userRepository.saveAndFlush(order.getUserExecutor());
+        return order;
+    }
+
+
+    private boolean isOrderCreator(Order order, User user){
+        return user.getUsername().equals(order.getUserCreator().getUsername());
+    }
+
+    private boolean isOrderExecutor(Order order, User user){
+        return user.getUsername().equals(order.getUserExecutor().getUsername());
+    }
+
+    private boolean isOrderExpired(Order order){
+        return order.getEndDate().isBefore(LocalDateTime.now());
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
+import com.softserve.academy.studhub.dto.UserForListDTO;
 import com.softserve.academy.studhub.entity.Team;
 import com.softserve.academy.studhub.entity.User;
 import com.softserve.academy.studhub.exceptions.NotFoundException;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +27,13 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team save(Team team, Principal principal) {
+
+        User creator = userService.findByUsername(principal.getName());
+        team.setUser(creator);
+        team.setUserList(new ArrayList<>());
+        team.getUserList().add(creator);
         team.setCreationDate(LocalDateTime.now());
+
         return teamRepository.saveAndFlush(team);
     }
 
@@ -54,9 +63,39 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public Team deleteMemberFromTeam(Integer teamId, Integer userId) {
+
+        Team team = findById(teamId);
+        User user = userService.findById(userId);
+
+        team.getUserList().remove(user);
+
+        return update(teamId, team);
+    }
+
+    @Override
+    public Team joinTeam(Integer teamId, Integer userId) {
+
+        Team team = findById(teamId);
+        User user = userService.findById(userId);
+
+        team.getUserList().add(user);
+
+        return update(teamId, team);
+    }
+
+    @Override
     public Page<Team> findAll(Pageable pageable) {
 
-        return teamRepository.findAllByOrderByCreationDateDesc(pageable);
+        return teamRepository.findAllByIsPublicTrueOrderByCreationDateDesc(pageable);
+    }
+
+    @Override
+    public boolean isTeamPublic(Integer teamId) {
+
+        Team team = findById(teamId);
+
+        return team.getIsPublic();
     }
 
     @Override
@@ -64,7 +103,7 @@ public class TeamServiceImpl implements TeamService {
 
         Team team = findById(teamId);
 
-        if(team.getUser().getUsername().equals(username)){
+        if (team.getUser().getUsername().equals(username)) {
             return true;
         }
 
@@ -76,5 +115,31 @@ public class TeamServiceImpl implements TeamService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Team> findAllByIsPublicTrueAndUserUsernameOrderByCreationDateDesc(String username) {
+
+        return getAllTeamsByAccessAndUsername(teamRepository.findAllByIsPublicTrueOrderByCreationDateDesc(), username);
+    }
+
+    @Override
+    public List<Team> findAllByIsPublicFalseAndUserUsernameOrderByCreationDateDesc(String username) {
+
+        return getAllTeamsByAccessAndUsername(teamRepository.findAllByIsPublicFalseOrderByCreationDateDesc(), username);
+    }
+
+    private List<Team> getAllTeamsByAccessAndUsername(List<Team> teamList, String username){
+        List<Team> teamPublicListByUserUsername = new ArrayList<>();
+
+        User user = userService.findByUsername(username);
+
+        for (Team team: teamList) {
+            if(team.getUserList().contains(user)){
+                teamPublicListByUserUsername.add(team);
+            }
+        }
+
+        return teamPublicListByUserUsername;
     }
 }

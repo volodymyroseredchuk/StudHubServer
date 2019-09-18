@@ -2,7 +2,7 @@ package com.softserve.academy.studhub.service.impl;
 
 import com.google.common.collect.Lists;
 import com.softserve.academy.studhub.dto.ChatHeaderDTO;
-import com.softserve.academy.studhub.dto.ChatListItem;
+import com.softserve.academy.studhub.dto.ChatListItemDTO;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.Chat;
 import com.softserve.academy.studhub.entity.ChatMessage;
@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,6 +33,7 @@ public class ChatServiceImpl implements ChatService {
     private ChatSubscriptionRepository subscriptionRepository;
     private SocketService socketService;
     private UserService userService;
+
 
     @Override
     public void handleChatMessage(ChatMessage message) {
@@ -60,11 +62,22 @@ public class ChatServiceImpl implements ChatService {
         if (pageable.getPageNumber() == 0) {
             list = Lists.reverse(list);
         }
-
         return list;
     }
 
     @Override
+    public List<ChatListItemDTO> getChatList(Integer userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("Cannot get a chat list for an empty user ID.");
+        }
+
+        return chatRepository.findChatListByUserId(userId);
+    }
+
+
+    // Leave it here for now. I want people to know what kind of shit I am writing.
+
+    /*@Override
     public List<ChatListItem> getChatList(Integer userId) {
         if (userId == null) {
             throw new IllegalArgumentException("Cannot get chat list by empty ID.");
@@ -83,6 +96,7 @@ public class ChatServiceImpl implements ChatService {
 
     private Map.Entry<ChatMessage, ChatListItem> getListItemEntry(ChatSubscription sub, Integer userId) {
         Integer chatId = sub.getChat().getId();
+        Boolean secret = sub.getChat().getSecret();
         List<ChatSubscription> chatSubscriptions = subscriptionRepository.findChatSubscriptionByChatId(chatId);
         Optional<ChatMessage> message = chatMessageRepository.findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(chatId);
 
@@ -100,7 +114,7 @@ public class ChatServiceImpl implements ChatService {
 
         boolean personal = (chatSubscriptions.size() == 2);
         ChatListItem item = new ChatListItem(chatId, personal ? photoUrl : null,
-                personal ? chatName : sub.getChat().getName(), lastMessage.getContent());
+                personal ? chatName : sub.getChat().getName(), lastMessage.getContent(), secret);
 
         return new AbstractMap.SimpleEntry<>(lastMessage, item);
 
@@ -116,7 +130,7 @@ public class ChatServiceImpl implements ChatService {
         }
 
         return itemList;
-    }
+    }*/
 
     @Override
     public ChatMessage save(ChatMessagePostDTO messagePostDTO) {
@@ -129,7 +143,7 @@ public class ChatServiceImpl implements ChatService {
         message.setSender(userService.findById(messagePostDTO.getSender()));
         message.setCreationDateTime(messagePostDTO.getCreationDateTime());
         message.setChat(chatRepository.findById(messagePostDTO.getChat())
-                .orElseThrow(() -> new IllegalArgumentException("Cannot save message for not existing chat.")));
+                .orElseThrow(() -> new IllegalArgumentException("Cannot save the message for a not existing chat.")));
         return chatMessageRepository.saveAndFlush(message);
     }
 
@@ -158,7 +172,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Integer getChatId(Integer creatorUserId, Integer userId) {
+    public Integer getChatId(Integer creatorUserId, Integer userId, Boolean secret) {
         if (creatorUserId == null || userId == null) {
             throw new IllegalArgumentException("Cannot get chat ID for an empty user.");
         }
@@ -175,24 +189,25 @@ public class ChatServiceImpl implements ChatService {
             }
         }
 
-        if (commonChats.size() == 1) {
+        if (commonChats.size() == 1 && commonChats.get(0).getSecret().equals(secret)) {
             return commonChats.get(0).getId();
         } else if (commonChats.size() > 1) {
             for (Chat chat : commonChats) {
                 List<ChatSubscription> chatSubs = subscriptionRepository.findChatSubscriptionByChatId(chat.getId());
-                if (chatSubs.size() == 2) {
+                if (chatSubs.size() == 2 && chat.getSecret().equals(secret)) {
                     return chat.getId();
                 }
             }
         }
 
-        return createNewChat(creatorUserId, userId).getId();
+        return createNewChat(creatorUserId, userId, secret).getId();
 
     }
 
-    private Chat createNewChat(Integer creatorUserId, Integer userId) {
-
-        Chat chat = chatRepository.saveAndFlush(new Chat());
+    private Chat createNewChat(Integer creatorUserId, Integer userId, Boolean secret) {
+        Chat chatToSave = new Chat();
+        chatToSave.setSecret(secret);
+        Chat chat = chatRepository.saveAndFlush(chatToSave);
 
         ChatSubscription creatorSubscription = new ChatSubscription();
         creatorSubscription.setChat(chat);
@@ -214,6 +229,7 @@ public class ChatServiceImpl implements ChatService {
         return chat;
     }
 
+    @Override
     public List<String> getUsernameParticipantsByChat(Integer chatId) {
         if (chatId == null) {
             throw new IllegalArgumentException("Cannot get participants for an empty chat ID.");
@@ -226,5 +242,34 @@ public class ChatServiceImpl implements ChatService {
         }
         return usernames;
     }
+
+    @Override
+    public List<Integer> findUserIdByUserIdNotAndChatId(Integer userId, Integer chatId) {
+        if (userId == null || chatId == null) {
+            throw new IllegalArgumentException("Cannot find user ID by with empty user ID and/or chat ID.");
+        }
+
+        List<ChatSubscription> subs = subscriptionRepository.findChatSubscriptionByChatId(chatId);
+        List<Integer> subIds = new ArrayList<>();
+        for (ChatSubscription sub : subs) {
+            if (!sub.getUser().getId().equals(userId)) {
+                subIds.add(sub.getUser().getId());
+            }
+        }
+        return subIds;
+    }
+
+    @Override
+    @Transactional
+    public void deleteChat(Integer chatId) {
+        if (chatId == null) {
+            throw new IllegalArgumentException("Cannot delete chat with an empty ID.");
+        }
+
+        chatMessageRepository.deleteAllByChatId(chatId);
+        subscriptionRepository.deleteAllByChatId(chatId);
+        chatRepository.deleteById(chatId);
+    }
+
 
 }

@@ -11,7 +11,7 @@ public class ErrorMessage {
     public static final String QUESTION_NOTFOUND = "Requested question does not exist by this id: ";
     public static final String ANSWER_NOTFOUND = "Requested answer does not exist by this id: ";
     public static final String COMMENT_NOTFOUND = "Requested comment does not exist by this id: ";
-    public static final String NEWS_NOTFOUND = "Requested news does not exist by this id: ";
+    public static final String FEED_NOTFOUND = "Requested feed does not exist by this id: ";
     public static final String TEACHER_NOTFOUND = "Requested teacher does not exist by this id: ";
     public static final String UNIVERSITY_NOTFOUND = "Requested university does not exist by this id: ";
     public static final String TAG_NOT_FOUND_BY_ID = "Requested tag does not exist by this id: ";
@@ -21,6 +21,8 @@ public class ErrorMessage {
     public static final String TASK_NOT_FOUND_BY_ID = "The task does not exist by this id: ";
     public static final String TEAM_NOT_FOUND_BY_ID = "The team does not exist by this id: ";
     public static final String PROPOSAL_NOT_FOUND_BY_ID = "The proposal does not exist by this id: ";
+
+    public static final String INVITATION_NOT_FOUNT_BY_ID = "The invitation does not exist by this id: ";
 
     public static final String NOT_AUTHORISED = "You don't have rights to access this resource ";
     public static final String WRONG_GOOGLE_DATA = "Invalid Google information.";
@@ -52,4 +54,6 @@ public class ErrorMessage {
     public static final String PROPOSAL_DELETED = "Proposal was successfully deleted";
 
     public static final String ORDER_NOT_EXIST = "The order does not exist with id: ";
+
+    public static final String USER_NEITHER_QUESTION_CREATOR_NOR_EXECUTOR = "The user is neither question creator not executor";
 }

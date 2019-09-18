@@ -20,13 +20,13 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
 
     @Query(
-        value = "select * from Questions q where q.team_id is null and match(q.title, q.body) against(:pattern) order by :#{#pageable}",
-        countQuery = "select count(*) from Questions q where match(q.title, q.body) against(:pattern)",
-        nativeQuery = true
+            value = "select * from Questions q where q.team_id is null and match(q.title, q.body) against(:pattern) order by :#{#pageable}",
+            countQuery = "select count(*) from Questions q where match(q.title, q.body) against(:pattern)",
+            nativeQuery = true
     )
     Page<Question> findByFullTextSearch(
-        @Param("pattern") String searchPattern,
-        @Param("pageable") Pageable pageable);
+            @Param("pattern") String searchPattern,
+            @Param("pageable") Pageable pageable);
 
     List<Question> findQuestionByUserUsernameOrderByCreationDateDesc(String username);
 

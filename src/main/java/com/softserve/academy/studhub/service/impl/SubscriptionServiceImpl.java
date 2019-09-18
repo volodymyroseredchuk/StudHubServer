@@ -80,7 +80,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private void sendSocketNotifications(List<User> userList) {
-
         SocketMessageEncoder encoder = new SocketMessageEncoder();
         SocketMessage message = new SocketMessage("You've got a new answer for your question.", SocketMessageType.NOTIFICATION);
 

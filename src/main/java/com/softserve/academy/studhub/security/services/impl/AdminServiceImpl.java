@@ -20,9 +20,9 @@ public class AdminServiceImpl implements AdminService {
     private final RoleService roleService;
 
     @Override
-    public void addRole(Integer userId, RoleName roleName) {
+    public User addRole(Integer userId, RoleName roleName) {
 
-        if (!userService.isUserPrivilegedByRole(userId, roleName) == false) {
+        if (userService.isUserPrivilegedByRole(userId, roleName)) {
             throw new IllegalArgumentException(ErrorMessage.USER_IS_ALREADY + roleName);
         }
 
@@ -31,11 +31,12 @@ public class AdminServiceImpl implements AdminService {
         Role role = roleService.findByName(roleName);
         roles.add(role);
         user.setRoles(roles);
-        userService.update(user);
+
+        return userService.update(user);
     }
 
     @Override
-    public void removeRole(Integer userId, RoleName roleName) {
+    public User removeRole(Integer userId, RoleName roleName) {
 
         if (!userService.isUserPrivilegedByRole(userId, roleName)) {
             throw new IllegalArgumentException(ErrorMessage.USER_IS_NOT + roleName);
@@ -46,6 +47,7 @@ public class AdminServiceImpl implements AdminService {
         Role role = roleService.findByName(roleName);
         roles.remove(role);
         user.setRoles(roles);
-        userService.update(user);
+
+        return userService.update(user);
     }
 }

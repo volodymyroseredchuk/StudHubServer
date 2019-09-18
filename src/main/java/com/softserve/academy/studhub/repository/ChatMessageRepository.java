@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Integer> {
 
     Page<ChatMessage> findByChatIdOrderByCreationDateTimeDesc(Integer chatId, Pageable pageable);
-    Optional<ChatMessage> findFirstChatMessageByChatIdOrderByCreationDateTimeDesc(Integer chatId);
+    Long deleteAllByChatId(Integer chatId);
 
 }

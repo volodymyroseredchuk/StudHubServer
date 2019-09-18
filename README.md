@@ -4,9 +4,9 @@ RESTfull application created by students of SoftServe IT Academy
 
 ## Getting Started
 
-To start working on this project please add `application.properties` file in the root
+To start working on this project please add `application-dev.properties` file in the root
 directory of the project (next to `README.md` and `.gitignore`) containing the same
-info as `application.properties` file in `src/main/resources/` directory, but 
+info as `application-heroku.properties` file in the root directory, but 
 change `${...}` values to your local credentials.
 
 

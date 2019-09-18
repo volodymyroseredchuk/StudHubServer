@@ -19,30 +19,52 @@
 -- Table structure for table `news`
 --
 
-DROP TABLE IF EXISTS `news`;
+DROP TABLE IF EXISTS `feeds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `news` (
+CREATE TABLE `feeds` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `body` text,
-  `creation_date` datetime DEFAULT NULL,
-  `source_url` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `news`
+-- Dumping data for table `feeds`
 --
 
-LOCK TABLES `news` WRITE;
-/*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (1,'Ukraine is new China?','Ukrainian programmers will work according to 996 schedule, as their Chinese colleagues! 9am to 9pm 6 days a week.','2019-06-01 00:00:00', 'https://ain.ua/2019/07/12/zelenyj-tarif-vernuli-chto-eto-znachit/'),(2,'Do not leave Your sandwiches unattended!','Today was committed terrifying crime - somebody has ate my sandwich! Police it doing its best, but no evidences or witnesses are available.','2019-06-01 00:00:00', 'https://dou.ua/lenta/articles/juniors-2018/?from=doufp');
-/*!40000 ALTER TABLE `news` ENABLE KEYS */;
+LOCK TABLES `feeds` WRITE;
+/*!40000 ALTER TABLE `feeds` DISABLE KEYS */;
+INSERT INTO `feeds` VALUES (1,'DZone','http://feeds.dzone.com/java'), (2,'Digital trends','https://www.digitaltrends.com/cool-tech/feed'), (3,'MIT','http://news.mit.edu/rss/feed');
+/*!40000 ALTER TABLE `feeds` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `user_feeds`
+--
 
+DROP TABLE IF EXISTS `user_feeds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_feeds` (
+  `user_id` int(11) NOT NULL,
+  `feed_id` int(11) NOT NULL,
+  KEY `feed_id` (`feed_id`),
+  CONSTRAINT `user_feeds_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_feeds_ibfk_2` FOREIGN KEY (`feed_id`) REFERENCES `feeds` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_feeds`
+--
+
+LOCK TABLES `user_feeds` WRITE;
+/*!40000 ALTER TABLE `user_feeds` DISABLE KEYS */;
+INSERT INTO `user_feeds` VALUES (1,1);
+/*!40000 ALTER TABLE `user_feeds` ENABLE KEYS */;
+UNLOCK TABLES;
 --
 -- Table structure for table `answers`
 --
@@ -174,6 +196,7 @@ SET character_set_client = utf8mb4 ;
 CREATE TABLE `chats` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
                          `name` varchar(45) DEFAULT NULL,
+                         `secret` bit(1) DEFAULT 0,
                          PRIMARY KEY (`id`),
                          UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -185,7 +208,7 @@ CREATE TABLE `chats` (
 
 LOCK TABLES `chats` WRITE;
 /*!40000 ALTER TABLE `chats` DISABLE KEYS */;
-INSERT INTO `chats` VALUES (1,'Test'), (2, null);
+INSERT INTO `chats` VALUES (1,'Test', 0), (2, null, 0);
 /*!40000 ALTER TABLE `chats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,6 +335,35 @@ CREATE TABLE `freelancers` (
 LOCK TABLES `freelancers` WRITE;
 /*!40000 ALTER TABLE `freelancers` DISABLE KEYS */;
 /*!40000 ALTER TABLE `freelancers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `invitations`
+--
+
+DROP TABLE IF EXISTS `invitations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `invitations` (
+                              `id` int(11) NOT NULL AUTO_INCREMENT,
+                              `expiry_date` date NOT NULL,
+                              `user_id` int(11) DEFAULT NULL,
+                              `team_id` int(11) DEFAULT NULL,
+                              PRIMARY KEY (`id`),
+                              KEY `user_id` (`user_id`),
+                              KEY `team_id` (`team_id`),
+                              CONSTRAINT `invitations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+                              CONSTRAINT `invitations_ibfk_2` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `invitations`
+--
+
+LOCK TABLES `invitations` WRITE;
+/*!40000 ALTER TABLE `invitations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invitations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -796,9 +848,11 @@ SET character_set_client = utf8mb4 ;
 CREATE TABLE `teams` (
                          `id` int(11) NOT NULL AUTO_INCREMENT,
                          `title` varchar(32) DEFAULT NULL,
+                         `description` varchar(255) DEFAULT NULL,
                          `creator_id` int(11) NOT NULL,
                          `creation_date` datetime DEFAULT NULL,
                          `modified_date` datetime DEFAULT NULL,
+                         `public` bit(1) NOT NULL DEFAULT _binary '\0',
                          PRIMARY KEY (`id`),
                          KEY `creator_id` (`creator_id`),
                          CONSTRAINT `teams_ibfk_1` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`)
@@ -811,7 +865,7 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
-INSERT INTO `teams` VALUES (1,'dreamteam',3, '2019-06-02 00:00:00', '2019-06-02 00:01:01'),(2,'adminteam',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03'),(3,'tarasteam',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01');
+INSERT INTO `teams` VALUES (1,'dreamteam', 'Its public team for dream members', 3, '2019-06-02 00:00:00', '2019-06-02 00:01:01', 1),(2,'adminteam','Its public team for admin members',3, '2019-07-02 00:00:02', '2019-07-02 00:01:03', 0),(3,'tarasteam','Its public team for taras members',1, '2019-09-02 00:00:00', '2019-09-02 00:01:01', 1);
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
 UNLOCK TABLES;
 

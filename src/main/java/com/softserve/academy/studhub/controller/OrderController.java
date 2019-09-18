@@ -70,12 +70,20 @@ public class OrderController {
         ));
     }
 
+    @PostMapping("/{orderId}/cancel")
+    @PreAuthorize("@orderServiceImpl.findById(#orderId).getUserExecutor().getUsername() == principal.username or " +
+            "@orderServiceImpl.findById(#orderId).getUserCreator().getUsername() == principal.username")
+    public ResponseEntity<OrderDTO> cancelOrder(@PathVariable Integer orderId,
+                                                Principal principal) {
+        return ResponseEntity.ok(modelMapper.map(orderService.cancelOrder(orderId, principal.getName()), OrderDTO.class));
+    }
+
     @PostMapping("/{orderId}/feedback/customer")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<CustomerDTO> rateCustomer(@PathVariable Integer orderId, @RequestBody CustomerDTO customerDTO) {
 
         Customer customer = customerService.add(modelMapper.map(customerDTO, Customer.class), orderId);
-        return ResponseEntity.ok().body(modelMapper.map(customer, CustomerDTO.class));
+        return ResponseEntity.ok(modelMapper.map(customer, CustomerDTO.class));
     }
 
     @PostMapping("/{orderId}/feedback/freelancer")
@@ -83,6 +91,13 @@ public class OrderController {
     public ResponseEntity<?> rateFreelancer(@PathVariable Integer orderId, @RequestBody FreelancerDTO freelancerDTO) {
 
         Freelancer freelancer = freelancerService.add(modelMapper.map(freelancerDTO, Freelancer.class), orderId);
-        return ResponseEntity.ok().body(modelMapper.map(freelancer, FreelancerDTO.class));
+        return ResponseEntity.ok(modelMapper.map(freelancer, FreelancerDTO.class));
+    }
+
+    @GetMapping("/count/done/{username}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Integer> getCountOfDoneOrdersByUsername(@PathVariable String username) {
+
+        return ResponseEntity.ok(orderService.countByFreelancerAndTaskDone(username));
     }
 }

@@ -1,6 +1,7 @@
 package com.softserve.academy.studhub.security.services.impl;
 
 import com.softserve.academy.studhub.entity.User;
+import com.softserve.academy.studhub.security.entity.UserPrinciple;
 import com.softserve.academy.studhub.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

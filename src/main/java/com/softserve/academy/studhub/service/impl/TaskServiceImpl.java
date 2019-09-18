@@ -1,7 +1,6 @@
 package com.softserve.academy.studhub.service.impl;
 
 import com.softserve.academy.studhub.constants.ErrorMessage;
-import com.softserve.academy.studhub.entity.Proposal;
 import com.softserve.academy.studhub.entity.Task;
 import com.softserve.academy.studhub.entity.enums.TaskStatus;
 import com.softserve.academy.studhub.exceptions.NotFoundException;

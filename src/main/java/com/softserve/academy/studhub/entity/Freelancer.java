@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"quality", "professionalism", "price", "velocity", "contact"})
+@EqualsAndHashCode(exclude = {"quality", "price", "velocity", "contact"})
 @Entity
 @Table(name = "freelancers")
 public class Freelancer {

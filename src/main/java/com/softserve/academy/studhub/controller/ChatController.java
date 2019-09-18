@@ -1,7 +1,6 @@
 package com.softserve.academy.studhub.controller;
 
-import com.google.common.collect.Lists;
-import com.softserve.academy.studhub.dto.ChatListItem;
+import com.softserve.academy.studhub.dto.ChatListItemDTO;
 import com.softserve.academy.studhub.dto.ChatMessagePostDTO;
 import com.softserve.academy.studhub.entity.ChatMessage;
 import com.softserve.academy.studhub.service.ChatService;
@@ -21,12 +20,12 @@ import java.util.List;
 public class ChatController {
 
     private ChatService chatService;
-    private UserService userService;
 
     @GetMapping("/{chatId}")
     @PreAuthorize("isAuthenticated() "
             + "and @chatServiceImpl.getUsernameParticipantsByChat(#chatId).contains(principal.username)")
-    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, @RequestParam Integer offset, @RequestParam Integer size) {
+    public ResponseEntity<?> getChatMessages(@PathVariable Integer chatId, @RequestParam Integer offset,
+                                             @RequestParam Integer size) {
         List<ChatMessage> messages = chatService.getMessagesByChatId(chatId, new OffsetBasedPageable(offset, size));
         return ResponseEntity.ok(messages);
     }
@@ -34,7 +33,7 @@ public class ChatController {
     @GetMapping("/list/{userId}")
     @PreAuthorize("isAuthenticated() and @userServiceImpl.findById(#userId).username == principal.username")
     public ResponseEntity<?> getChatMessages(@PathVariable Integer userId) {
-        List<ChatListItem> itemList = chatService.getChatList(userId);
+        List<ChatListItemDTO> itemList = chatService.getChatList(userId);
         return ResponseEntity.ok(itemList);
     }
 
@@ -52,14 +51,15 @@ public class ChatController {
             + "and @userServiceImpl.findById(#message.sender).username == principal.username")
     public ResponseEntity<?> postChatMessage(@RequestBody ChatMessagePostDTO message) {
         ChatMessage savedMessage = chatService.save(message);
-        chatService.handleChatMessage(savedMessage);
+        chatService.handleChatMessage(savedMessage.clone());
         return ResponseEntity.ok(savedMessage);
     }
 
-    @GetMapping("/new/{creatorUserId}/{userId}")
+    @GetMapping("/new/{creatorUserId}/{userId}/{secret}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId) {
-        return ResponseEntity.ok(chatService.getChatId(creatorUserId, userId));
+    public ResponseEntity<?> getChat(@PathVariable Integer creatorUserId, @PathVariable Integer userId,
+                                     @PathVariable Boolean secret) {
+        return ResponseEntity.ok(chatService.getChatId(creatorUserId, userId, secret));
     }
 
 }
